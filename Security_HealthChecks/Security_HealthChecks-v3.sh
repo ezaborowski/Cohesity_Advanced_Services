@@ -128,8 +128,16 @@ echo "-------------------"
 echo " "
 echo "Use the space bar to select, and the ENTER key to complete your selection. Please choose Cohesity Cluster parameters: "
 
-api_values=("cluster" "externalClientSubnets" "basicClusterInfo" "clusterPartitions" "apps" "nodes" "interfaceGroups" "vlans" "viewBoxes" "remoteClusters" "vaults" "activeDirectory" "roles" "users" "idps" "groups" "alertNotificationRules" "views" "protectionPolicies" "protectionSources" "protectionJobs")
-api_labels=("Cohesity Cluster" "Subnets" "Basic Cluster Info" "Partitions" "Apps" "Cluster Nodes" "Interface Groups" "vLANS" "Storage Domains" "Remote Clusters" "Archive Targets" "Active Directory" "Cohesity Roles" "Cohesity Users" "idps" "Cohesity Groups" "Alerts" "Views" "Protection Policies" "Sources" "Protection Jobs")
+networking=(externalClientSubnets, interfaceGroups, vlans)
+informative=(cluster, basicClusterInfo, nodes)
+storage=(clusterPartitions, viewBoxes)
+remoteTargets=(remoteClusters, vaults)
+accessManagement=(activeDirectory, roles, users, groups)
+protection=(views, protectionPolicies, protectionSources, protectionJobs)
+
+api_values=("${networking[*]}" "${informative[*]}" "${storage[*]}" "${remoteTargets[*]}" "${accessManagement[*]}" "${protection[*]}" "apps" "idps" "alertNotificationRules")
+
+api_labels=("Networking - Subnets, Interface Groups, and vLANS" "Informative - Cohesity Cluster, Basic Cluster Info, and Cluster Nodes" "Storage - Partitions and Storage Domains" "Remote Targets - Remote Clusters and Archive Targets" "Access Management - Active Directory, Cohesity Roles, Cohesity Users, and Cohesity Groups" "Cohesity Protection - Views, Protection Policies, Sources, Protection Jobs" "Apps" "idps" "Alerts")
 
 for i in "${!api_values[@]}"; do
 	api_string+="${api_labels[$i]} (${api_values[$i]});"
@@ -148,14 +156,14 @@ prompt_for_multiselect choice "$api_string"
         echo "The following data will be collected: "
         for api_choice in "${api_choices[@]}"
         do
-        printf "%s\n " "$api_choice"
+        printf "%s\n" "$api_choice"
         done
         printf '\n'
 
         echo "API Commands chosen:"
-        for api_choice in "${api_choices_values[@]}"
+        for api_choice in $(echo ${api_choices_values[@]} | sed "s/,/ /g")
         do
-        printf "%s\n " "$api_choice"
+        printf "%s\n" "$api_choice"
         done
         printf '\n'
 
