@@ -97,39 +97,48 @@ function prompt_for_multiselect {
     eval $retval='("${selected[@]}")'
 }
 
-options_values=("cluster" "externalClientSubnets" "basicClusterInfo" "clusterPartitions" "apps" "nodes" "interfaceGroups" "vlans" "viewBoxes" "remoteClusters" "vaults" "activeDirectory" "roles" "users" "idps" "groups" "alertNotificationRules" "views" "protectionPolicies" "protectionSources" "protectionJobs")
-options_labels=("Cohesity Cluster" "Subnets" "Basic Cluster Info" "Partitions" "Apps" "Cluster Nodes" "Interface Groups" "vLANS" "Storage Domains" "Remote Clusters" "Archive Targets" "Active Directory" "Cohesity Roles" "Cohesity Users" "idps" "Cohesity Groups" "Alerts" "Views" "Protection Policies" "Sources" "Protection Jobs")
 
-for i in "${!options_values[@]}"; do
-	options_string+="${options_labels[$i]} (${options_values[$i]});"
-done
+#Asks user to choose what Cohesity Cluster IRIS_CLI parameters to output.
 
+echo "-------------------"
+echo "IRIS_CLI DATA COLLECTION"
+echo "-------------------"
+echo " "
 echo "Use the space bar to select, and the ENTER key to complete your selection. Please choose Cohesity Cluster parameters: "
 
-prompt_for_multiselect choice "$options_string"
+networking=(get-bonding-mode, get-dns-server, get-subnets, list-interfaces, get-domain-names, get-ntp-servers)
+informative=(get-etc-hosts, get-info)
+accessManagement=(get-proxy-servers, get-nfs-whitelist, get-nfs-export-paths)
+security=(list-ssl-cert-details, ls-ssh-keys)
 
-    for i in "${!choice[@]}"; do
-        if [ "${choice[$i]}" == "true" ]; then
-            choices+=("${options_labels[$i]}")
-            choices_values+=("${options_values[$i]}")
+iris_values=("${networking[*]}" "${informative[*]}" "${accessManagement[*]}" "${security[*]}" "cluster get-io-pref-tier")
+
+iris_labels=("Networking - To list the bonding mode of the NICs, DNS servers, subnets, interfaces, domain names, and NTP servers for the Cluster." "Informative - To get the hosts info and and general information about the Cluster." "Access Management - To list the proxy servers, client subnets with permissions to access Views, and NFS export paths accessible in the Cluster." "Security - To get the SSL certificate details of the Cluster and list public SSH Keys." "To get the preferred IO tier of the Cluster.")   
+
+for i in "${!iris_values[@]}"; do
+	iris_string+="${iris_labels[$i]};"
+done
+
+prompt_for_multiselect iris_choice "$iris_string"
+
+    for i in "${!iris_choice[@]}"; do
+        if [ "${iris_choice[$i]}" == "true" ]; then
+            iris_choices+=("${iris_labels[$i]}")
+            iris_choices_values+=("${iris_values[$i]}")
         fi
     done
 
         # Write out each choice
-        echo "You selected the following: "
-        for choice in "${choices[@]}"
+        echo "The following data will be collected: "
+        for iris_choice in "${iris_choices[@]}"
         do
-        printf "%s\n " "$choice"
+        printf "%s\n" "$iris_choice"
         done
         printf '\n'
 
-        echo "API Commands chosen:"
-        for choice in "${choices_values[@]}"
+        for iris_choice in $(echo ${iris_choices_values[@]} | sed "s/,/ /g")
         do
-        printf "%s\n " "$choice"
+        printf "%s\n" "$iris_choice"
         done
         printf '\n'
-
- 
-
 

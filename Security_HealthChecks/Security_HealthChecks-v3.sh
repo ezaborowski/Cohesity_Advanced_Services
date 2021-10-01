@@ -137,10 +137,19 @@ protection=(views, protectionPolicies, protectionSources, protectionJobs)
 
 api_values=("${networking[*]}" "${informative[*]}" "${storage[*]}" "${remoteTargets[*]}" "${accessManagement[*]}" "${protection[*]}" "apps" "idps" "alertNotificationRules")
 
-api_labels=("Networking - Subnets, Interface Groups, and vLANS" "Informative - Cohesity Cluster, Basic Cluster Info, and Cluster Nodes" "Storage - Partitions and Storage Domains" "Remote Targets - Remote Clusters and Archive Targets" "Access Management - Active Directory, Cohesity Roles, Cohesity Users, and Cohesity Groups" "Cohesity Protection - Views, Protection Policies, Sources, Protection Jobs" "Apps" "idps" "Alerts")
+api_labels=(
+    "Networking - Subnets, Interface Groups, and vLANS" 
+    "Informative - Cohesity Cluster, Basic Cluster Info, and Cluster Nodes" 
+    "Storage - Partitions and Storage Domains" "Remote Targets - Remote Clusters and Archive Targets" 
+    "Access Management - Active Directory, Cohesity Roles, Cohesity Users, and Cohesity Groups" 
+    "Cohesity Protection - Views, Protection Policies, Sources, Protection Jobs" 
+    "Apps" 
+    "idps" 
+    "Alerts"
+    )
 
 for i in "${!api_values[@]}"; do
-	api_string+="${api_labels[$i]} (${api_values[$i]});"
+	api_string+="${api_labels[$i]};"
 done
 
 prompt_for_multiselect choice "$api_string"
@@ -188,11 +197,11 @@ token=`curl -s -k -X POST --url "${url}/irisservices/api/v1/public/accessTokens"
               echo "The Access Token is" $token
 ​
 #Loop through each api call, optionally pipe to json.tool to beautify.
-for f in ${api_choices_values[@]}
+for f in $(echo ${api_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $f \n"
 ​
-         curl -s -k -X GET -G --url "$url/irisservices/api/v1/public/$f" -H "Authorization: Bearer $token" -H 'Accept: text/html' > API-Logs\\$filename-API-$f-`date +%s`.json
+        `curl -s -k -X GET -G --url "$url/irisservices/api/v1/public/$f" -H "Authorization: Bearer $token" -H 'Accept: text/html'` > API-Logs\\$filename-API-$f-`date +%s`.json
  done
 
 # #Create output tgz in local directory.
@@ -208,11 +217,23 @@ echo "-------------------"
 echo " "
 echo "Use the space bar to select, and the ENTER key to complete your selection. Please choose Cohesity Cluster parameters: "
 
-iris_values=("cluster get-bonding-mode" "cluster get-dns-server" "cluster get-domain-names" "cluster get-etc-hosts" "cluster get-info" "cluster get-io-pref-tier" "cluster get-nfs-export-paths" "cluster get-nfs-whitelist" "cluster get-ntp-servers" "cluster get-proxy-servers" "cluster get-subnets" "cluster get-upgrade-status" "cluster list-interfaces" "cluster list-packages" "cluster list-ssl-cert-details" "cluster ls-ssh-keys")
-iris_labels=("To get the bonding mode of the NICs" "To get the IP addresses of the DNS servers for the Cluster." "To get the domain names of the cluster" "To get the hosts info of the Cluster." "To get information about the Cluster." "To get the preferred IO tier of the Cluster." "To list NFS export paths accessible in the Cluster." "To list client subnets with permissions to access Views." "To get the list of the NTP servers for the Cluster." "To get the proxy servers for the Cluster." "To get the subnets of the Cluster." "To get the Cluster software upgrade status." "To list the interfaces in the cluster." "To list the available Cohesity software packages on a Cluster." "To get the SSL certificate details of the Cluster." "List public SSH Keys.")   
+networking=(get-bonding-mode, get-dns-server, get-subnets, list-interfaces, get-domain-names, get-ntp-servers)
+informative=(get-etc-hosts, get-info)
+accessManagement=(get-proxy-servers, get-nfs-whitelist, get-nfs-export-paths)
+security=(list-ssl-cert-details, ls-ssh-keys)
+
+iris_values=("${networking[*]}" "${informative[*]}" "${accessManagement[*]}" "${security[*]}" "cluster get-io-pref-tier")
+
+iris_labels=(
+    "Networking - To list the bonding mode of the NICs, DNS servers, subnets, interfaces, domain names, and NTP servers for the Cluster." 
+    "Informative - To get the hosts info and and general information about the Cluster." 
+    "Access Management - To list the proxy servers, client subnets with permissions to access Views, and NFS export paths accessible in the Cluster." 
+    "Security - To get the SSL certificate details of the Cluster and list public SSH Keys." 
+    "To get the preferred IO tier of the Cluster."
+    )   
 
 for i in "${!iris_values[@]}"; do
-	iris_string+="${iris_labels[$i]} (${iris_values[$i]});"
+	iris_string+="${iris_labels[$i]};"
 done
 
 prompt_for_multiselect iris_choice "$iris_string"
@@ -228,14 +249,13 @@ prompt_for_multiselect iris_choice "$iris_string"
         echo "The following data will be collected: "
         for iris_choice in "${iris_choices[@]}"
         do
-        printf "%s\n " "$iris_choice"
+        printf "%s\n" "$iris_choice"
         done
         printf '\n'
 
-        echo "IRIS_CLI Commands chosen:"
-        for iris_choice in "${iris_choices_values[@]}"
+        for iris_choice in $(echo ${iris_choices_values[@]} | sed "s/,/ /g")
         do
-        printf "%s\n " "$iris_choice"
+        printf "%s\n" "$iris_choice"
         done
         printf '\n'
 
@@ -255,11 +275,11 @@ printf '\n'
 echo "Creating output and saving to IRIS_CLI-Logs folder..."
 
 #Loop through each iris_cli call, optionally pipe to json.tool to beautify.
-for x in ${iris_choices_values[@]}
+for x in $(echo ${iris_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $x \n"
 ​
-         iris_cli -username $username -password $password $x > IRIS_CLI-Logs\\$filename-IRIS-$x-`date +%s`.json
+         iris_cli -username $username -password $password cluster $x > IRIS_CLI-Logs\\$filename-IRIS-$x-`date +%s`.json
  done
 
 # #Create output tgz in local directory.
@@ -354,7 +374,7 @@ hc_labels=(
 
 
 for i in "${!hc_values[@]}"; do
-	hc_string+="${hc_labels[$i]} (${hc_values[$i]});"
+	hc_string+="${hc_labels[$i]};"
 done
 
 prompt_for_multiselect hc_choice "$hc_string"
@@ -374,10 +394,9 @@ prompt_for_multiselect hc_choice "$hc_string"
         done
         printf '\n'
 
-        echo "HC_CLI Commands chosen:"
-        for hc_choice in "${hc_choices_values[@]}"
+        for hc_choice in $(echo ${hc_choices_values[@]} | sed "s/,/ /g")
         do
-        printf "%s\n " "$hc_choice"
+        printf "%s\n" "$hc_choice"
         done
         printf '\n'
 
@@ -397,7 +416,7 @@ printf '\n'
 echo "Creating output and saving to HC_CLI-Logs folder..."
 ​
 #Loop through each hc_cli call, optionally pipe to json.tool to beautify.
-for y in ${hc_choices_values[@]}
+for y in $(echo ${hc_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $y \n"
 ​
