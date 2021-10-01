@@ -13,9 +13,9 @@ echo "Please enter Cluster address (ex: https://localhost:8053 or https://myclus
 read url
 echo "Please enter a prefix to append to output files: "
 read filename
-echo "Please enter Cluster UI username: "
+echo "Please enter a Local Cohesity Cluster UI username: "
 read username
-echo "Please enter Cluster UI password: "
+echo "Please enter a Local Cohesity Cluster UI password: "
 read -s password
 ​
 #---------------------------------------------------------------------------------------------------------------#
@@ -192,7 +192,7 @@ printf '\n'
 echo "Creating output and saving to API-Logs folder..."
 
 #get token
-token=`curl -s -k -X POST --url "${url}/irisservices/api/v1/public/accessTokens" -H 'Accept: application/json' -H 'Content-type: application/json' --data-raw '{"password": "'$password'", "username": "'$username'"}' | cut -d : -f 2 | cut -d, -f1 `
+token=``curl -X POST -k "https://$url]/irisservices/api/v1/public/accessTokens" -H "accept: application/json" -H "content-type: application/json" -d "{ \"domain\": \"LOCAL\", \"password\": \"$password\", \"username\": \"$username\"}" | cut -d : -f 2 | cut -d, -f1 `
 ​
               echo "The Access Token is" $token
 ​
@@ -201,7 +201,7 @@ for f in $(echo ${api_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $f \n"
 ​
-        `curl -s -k -X GET -G --url "$url/irisservices/api/v1/public/$f" -H "Authorization: Bearer $token" -H 'Accept: text/html'` > API-Logs\\$filename-API-$f-`date +%s`.json
+        `curl -X GET -k "https://$url/irisservices/api/v1/public/$f" -H "accept: application/json" -H "Authorization: Bearer $token"` > API-Logs/$filename-API-$f-`date +%s`.json
  done
 
 # #Create output tgz in local directory.
@@ -253,6 +253,7 @@ prompt_for_multiselect iris_choice "$iris_string"
         done
         printf '\n'
 
+        echo "IRIS_CLI Commands chosen:"
         for iris_choice in $(echo ${iris_choices_values[@]} | sed "s/,/ /g")
         do
         printf "%s\n" "$iris_choice"
@@ -279,7 +280,7 @@ for x in $(echo ${iris_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $x \n"
 ​
-         iris_cli -username $username -password $password cluster $x > IRIS_CLI-Logs\\$filename-IRIS-$x-`date +%s`.json
+         iris_cli -username $username -password $password cluster $x > IRIS_CLI-Logs/$filename-IRIS-$x-`date +%s`.json
  done
 
 # #Create output tgz in local directory.
@@ -300,19 +301,19 @@ networking1=(test-ids=10008, test-ids=10025, test-ids=10026, test-ids=10027, tes
 networking2=(test-ids=10063, test-ids=10064, test-ids=10065, test-ids=10066, test-ids=10067, test-ids=10068, test-ids=10069) 
 networking3=(test-ids=10070, test-ids=10071, test-ids=10074, test-ids=10076, test-ids=10077)
 informative=(test-ids=10011, test-ids=10035, test-ids=10044)
-storage=(test-ids=10004, test-ids=10051, test-ids=10052, )
-remoteTargets=(test-ids=10006, test-ids=10017, test-ids=10037, )
-accessManagement=(test-ids=10031, )
-protection=(test-ids=10049, test-ids=10057, test-ids=10058, test-ids=10075, )
-security=(test-ids=10033, test-ids=10045, test-ids=10072, test-ids=10073, )
+storage=(test-ids=10004, test-ids=10051, test-ids=10052)
+remoteTargets=(test-ids=10006, test-ids=10017, test-ids=10037)
+accessManagement=(test-ids=10031)
+protection=(test-ids=10049, test-ids=10057, test-ids=10058, test-ids=10075)
+security=(test-ids=10033, test-ids=10045, test-ids=10072, test-ids=10073)
 hardware1=(test-ids=10002, test-ids=10012, test-ids=10023, test-ids=10028, test-ids=10036, test-ids=10040)
 hardware2=(test-ids=10032, test-ids=10053, test-ids=10060, test-ids=10081, test-ids=10082, test-ids=10083)
 hardware3=(test-ids=10084, test-ids=10085, test-ids=10086, test-ids=10088, test-ids=10090)
-clusterIntegrity=(test-ids=10003, test-ids=10007, )
-services=(test-ids=10015, test-ids=10020, test-ids=10039, test-ids=10047, test-ids=10050, test-ids=10054, test-ids=10059, )
-alerts=(test-ids=10009, test-ids=10018, )
+clusterIntegrity=(test-ids=10003, test-ids=10007)
+services=(test-ids=10015, test-ids=10020, test-ids=10039, test-ids=10047, test-ids=10050, test-ids=10054, test-ids=10059)
+alerts=(test-ids=10009, test-ids=10018)
 performance=(test-ids=10021, test-ids=10046, test-ids=10087, test-ids=10089, test-ids=10101, test-ids=10102)
-fileLevel=(test-ids=10048, test-ids=10038, test-ids=10043, test-ids=10061, )
+fileLevel=(test-ids=10048, test-ids=10038, test-ids=10043, test-ids=10061)
 
 hc_values=("${networking1[*]}" "${networking2[*]}" "${networking3[*]}" "${informative[*]}" "${storage[*]}" "${remoteTargets[*]}" "${accessManagement[*]}" "${protection[*]}" "${security[*]}" "${hardware1[*]}" "${hardware2[*]}" "${hardware3[*]}" "${clusterIntegrity[*]}" "${services[*]}" "${alerts[*]}" "${performance[*]}" "${fileLevel[*]}" "all")
 
@@ -358,6 +359,7 @@ prompt_for_multiselect hc_choice "$hc_string"
         done
         printf '\n'
 
+        echo "HC_CLI Commands chosen:"
         for hc_choice in $(echo ${hc_choices_values[@]} | sed "s/,/ /g")
         do
         printf "%s\n" "$hc_choice"
@@ -384,7 +386,12 @@ for y in $(echo ${hc_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $y \n"
 ​
-         hc_cli run -u $username -p $password hc_cli run --$y -v > HC_CLI-Logs\\$filename-HC-$y-`date +%s`.json
+         hc_cli run -u $username -p $password --$y -v > HC_CLI-Logs/$filename-HC-$y-`date +%s`.json
+         
+         if $y="all"
+            sleep 3m
+         else
+            sleep 15
 
  done
 
