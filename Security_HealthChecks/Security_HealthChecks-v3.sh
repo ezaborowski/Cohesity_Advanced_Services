@@ -135,7 +135,7 @@ remoteTargets=(remoteClusters, vaults)
 accessManagement=(activeDirectory, roles, users, groups)
 protection=(views, protectionPolicies, protectionSources, protectionJobs)
 
-api_values=("${networking[*]}" "${informative[*]}" "${storage[*]}" "${remoteTargets[*]}" "${accessManagement[*]}" "${protection[*]}" "apps" "idps" "alertNotificationRules")
+api_values=("${networking[*]}" "${informative[*]}" "${storage[*]}" "${remoteTargets[*]}" "${accessManagement[*]}" "${protection[*]}" "analytics/apps" "idps" "alertNotificationRules")
 
 api_labels=(
     "Networking - Subnets, Interface Groups, and vLANS" 
@@ -152,7 +152,7 @@ for i in "${!api_values[@]}"; do
 	api_string+="${api_labels[$i]};"
 done
 
-prompt_for_multiselect choice "$api_string"
+prompt_for_multiselect api_choice "$api_string"
 
     for i in "${!api_choice[@]}"; do
         if [ "${api_choice[$i]}" == "true" ]; then
@@ -192,7 +192,7 @@ printf '\n'
 echo "Creating output and saving to API-Logs folder..."
 
 #get token
-token=``curl -X POST -k "https://$url]/irisservices/api/v1/public/accessTokens" -H "accept: application/json" -H "content-type: application/json" -d "{ \"domain\": \"LOCAL\", \"password\": \"$password\", \"username\": \"$username\"}" | cut -d : -f 2 | cut -d, -f1 `
+token=`curl -X POST -k "$url/irisservices/api/v1/public/accessTokens" -H "accept: application/json" -H "content-type: application/json" -d "{ \"domain\": \"LOCAL\", \"password\": \"$password\", \"username\": \"$username\"}" | cut -d : -f 2 | cut -d, -f1 `
 ​
               echo "The Access Token is" $token
 ​
@@ -201,7 +201,7 @@ for f in $(echo ${api_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $f \n"
 ​
-        `curl -X GET -k "https://$url/irisservices/api/v1/public/$f" -H "accept: application/json" -H "Authorization: Bearer $token"` > API-Logs/$filename-API-$f-`date +%s`.json
+        curl -X GET -k "$url/irisservices/api/v1/public/$f" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > API-Logs/$filename-API-$f-`date +%s`.json
  done
 
 # #Create output tgz in local directory.
@@ -387,13 +387,7 @@ do
          echo -e "\nCalling $y \n"
 ​
          hc_cli run -u $username -p $password --$y -v > HC_CLI-Logs/$filename-HC-$y-`date +%s`.json
-         
-         if $y="all"
-            sleep 3m
-         else
-            sleep 15
-
- done
+done
 
 #Create output tgz in local directory.
 # printf '\n'
