@@ -3,20 +3,20 @@
 printf '\n'
 echo "#---------------------------------------------------------------------------------------------------------------#"
 echo "#Developed by Erin Zaborowski and Christopher Peyton - August 12 2021                                           #"
-echo "#Last Updated 9/29/2021                                                                                         #"
-echo "#  -updated parameter choice section                                                                            #"
+echo "#Last Updated 10/04/2021                                                                                         #"
+echo "#  -updated parameter choice section: ALL                                                                            #"
 echo "#                                                                                                               #"
 echo "#---------------------------------------------------------------------------------------------------------------#"
 
 printf '\n'
 echo "Please enter Cluster address (ex: https://localhost:8053 or https://mycluster): "
-read url
+read -e url
 echo "Please enter a prefix to append to output files: "
-read filename
+read -e filename
 echo "Please enter a Local Cohesity Cluster UI username: "
-read username
+read -e username
 echo "Please enter a Local Cohesity Cluster UI password: "
-read -s password
+read -es password
 ​
 #---------------------------------------------------------------------------------------------------------------#
 #Configuration for multiple choice selection section.
@@ -122,30 +122,38 @@ function prompt_for_multiselect {
 #---------------------------------------------------------------------------------------------------------------#
 #Asks user to choose what Cohesity Cluster API parameters to output.
 
+printf '\n'
+printf '\n'
 echo "-------------------"
 echo "API DATA COLLECTION"
 echo "-------------------"
 echo " "
 echo "Use the space bar to select, and the ENTER key to complete your selection. Please choose Cohesity Cluster parameters: "
 
-networking=(externalClientSubnets, interfaceGroups, vlans)
+networking=(externalClientSubnets, interfaceGroups, vlans,ldapProvider, routes)
+#network/bonds, network/hosts network/interfaces
 informative=(cluster, basicClusterInfo, nodes)
 storage=(clusterPartitions, viewBoxes)
 remoteTargets=(remoteClusters, vaults)
 accessManagement=(activeDirectory, roles, users, groups)
 protection=(views, protectionPolicies, protectionSources, protectionJobs)
+security=(antivirusGroups, icapConnectionStatus, infectedFiles)
+alerts=(alertNotificationRules, alerts)
 
-api_values=("${networking[*]}" "${informative[*]}" "${storage[*]}" "${remoteTargets[*]}" "${accessManagement[*]}" "${protection[*]}" "analytics/apps" "idps" "alertNotificationRules")
+api_values=("${networking[*]}" "${informative[*]}" "${storage[*]}" "${remoteTargets[*]}" "${accessManagement[*]}" "${protection[*]}" "${security[*]}" "${alerts[*]}" "certificates/webServer" "kmsConfig" "apps" "IdPs")
 
 api_labels=(
-    "Networking - Subnets, Interface Groups, and vLANS" 
+    "Networking - Subnets, Interface Groups, vLANS, LDAP Provider, and Routes" 
     "Informative - Cohesity Cluster, Basic Cluster Info, and Cluster Nodes" 
     "Storage - Partitions and Storage Domains" "Remote Targets - Remote Clusters and Archive Targets" 
     "Access Management - Active Directory, Cohesity Roles, Cohesity Users, and Cohesity Groups" 
     "Cohesity Protection - Views, Protection Policies, Sources, Protection Jobs" 
+    "Security - AntiVirus Groups, ICAP Connection Status, and Infected Files"
+    "Alerts - Alert Notification Rules and Current Cluster Alerts"
+    "Cluster Certificate"
+    "KMS Configuration"
     "Apps" 
     "idps" 
-    "Alerts"
     )
 
 for i in "${!api_values[@]}"; do
@@ -181,27 +189,28 @@ prompt_for_multiselect api_choice "$api_string"
 
 printf '\n'
 printf '\n'
-echo "Making subdirectory to save all logs to..."
+echo "Making secLogs/API-Logs subdirectory to save all logs to..."
+  mkdir secLogs 
+  mkdir secLogs/API-Logs 
+    sleep 5
 
-mkdir API-Logs 
-
 printf '\n'
 printf '\n'
-echo "Running API Data Collection Commands..."
+echo "Running API Data Collection Commands and saving output to API-Logs folder..."
+  sleep 5
 printf '\n'
-echo "Creating output and saving to API-Logs folder..."
 
 #get token
 token=`curl -X POST -k "$url/irisservices/api/v1/public/accessTokens" -H "accept: application/json" -H "content-type: application/json" -d "{ \"domain\": \"LOCAL\", \"password\": \"$password\", \"username\": \"$username\"}" | cut -d : -f 2 | cut -d, -f1 `
 ​
               echo "The Access Token is" $token
 ​
-#Loop through each api call, optionally pipe to json.tool to beautify.
+#Loop through each api call and write the output of each call to secLogs/HC_CLI-Logs folder. Piping to json.tool to beautify.
 for f in $(echo ${api_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $f \n"
 ​
-        curl -X GET -k "$url/irisservices/api/v1/public/$f" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > API-Logs/$filename-API-$f-`date +%s`.json
+        curl -X GET -k "$url/irisservices/api/v1/public/$f" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API-Logs/$filename-API-$f-`date +%s`.json
  done
 
 # #Create output tgz in local directory.
@@ -211,6 +220,8 @@ do
 #---------------------------------------------------------------------------------------------------------------#
 #Asks user to choose what Cohesity Cluster IRIS_CLI parameters to output.
 
+printf '\n'
+printf '\n'
 echo "-------------------"
 echo "IRIS_CLI DATA COLLECTION"
 echo "-------------------"
@@ -265,22 +276,22 @@ prompt_for_multiselect iris_choice "$iris_string"
 
 printf '\n'
 printf '\n'
-echo "Making subdirectory to save all logs to..."
-
-mkdir IRIS_CLI-Logs 
+echo "Making secLogs/IRIS_CLI-Logs subdirectory to save all logs to..."
+  mkdir secLogs/IRIS_CLI-Logs 
+    sleep 5
 
 printf '\n'
 printf '\n'
-echo "Running IRIS_CLI Data Collection Commands..."
+echo "Running IRIS_CLI Data Collection Commands and saving output to IRIS_CLI-Logs folder..."
+  sleep 5
 printf '\n'
-echo "Creating output and saving to IRIS_CLI-Logs folder..."
 
-#Loop through each iris_cli call, optionally pipe to json.tool to beautify.
+#Loop through each iris_cli call and write the output of each call to secLogs/IRIS_CLI-Logs folder
 for x in $(echo ${iris_choices_values[@]} | sed "s/,/ /g")
 do
          echo -e "\nCalling $x \n"
 ​
-         iris_cli -username $username -password $password cluster $x > IRIS_CLI-Logs/$filename-IRIS-$x-`date +%s`.json
+         iris_cli -username $username -password $password cluster $x > secLogs/IRIS_CLI-Logs/$filename-IRIS-$x-`date +%s`.json
  done
 
 # #Create output tgz in local directory.
@@ -291,6 +302,8 @@ do
 #---------------------------------------------------------------------------------------------------------------#
 #Asks user to choose what Cohesity Cluster HC_CLI parameters to output.
 
+printf '\n'
+printf '\n'
 echo "-------------------"
 echo "HC_CLI DATA COLLECTION"
 echo "-------------------"
@@ -318,18 +331,18 @@ fileLevel=(test-ids=10048, test-ids=10038, test-ids=10043, test-ids=10061)
 hc_values=("${networking1[*]}" "${networking2[*]}" "${networking3[*]}" "${informative[*]}" "${storage[*]}" "${remoteTargets[*]}" "${accessManagement[*]}" "${protection[*]}" "${security[*]}" "${hardware1[*]}" "${hardware2[*]}" "${hardware3[*]}" "${clusterIntegrity[*]}" "${services[*]}" "${alerts[*]}" "${performance[*]}" "${fileLevel[*]}" "all")
 
 hc_labels=(
-    "Networking - NTP Sync Check | NTPD Reachability Check | Bond Mode Check | Node Connectivity | Default Gateway Status | Duplicate Node IP Configuration Check | Physical Interface Check"
-    "Networking (contd) - Primary Interface Check | Network Validation Check | Default Gateway Config Check | DNS Config Check | DNS Reachability Check | NTP Config Check | NTP Reachability Check" 
-    "Networking (contd) - VLAN Config Check | VLAN Reachability Check | Route Status Check | Routing Config Check | Routing Status Check"
+    "Networking 1 - NTP Sync Check | NTPD Reachability Check | Bond Mode Check | Node Connectivity | Default Gateway Status | Duplicate Node IP Configuration Check | Physical Interface Check"
+    "Networking 2 - Primary Interface Check | Network Validation Check | Default Gateway Config Check | DNS Config Check | DNS Reachability Check | NTP Config Check | NTP Reachability Check" 
+    "Networking 3 - VLAN Config Check | VLAN Reachability Check | Route Status Check | Routing Config Check | Routing Status Check"
     "Informative - Agent Health Check | Dedup Status Check | Node Uptime"
     "Storage - Parition Size Check | SMB Exclude Snapshot Check | Cluster Disk Usage Check"
     "Remote Targets - Cloud Connectivity | AWS Reachability Check | Vault Connectivity"
     "Access Management - Check LDAP Connectivity"
     "Protection - VSS Snapshots CNT Check | Protection Sources Connectivity Check | Backup Job SLA Violation | Archive No Tasks"
     "Security - Firewalld Status Check | IPMI Permissions | Firewall Config Check | Firewall Status Check"
-    "Hardware - Hardware HDD Utility | CPU Throttled Check | Hardware PCIe Link Check | Uncorrectable ECC MCE | HDD Disk Availability Check | SSD Lifetime Write Limit Check"
-    "Hardware (contd) - Cisco UCS Server NIC Port Check | Multiple RAIDS Configuration Check | Disk Latency Check | Validate Product Model | Check DIMMS | Check System Firmware" 
-    "Hardware (contd) - Check NVME System Disk | Check Missing Disk | Check NVME Data Disk | Check NIC Slot Port | Disk Serial Number Check"
+    "Hardware 1 - Hardware HDD Utility | CPU Throttled Check | Hardware PCIe Link Check | Uncorrectable ECC MCE | HDD Disk Availability Check | SSD Lifetime Write Limit Check"
+    "Hardware 2 - Cisco UCS Server NIC Port Check | Multiple RAIDS Configuration Check | Disk Latency Check | Validate Product Model | Check DIMMS | Check System Firmware" 
+    "Hardware 3 - Check NVME System Disk | Check Missing Disk | Check NVME Data Disk | Check NIC Slot Port | Disk Serial Number Check"
     "Cluster Integrity - Binary Files Release Version Check | Constituent Uptime Check"
     "Services - Winbind Availability Check | Syslog Server Check | Bridge Proxy Exec Check | Librarian Status Check | Storage Proxy Memory Check | Yoda XFS Check | Apollo Healer Deadline Check"
     "Alerts - Alert Mail Config Check | Alert Service Check"
@@ -368,25 +381,33 @@ prompt_for_multiselect hc_choice "$hc_string"
 
 #---------------------------------------------------------------------------------------------------------------#
 
+hc_values=("test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=" "test-ids=10102" "all")
+
+declare -A hc_array
+hc_array=( [test-ids=10002]=Hardware_HDD_Utility [test-ids=10003]=Binary_Files_Release_Version_Check [test-ids=10004]=Parition_Size_Check [test-ids=10006]=Cloud_Connectivity [test-ids=10007]=Constituent_Uptime_Check [test-ids=10008]=NTP_Sync_Check [test-ids=10009]=Alert_Mail_Config_Check [test-ids=10011]=Agent_Health_Check [test-ids=10012]=CPU_Throttled_Check [test-ids=10015]=Winbind_Availability_Check [test-ids=10017]=AWS_Reachability_Check [test-ids=10018]=Alert_Service_Check [test-ids=10020]=Syslog_Server_Check [test-ids=10021]=Disk_Commands_Check [test-ids=10023]=Hardware_PCIe_Link_Check [test-ids=10025]=NTPD_Reachability_Check [test-ids=10026]=Bond_Mode_Check [test-ids=10027]=Node_Connectivity [test-ids=10028]=Uncorrectable_ECC_MCE [test-ids=10030]=Default_Gateway_Status [test-ids=10031]=Check_LDAP_Connectivity [test-ids=10032]=Cisco_UCS_Server_NIC_Port_Check [test-ids=10033]=Firewalld_Status_Check [test-ids=10035]=Dedup_Status_Check [test-ids=10036]=HDD_Disk_Availability_Check [test-ids=10037]=Vault_Connectivity [test-ids=10038]=Stale_File_Handle_Error_Check [test-ids=10039]=Bridge_Proxy_Exec_Check [test-ids=10040]=SSD_Lifetime_Write_Limit Check [test-ids=10043]=D_State_Check [test-ids=10044]=Node_Uptime [test-ids=10045]=IPMI_Permissions [test-ids=10046]=OOM_Check [test-ids=10047]=Librarian_Status_Check [test-ids=10048]=Read_Only_Disk_Check [test-ids=10049]=VSS_Snapshots_CNT_Check [test-ids=10050]=Storage_Proxy_Memory_Check [test-ids=10051]=SMB_Exclude_Snapshot_Check [test-ids=10052]=Cluster_Disk_Usage_Check [test-ids=10054]=Multiple_RAIDS_Configuration_Check [test-ids=10055]=Yoda_XFS_Check [test-ids=10057]=Duplicate_Node_IP_Configuration_Check [test-ids=10058]=Protection_Sources_Connectivity_Check [test-ids=10059]=Backup_Job_SLA_Violation [test-ids=10060]=Apollo_Healer_Deadline_Check [test-ids=10061]=Disk_Latency_Check [test-ids=10062]=File_Count_Limit_Check [test-ids=10063]=Physical_Interface_Check [test-ids=10064]=Primary_Interface_Check [test-ids=10065]=Network_Validation_Check [test-ids=10066]=Default_Gateway_Config_Check [test-ids=10067]=DNS_Config_Check [test-ids=10068]=NTP_Config_Check [test-ids=10069]=NTP_Reachability_Check [test-ids=10070]=VLAN_Config_Check [test-ids=10071]=VLAN_Reachability_Check [test-ids=10072]=Firewall_Config_Check [test-ids=10073]=Firewall_Status_Check [test-ids=10074]=Route_Status_Check [test-ids=10075]=Archive_No_Tasks [test-ids=10076]=Routing_Config_Check [test-ids=10077]=Routing_Status_Check [test-ids=10081]=Validate_Product_Model [test-ids=10082]=Check_DIMMS [test-ids=10083]=Check_System_Firmware [test-ids=10084]=Check_NVME_System_Disk [test-ids=10085]=Check_Missing_Disk [test-ids=10086]=Check_NVME_Data_Disk [test-ids=10087]=Indexing_Backlog_Details [test-ids=10088]=Check_NIC_Slot_Port [test-ids=10089]=Queue_Length_Check [test-ids=10090]=Disk_Serial_Number_Check [test-ids=10101]=SMB_Latency_Check [test-ids=10102]=All_hc_cli_Tests )
+
+
 #Run chosen HC_CLI data gathering commands.
 printf '\n'
 printf '\n'
-echo "Making subdirectory to save all logs to..."
+echo "Making secLogs/HC_CLI-Logs subdirectory to save all logs to..."
+  mkdir secLogs/HC_CLI-Logs 
+    sleep 5
 
-mkdir HC_CLI-Logs 
-
 printf '\n'
 printf '\n'
-echo "Running HC_CLI Data Collection Commands..."
+echo "Running HC_CLI Data Collection Commands and saving output to HC_CLI-Logs folder..."
+  sleep 5
 printf '\n'
-echo "Creating output and saving to HC_CLI-Logs folder..."
 ​
-#Loop through each hc_cli call, optionally pipe to json.tool to beautify.
+#Loop through each hc_cli calls and write the output of each call to secLogs/HC_CLI-Logs folder
 for y in $(echo ${hc_choices_values[@]} | sed "s/,/ /g")
 do
+    d=${hc_array[$y]}
+    
          echo -e "\nCalling $y \n"
 ​
-         hc_cli run -u $username -p $password --$y -v > HC_CLI-Logs/$filename-HC-$y-`date +%s`.json
+         hc_cli run -v -u $username -p $password --$y > secLogs/HC_CLI-Logs/$filename-HC-$d-`date +%s`.json
 done
 
 #Create output tgz in local directory.
