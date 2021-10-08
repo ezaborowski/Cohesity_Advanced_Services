@@ -8,9 +8,8 @@ echo "#  -updated section: ALL                                                  
 echo "#                                                                                                               #"
 echo "#---------------------------------------------------------------------------------------------------------------#"
 
-cluster_config.sh fetch 
+source=/Users/erin.zaborowski/Documents/Source_Files/Professional_Services/PROJECTS/Endo_Pharm/HealthCheck
 
-sourceDir=/Users/erin.zaborowski/Documents/Source_Files/Professional_Services/PROJECTS/Endo_Pharm
 cluster=
 
 slide4parameters=("cluster_name" "cluster_id" "cluster_target_software_version" "hardware_model" "view_box_vec" "all_nodes_reachable" "domain_name_vec")
@@ -25,13 +24,13 @@ activeDirectory=("active_directory_config")
 
 #Iterate through parameters to output values to screen.
 
-echo "Slide 1 Parameters" >> parameters.json
+echo "Slide 4 Parameters" >> parameters.json
 
-for i in "${slide1parameters[@]}"
+for i in "${slide4parameters[@]}"
     do
-        slide1=$(grep $i $source/$cluster/cluster_config) | python -m json.tool >> $source/$cluster/$cluster-parameters.json 
+        slide4=$(grep $i $source/$cluster/cluster_config) | python -m json.tool >> $source/$cluster/$cluster-parameters.json 
 
-        echo $slide1
+        echo $slide4
 
 #Count how many occurences are present.
     echo "NODE COUNT DATA" >> $source/$cluster/$cluster-parameters.json
