@@ -1,3 +1,3 @@
-This script is currently under construction.
+# Cohesity - Advanced Services
 
-This code will assist in efficiently pulling data from client's Cohesity Clusters when performing Security and Health Checks.
+Collaboration of scripts created and utilized by the Cohesity Advanced Services Team.
