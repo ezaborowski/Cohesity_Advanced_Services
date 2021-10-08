@@ -7,6 +7,53 @@ echo "#Last Updated 10/04/2021                                                  
 echo "#  -updated section: ALL                                                                                        #"
 echo "#                                                                                                               #"
 echo "#---------------------------------------------------------------------------------------------------------------#"
+printf '\n'
+
+#---------------------------------------------------------------------------------------------------------------#
+#TESTING
+
+# printf '\n'
+# echo "Please enter a Local Cohesity Cluster UI username: "
+# read -e username
+# printf '\n'
+# echo "Please enter a Local Cohesity Cluster UI password: "
+# read -es password
+# printf '\n'
+
+# printf '\n'
+# echo "Please enter the location of the Security_HealthCheck-v3.sh: "
+# echo "example: /Users/erin.zaborowski/Documents/Source_Files/SCRIPTS/Bash/Security_HealthChecks/Security_HealthChecks-v3.sh"
+# read -e filepath 
+# printf '\n'
+
+# declare -a clusterAccess
+
+# while IFS= read clusterID clusterToken
+# do
+#     clusterAccess["$clusterID"]="$clusterToken"
+# done < 
+
+# while true
+# do  
+#     printf '\n'
+#     echo "Please enter Cohesity Cluster ID: "
+#         read -e clusterID 
+    
+#     printf '\n'
+#     echo "Please enter corresponding Cohesity Cluster Token: "
+#         read -e clusterToken
+    
+#     printf '\n'
+#     echo "Type DONE below or click ENTER to input another Cluster: "
+#         read -e input
+        
+#         if [ $input == "DONE" ]
+#             then break
+#         fi
+
+# done 
+
+#---------------------------------------------------------------------------------------------------------------#
 
 #---------------------------------------------------------------------------------------------------------------#
 #From .bashrc
@@ -294,5 +341,10 @@ clusterAccess=( [2825687123695835]=JDEkTUhjQ0FRRUVJRWp4RzJadG5vbzJxdEY3VUZyREsza
 
 for y in "${!clusterAccess[@]}"
 do
-    cput_token $y ${clusterAccess[$y]} /Users/erin.zaborowski/Documents/Source_Files/SCRIPTS/Bash/Security_HealthChecks/Security_HealthChecks-v3.sh 
+#Pushes HC_CLI code (CAN ONLY BE RUN FROM cohesity@rt/sre_tools DIRECTORY)
+#    ./sretoolpush -c $y -t ${clusterAccess[$y]} -u $username -p "$password" 
+
+    yes | cput_token $y ${clusterAccess[$y]} /Users/erin.zaborowski/Documents/Source_Files/SCRIPTS/Bash/Security_HealthChecks/Security_HealthChecks-v3.sh
+
+
 done

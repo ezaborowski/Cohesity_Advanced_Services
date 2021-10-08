@@ -9,6 +9,45 @@ echo "#                                                                         
 echo "#---------------------------------------------------------------------------------------------------------------#"
 
 #---------------------------------------------------------------------------------------------------------------#
+#TESTING
+
+# printf '\n'
+# echo "Please enter the location you would like to save your logs: "
+# echo "example: /Users/erin.zaborowski/Documents/Source_Files/Professional_Services/PROJECTS/Endo_Pharm"
+# read -e filepath 
+# printf '\n'
+
+# declare -a clusterAccess
+
+# while IFS= read clusterID clusterToken
+# do
+#     clusterAccess["$clusterID"]="$clusterToken"
+# done < 
+
+# while true
+# do  
+#     printf '\n'
+#     echo "Please enter Cohesity Cluster ID: "
+#         read -e clusterID 
+    
+#     printf '\n'
+#     echo "Please enter corresponding Cohesity Cluster Token: "
+#         read -e clusterToken
+    
+#     printf '\n'
+#     echo "Type DONE below or click ENTER to input another Cluster: "
+#         read -e input
+        
+#         if [ $input == "DONE" ]
+#             then break
+#         fi
+
+# done 
+
+#---------------------------------------------------------------------------------------------------------------#
+
+
+#---------------------------------------------------------------------------------------------------------------#
 #From .bashrc
 
 # Created by Edmond Donegan edonegan@cohesity.com
@@ -303,11 +342,11 @@ done
 
 for z in "${!clusterAccess[@]}"
 do
-    cd $y
-    cget_token $z ${clusterAccess[$z]} /tmp/cluster_config 
-    cget_token $z ${clusterAccess[$z]} /home/support/secLogs/CONFIG-Logs/* 
-    cget_token $z ${clusterAccess[$z]} /home/support/secLogs/API-Logs/*
-    cget_token $z ${clusterAccess[$z]} /home/support/secLogs/IRIS_CLI-Logs/*
-    cget_token $z ${clusterAccess[$z]} /home/support/secLogs/HC_CLI-Logs/*
+    cd $z
+    yes | cget_token $z ${clusterAccess[$z]} /tmp/cluster_config 
+    yes | cget_token $z ${clusterAccess[$z]} /home/support/secLogs/CONFIG-Logs/* 
+    yes | cget_token $z ${clusterAccess[$z]} /home/support/secLogs/API-Logs/*
+    yes | cget_token $z ${clusterAccess[$z]} /home/support/secLogs/IRIS_CLI-Logs/*
+    yes | cget_token $z ${clusterAccess[$z]} /home/support/secLogs/HC_CLI-Logs/*
     cd .. 
 done
