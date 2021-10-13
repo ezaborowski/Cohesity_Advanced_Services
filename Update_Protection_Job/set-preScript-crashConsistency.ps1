@@ -29,7 +29,7 @@ else {
 
 
 #connect to Cohesity PowerShell API
-Connect-CohesityCluster -Credential (Get-Credential -User $username) -Server $cluster -Port 46258
+Connect-CohesityCluster -Credential (Get-Credential -User $username) -Server $cluster 
 
 #---------------------------------------------------------------------------------------------------------------#
 
