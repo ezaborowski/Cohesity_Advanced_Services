@@ -20,16 +20,16 @@ else {
 #---------------------------------------------------------------------------------------------------------------#
 
 #Please input the Cohesity UI admin username after the equals sign
-$username = "admin"
+$username = "admin_username"
 
 #Please input the Cohesity UI admin password after the equals sign
-$password = "admin"
+$password = "admin_password"
 
 #Please input the full Cohesity Cluster hostname or IP address (ex: servername.domain.com or 172.20.1.55) after the equals sign
-$server = "localhost"
+$server = "your_cluster.your_domain.com"
 
 #Please input the name of the Protection Job
-$pJob = "erin_sql_1"
+$pJob = "sql_protection_job"
 
 $secureStringPwd = $password | ConvertTo-SecureString -AsPlainText -Force 
 #$creds = New-Object System.Management.Automation.PSCredential -ArgumentList $user, $secureStringPwd
@@ -39,7 +39,7 @@ $Credentials = New-Object System.Management.Automation.PSCredential -ArgumentLis
 #---------------------------------------------------------------------------------------------------------------#
 
 #connect to Cohesity PowerShell API
-Connect-CohesityCluster -Credential $Credentials -Server $server -Port 46258
+Connect-CohesityCluster -Credential $Credentials -Server $server
 
 $backupObj = Get-CohesityProtectionJobRun -JobName $pJob -NumRuns 1 | ConvertTo-Json | ConvertFrom-Json 
 $runType = $backupObj.backupRun.runType
