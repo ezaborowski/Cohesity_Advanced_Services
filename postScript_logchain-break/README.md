@@ -10,11 +10,12 @@ Run these commands from PowerShell to download the script(s) directly into your 
 
 ## Download Commands
 ```powershell
-$scriptName = 'postScript_logchain-break.ps1'
+$scriptName = 'postScript_logchain-break'
 
 $repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main/Update_Protection_Job'
 
 (Invoke-WebRequest -Uri "$repoUrl/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
+(Invoke-WebRequest -Uri "$repoUrl/$scriptName/postScript_wrapper.bat").content | Out-File cohesity-api.ps1; (Get-Content postScript_wrapper.bat) | Set-Content postScript_wrapper.bat
 ```
 #---------------------------------------------------------------------------------------------------------------#
 
@@ -33,6 +34,6 @@ To use a this Post-Script:
 
 ## Parameters
 * -username: Cohesity local UI admin username
-* -password: Cohesity local UI admin password 
+* -password: Cohesity local UI admin password
 * -server: Cohesity Cluster hostname or IP address (ex: servername.domain.com or 172.20.1.55)
 * -pJob: Cohesity Protection Job Name
