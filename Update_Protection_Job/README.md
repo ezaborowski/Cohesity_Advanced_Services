@@ -14,7 +14,7 @@ $scriptName = 'set-preScript-crashConsistency'
 
 $repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main/Update_Protection_Job'
 
-(Invoke-WebRequest -Uri "$repoUrl/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
+(Invoke-WebRequest -Uri "$repoUrl/Update_Protection_Job/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
 ```
 #---------------------------------------------------------------------------------------------------------------#
 
