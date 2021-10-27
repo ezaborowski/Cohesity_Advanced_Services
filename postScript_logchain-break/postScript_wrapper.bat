@@ -1,1 +1,0 @@
-Powershell.exe -NoProfile -executionpolicy Bypass -Command "& {Start-Process PowerShell -ArgumentList '-NoProfile -executionpolicy Bypass -File ""C:\Program Files\Cohesity\user_scripts\postScript_logchain-break.ps1""' -Verb RunAs}"
