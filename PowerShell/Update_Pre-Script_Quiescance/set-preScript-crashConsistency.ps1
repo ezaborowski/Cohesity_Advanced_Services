@@ -1,7 +1,6 @@
 param(
     [Parameter(Mandatory = $True)][string]$username,
     [Parameter(Mandatory = $True)][string]$cluster,
-    [Parameter(Mandatory = $True)][string]$domain,
     [Parameter()][string]$jobnamefile = '',
     [Parameter()][array]$jobname,
     [Parameter()][string]$quiesce,
@@ -20,17 +19,17 @@ echo "#-------------------------------------------------------------------------
 #ensure the environment meets the prerequisites listed here: https://cohesity.github.io/cohesity-powershell-module/#/pre-requisites 
 
 #tests if Cohesity.PowerShell is installed and if not, it installs it
-if (Get-Module -ListAvailable -Name Cohesity.PowerShell) {
-    Write-Host "Cohesity PowerShell Module already exists"
-} 
-else {
-    Write-Host "Cohesity PowerShell Module does not exist. `nInstalling now..."
-    Install-Module -Name Cohesity.PowerShell -Confirm:$false
-}
+# if (Get-Module -ListAvailable -Name Cohesity.PowerShell) {
+#     Write-Host "Cohesity PowerShell Module already exists"
+# } 
+# else {
+#     Write-Host "Cohesity PowerShell Module does not exist. `nInstalling now..."
+#     Install-Module -Name Cohesity.PowerShell -Confirm:$false
+# }
 
 
 #connect to Cohesity PowerShell API
-Connect-CohesityCluster -Credential (Get-Credential -User $username) -Server $cluster -Domain $domain
+Connect-CohesityCluster -Credential (Get-Credential -User $username) -Server $cluster
 
 #---------------------------------------------------------------------------------------------------------------#
 
