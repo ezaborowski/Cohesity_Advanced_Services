@@ -1,6 +1,7 @@
 param(
     [Parameter(Mandatory = $True)][string]$username,
     [Parameter(Mandatory = $True)][string]$cluster,
+    [Parameter(Mandatory = $True)][string]$domain,
     [Parameter()][string]$jobnamefile = '',
     [Parameter()][array]$jobname,
     [Parameter()][string]$quiesce,
@@ -29,7 +30,7 @@ else {
 
 
 #connect to Cohesity PowerShell API
-Connect-CohesityCluster -Credential (Get-Credential -User $username) -Server $cluster 
+Connect-CohesityCluster -Credential (Get-Credential -User $username) -Server $cluster -Domain $domain
 
 #---------------------------------------------------------------------------------------------------------------#
 

@@ -35,7 +35,8 @@ To use one or more Cohesity Protection Job Names (comma separated):
 #---------------------------------------------------------------------------------------------------------------#
 
 ## Parameters
-* -username: Cohesity local UI admin username
+* -username: Cohesity admin username
+  -domain: Domain associated with username
 * -cluster: Cohesity Cluster hostname or IP address (ex: servername.domain.com or 172.20.1.55)
 * -quiesce: whether Crash-Consistency should be enabled - True OR False (True=enabled, False=disabled)
 * -prescript: PreScript Filename (ex: script.bat, script1.ps1)
