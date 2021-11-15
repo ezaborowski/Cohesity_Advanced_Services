@@ -38,4 +38,4 @@ To use one Server Hostname:
 * -serviceName: Windows Service name (if using for Cohesity Agent Service, input: CohesityAgent)
 * -serviceUser: the Windows Service Logon Username (if using a domain user, ex: domain.com\username)
 * -hostnameFile: (optional) path and filename of the Server Hostnames text file (ex: "C:\Documents\JobNames.txt")
-* -hostname: one Server Hostname which the Service resides on (ex: servername.domain.com or 172.20.1.55)
+* -hostname: (optional) one Server Hostname which the Service resides on (ex: servername.domain.com or 172.20.1.55)
