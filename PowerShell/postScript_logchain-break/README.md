@@ -12,10 +12,10 @@ Run these commands from PowerShell to download the script(s) directly into your 
 ```powershell
 $scriptName = 'postScript_logchain-break'
 
-$repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main/Update_Protection_Job'
+$repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main/PowerShell/postScript_logchain-break'
 
-(Invoke-WebRequest -Uri "$repoUrl/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
-(Invoke-WebRequest -Uri "$repoUrl/$scriptName/postScript_wrapper.bat").content | Out-File cohesity-api.ps1; (Get-Content postScript_wrapper.bat) | Set-Content postScript_wrapper.bat
+(Invoke-WebRequest -Uri "$repoUrl/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
+(Invoke-WebRequest -Uri "$repoUrl/postScript_wrapper.bat").content | Out-File cohesity-api.ps1; (Get-Content postScript_wrapper.bat) | Set-Content postScript_wrapper.bat
 ```
 #---------------------------------------------------------------------------------------------------------------#
 
