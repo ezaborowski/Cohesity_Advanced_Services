@@ -12,9 +12,9 @@ Run these commands from PowerShell to download the script(s) directly into your 
 ```powershell
 $scriptName = 'set-preScript-crashConsistency'
 
-$repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main/Update_Protection_Job'
+$repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main/PowerShell/Update_Pre-Script_Quiescance'
 
-(Invoke-WebRequest -Uri "$repoUrl/Update_Pre-Script_Quiescance/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
+(Invoke-WebRequest -Uri "$repoUrl/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
 ```
 #---------------------------------------------------------------------------------------------------------------#
 
