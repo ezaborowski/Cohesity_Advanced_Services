@@ -12,7 +12,7 @@ Run these commands from PowerShell to download the script(s) directly into your 
 ```powershell
 $scriptName = 'update_service_pw'
 
-$repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main/Update_Windows_Service_PW'
+$repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main/update_Winservice_password'
 
 (Invoke-WebRequest -Uri "$repoUrl/Update_Pre-Script_Quiescance/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
 ```
