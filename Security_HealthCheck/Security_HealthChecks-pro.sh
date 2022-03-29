@@ -16,6 +16,9 @@ printf '\n'
 echo "Please enter a prefix to append to output files: "
 read -e filename
 printf '\n'
+echo "Please enter a Local Cohesity Cluster UI domain (ex: LOCAL or your active directory domain): "
+read -e domain
+printf '\n'
 echo "Please enter a Local Cohesity Cluster UI username: "
 read -e username
 printf '\n'
@@ -62,13 +65,16 @@ cluster_config.sh fetch 2> /dev/null
 cat /tmp/cluster_config > secLogs/CONFIG/$filename-CONFIG-CLUSTER_CONFIG-`date +%s`.json
 
 echo -e "\nPulling FATAL_logs \n" 
-/home/cohesity/software/crux/bin/allssh.sh 'ls -ltrGg ~/logs/*FATAL*|tail -4' > secLogs/CONFIG/$filename-CONFIG-FATALS_logs-`date +%s`.yml
+/home/cohesity/software/crux/bin/allssh.sh 'ls -ltrGg /home/cohesity/data/logs/*FATAL*|tail -4' > secLogs/CONFIG/$filename-CONFIG-FATALS_logs-`date +%s`.yml
 
 echo -e "\nPulling LDAP_errors \n" 
 /home/cohesity/software/crux/bin/allssh.sh 'grep -i LDAP /home/cohesity/data/logs/bridge_exec.INFO' > secLogs/CONFIG/$filename-CONFIG-LDAP_errors-`date +%s`.json
 
 echo -e "\nPulling IO_stats \n" 
 /home/cohesity/software/crux/bin/allssh.sh 'iostat | grep -A 1 avg-cpu' > secLogs/CONFIG/$filename-CONFIG-IO_stats-`date +%s`.json
+
+echo -e "\nPulling Cert_validation \n" 
+curl -v "https://$url" 2>$1> secLogs/CONFIG/$filename-CONFIG-Cert_val-`date +%s`.json
 
 #---------------------------------------------------------------------------------------------------------------#
 #Run API data gathering commands.
@@ -88,26 +94,70 @@ echo "Making secLogs/API subdirectory to save all logs to..."
 #  mkdir secLogs/API/$filename-API-certificates 2> /dev/null
     sleep 5
 
-api_checks=(basicClusterInfo, activeDirectory, ldapProvider, domainControllers, antivirusGroups, icapConnectionStatus, infectedFiles, alerts, roles, users, groups, remoteClusters, vaults, viewBoxes, views, alertNotificationRules, idps, cluster, apps, protectionJobs)
+api_checks=(basicClusterInfo, activeDirectory, ldapProvider, domainControllers, antivirusGroups, icapConnectionStatus, infectedFiles, alerts, roles, users, groups, remoteClusters, vaults, viewBoxes, views, alertNotificationRules, idps, cluster, apps, protectionJobs, scheduler, protectionPolicies)
 api_stats_checks=(storage, viewBoxes, vaults, protectionJobs)
 #public/ldapProvider/{id}/status
+
+endTime=$(date +%s%N)
+startTime=$(($endTime - 7*86400000000000))
+
+#echo $endTime
+#echo $startTime
 
 printf '\n'
 printf '\n'
 echo "Running API Data Collection Commands and saving output to API-Logs folder..."
+printf '\n'
+echo "This may take a few moments..."
   sleep 5
 printf '\n'
 
 #get token
-token=`curl -X POST -k "https://$url/irisservices/api/v1/public/accessTokens" -H "accept: application/json" -H "content-type: application/json" -d "{ \"domain\": \"LOCAL\", \"password\": \"$password\", \"username\": \"$username\"}" | cut -d : -f 2 | cut -d, -f1 `
+token=`curl -X POST -k "https://$url/irisservices/api/v1/public/accessTokens" -H "accept: application/json" -H "content-type: application/json" -d "{ \"domain\": \"$domain\", \"password\": \"$password\", \"username\": \"$username\"}" | cut -d : -f 2 | cut -d, -f1 `
 
               echo "The Access Token is" $token
 
 #Loop through each api call and write the output of each call to secLogs/API-Logs folder. Piping to json.tool to beautify.
 
-        echo -e "\nCalling certificates/webServer \n"
+echo -e "\nCalling certificates/webServer \n"
 
-        curl -X GET -k "https://$url/irisservices/api/v1/public/certificates/webServer" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-certificates-`date +%s`.json
+curl -X GET -k "https://$url/irisservices/api/v1/public/certificates/webServer" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-certificates-`date +%s`.json
+
+
+echo -e "\nCalling backupjobsummary \n"
+
+curl -X GET -k "https://$url/irisservices/api/v1/backupjobssummary?_includeTenantInfo=true&allUnderHierarchy=true&endTimeUsecs=$endTime&onlyReturnJobDescription=false&startTimeUsecs=$startTime&outputFormat=csv" -H "accept: application/json" -H "Authorization: Bearer $token" > secLogs/API/$filename-API-protectionSummary-`date +%s`.csv
+
+
+echo -e "\nCalling kerberos \n"
+
+curl -X GET -k "https://$url/irisservices/api/v2/kerberos-providers" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-kerberos-`date +%s`.json
+
+
+echo -e "\nCalling keystone \n"
+
+curl -X GET -k "https://$url/irisservices/api/v2/keystones" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-keystone-`date +%s`.json
+
+
+echo -e "\nCalling mcmConfig \n"
+
+curl -X GET -k "https://$url/irisservices/api/v1/mcm/config" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-mcmConfig-`date +%s`.json
+
+
+echo -e "\nCalling ldap \n"
+
+curl -X GET -k "https://$url/irisservices/api/v1/public/tenants" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-ldap-`date +%s`.json
+
+
+echo -e "\nCalling firewall \n"
+
+curl -X GET -k "https://$url/irisservices/api/v1/nexus/firewall/list" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-firewall-`date +%s`.json
+
+
+echo -e "\nCalling stats/vaults/providers \n"
+
+curl -X GET -k "https://$url/irisservices/api/v1/public/stats/vaults/providers" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-stats_vaults_providers-`date +%s`.json
+
 
 for x in $(echo ${api_checks[@]} | sed "s/,/ /g")
 do
@@ -116,9 +166,6 @@ do
         curl -X GET -k "https://$url/irisservices/api/v1/public/$x" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-$x-`date +%s`.json
  done
 
-        echo -e "\nCalling stats/vaults/providers \n"
-
-        curl -X GET -k "https://$url/irisservices/api/v1/public/stats/vaults/providers" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-stats_vaults_providers-`date +%s`.json
 
 for x in $(echo ${api_stats_checks[@]} | sed "s/,/ /g")
 do
@@ -163,7 +210,7 @@ do
          
          echo -e "\nCalling $y \n"
 
-         iris_cli -username $username -password "$password" $y > secLogs/IRIS/$filename-IRIS-$d-`date +%s`.json
+         iris_cli -domain $domain -username $username -password "$password" $y > secLogs/IRIS/$filename-IRIS-$d-`date +%s`.json
  done
 
 #---------------------------------------------------------------------------------------------------------------#
@@ -202,11 +249,18 @@ do
 
          echo -e "\nCalling $z \n"
          
-         sudo su cohesity hc_cli run -u $username -p $password -v --$z >> secLogs/HC/$filename-HC-$d-`date +%s`.json
+         sudo su cohesity hc_cli run -domain $domain -u $username -p $password -v --$z >> secLogs/HC/$filename-HC-$d-`date +%s`.json
+
+         hc_cli run -domain $domain -u $username -p $password -v --$z >> secLogs/HC/$filename-HC-$d-`date +%s`.json
 
          #sudo hc_cli run -v -u $username -p $password --$z > secLogs/HC/$filename-HC-$d-`date +%s`.json || hc_cli run -v -u $username -p $password --$z >> secLogs/HC/$filename-HC-$d-`date +%s`.json
 
 done
+echo -e "\nCalling ALL HC_CLI Tests \n"
+
+sudo su cohesity hc_cli run -domain $domain -u $username -p $password -v --test-ids=all >> secLogs/HC/$filename-HC_CLI-ALL-`date +%s`.json
+
+hc_cli run -domain $domain -u $username -p $password -v --test-ids=all >> secLogs/HC/$filename-HC_CLI-ALL-`date +%s`.json
 
 #---------------------------------------------------------------------------------------------------------------#
 
