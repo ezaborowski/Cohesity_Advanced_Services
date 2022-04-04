@@ -998,7 +998,9 @@ for x in config:
         pfile.write("\n")
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
         pfile.write('COHESITY CLUSTER CONFIGURATION')
+        pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
@@ -1126,27 +1128,33 @@ print("\n")
 print('SELF-SIGNED SSL CERTIFICATE VALIDATION')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
+# print('***To review the Self-Signed SSL Certification Validation Audit, please reference file: ' + source + '/CONFIG/*Cert_val*.json***')
+
 # load json file
 cert = glob.glob(source + '/CONFIG/*Cert_val*.json')
 
 for x in cert:
 
     if os.stat(x).st_size > 5:
-
-        with open(x, "r") as f:
-            content = f.read()
-            content = content.replace('\n', ' ')
-            
-        cert = "(Issuer (.*?)\. )"
-
-        # print data to screen
-        print('Certificate Validation: ')
-        try:
-            cert_search = re.search(cert, content)
-            print(cert_search.group())
+        with open(x, 'r') as f:
+            print(f.read())
             print("\n")
-        except AttributeError:
-            print('Not Listed')
+
+#         with open(x, "r") as f:
+#             content = f.read()
+#             content = content.replace('\n', ' ')
+            
+#         cert = "(Issuer (.*?)\. )"
+#         expired = "( (.*?)  expired\.)"
+
+#         # print data to screen
+#         print('Certificate Validation: ')
+#         try:
+#             cert_search = re.search(cert, content)
+#             print(cert_search.group())
+#             print("\n")
+#         except AttributeError:
+#             print('Not Listed')
 
         # print data to file
         pfile = open(param, "a")
@@ -1158,15 +1166,19 @@ for x in cert:
         pfile.write("\n")
         pfile.write("\n")
 
-        pfile.write('Certificate Validation:')
-        try:
-            cert_search = re.search(cert, content)
-            pfile.write(cert_search.group())
+        with open(x, 'r') as f:
+            pfile.write(f.read())
             pfile.write("\n")
-        except AttributeError:
-            pfile.write('Not Listed')
 
-        pfile.write("\n")
+        # pfile.write('Certificate Validation:')
+        # try:
+        #     cert_search = re.search(cert, content)
+        #     pfile.write(cert_search.group())
+        #     pfile.write("\n")
+        # except AttributeError:
+        #     pfile.write('Not Listed')
+
+        # pfile.write('***To review the Self-Signed SSL Certification Validation Audit, please reference file: ' + source + '/CONFIG/*Cert_val*.json***')
         pfile.write("\n")
 
     else:
@@ -1481,6 +1493,7 @@ for x in config:
             clusterLevel_group = clusterLevel_search.group()
             clusterLevel_group = clusterLevel_group.split(":")
             pfile.write(clusterLevel_group[1])
+            pfile.write("\n")
         except AttributeError:
             pfile.write('Not Listed')
             pfile.write("\n")
@@ -1491,6 +1504,7 @@ for x in config:
             nodeLevel_group = nodeLevel_search.group()
             nodeLevel_group = nodeLevel_group.split(":")
             pfile.write(nodeLevel_group[1])
+            pfile.write("\n")
         except AttributeError:
             pfile.write('Not Listed')
             pfile.write("\n")
@@ -2281,13 +2295,19 @@ for x in views:
                 try_write('View Data Protection Configured:', 'enableSmbAccessBasedEnumeration', i)
                 
                 try:
+                    antivirus = (json.dumps(i['antivirusScanConfig']))
+
+                    av = "(\"isEnabled\"\: (.*?)\, )"
+
                     av_search = re.search(av, antivirus)
                     av_group = av_search.group()
                     av_group = av_group.split(",")
                     pfile.write('Antivirus enabled on Views:')
                     pfile.write(av_group[0])
+                    pfile.write("\n")
                 except KeyError:
                     pfile.write('View Antivirus Not Configured')
+                    pfile.write("\n")
 
                 try:
                     viewProtection = (json.dumps(i['viewProtection']))
@@ -2301,6 +2321,7 @@ for x in views:
                     inactivity_group = inactivity_search.group()
                     pfile.write('View Data Protection Configuration Inactivity:')
                     pfile.write(inactivity_group)
+                    pfile.write("\n")
 
                     jobName_search = re.search(jobName, viewProtection)
                     jobName_group = jobName_search.group()
@@ -2313,8 +2334,8 @@ for x in views:
 
 
                 pfile.write("\n")
-
                 pfile.write('~~~~~ Cohesity View IP Whitelist ~~~~~')
+                pfile.write("\n")
                 try:
                     for x in i['subnetWhitelist']:
                         try_write('Description:', 'description', x)
@@ -2328,7 +2349,9 @@ for x in views:
                     pfile.write('Cohesity View IP Whitelist Not Listed')
                     pfile.write("\n")
 
+                pfile.write("\n")
                 pfile.write('~~~~~ SMB Share Permissions ~~~~~')
+                pfile.write("\n")
                 try:
                     for y in i['sharePermissions']:
                         try_write('Access:', 'access', y)
@@ -2339,7 +2362,10 @@ for x in views:
                     pfile.write('SMB Share Permissions Not Listed')
                     pfile.write("\n")
 
-                pfile.write('~~~~~ NFS Root Squash ~~~~~')
+                
+                pfile.write("\n")
+                ('~~~~~ NFS Root Squash ~~~~~')
+                pfile.write("\n")
                 try:
                     nfsRootSquash = (json.dumps(i['nfsRootSquash']))
                     pfile.write(nfsRootSquash)
@@ -2406,10 +2432,11 @@ for x in views:
         # print data to screen
         try:
             for i in data['views']:
+                print("\n")
                 try_print('View Name:', 'name', i)
                 try_print('View Datalock Retention Period:', 'dataLockExpiryUsecs', i)
 
-
+                print("\n")
                 print('~~~~~ File Lock Configuration ~~~~~')
 
                 try:
@@ -2422,6 +2449,7 @@ for x in views:
                     expiry = "(\"expiryTimestampMsecs\"\: (.*?)\, )"
 
                     print('AutoLock After Duration:')
+                    print("\n")
 
                     try:
                         autoLock_search = re.search(autoLock, fileLockConfig)
@@ -2519,9 +2547,9 @@ for x in views:
                 try_write('View Name:', 'name', i)
                 try_write('View Datalock Retention Period:', 'dataLockExpiryUsecs', i)
 
-
+                pfile.write("\n")
                 pfile.write('~~~~~ File Lock Configuration ~~~~~')
-
+                pfile.write("\n")
 
                 try:
                     fileLockConfig = (json.dumps(i['fileLockConfig']))
@@ -2533,50 +2561,68 @@ for x in views:
                     expiry = "(\"expiryTimestampMsecs\"\: (.*?)\, )"
 
                     pfile.write('AutoLock After Duration:')
+                    pfile.write("\n")
 
                     try:
                         autoLock_search = re.search(autoLock, fileLockConfig)
                         autoLock_group = autoLock_search.group()
                         pfile.write(autoLock_group)
+                        pfile.write("\n")
                     except AttributeError:
                         pfile.write('Not Listed')
+                        pfile.write("\n")
 
+                    pfile.write("\n")
                     pfile.write('File Data Locking Protocol:')
+                    pfile.write("\n")
                     try:
                         lockingProtocol_search = re.search(lockingProtocol, fileLockConfig)
                         lockingProtocol_group = lockingProtocol_search.group()
                         pfile.write(lockingProtocol_group)
+                        pfile.write("\n")
                     except AttributeError:
                         pfile.write('Not Listed')
+                        pfile.write("\n")
                 
+                    pfile.write("\n")
                     pfile.write('File Datalock Retention Period:')
+                    pfile.write("\n")
                     try:
                         fileRetention_search = re.search(fileRetention, fileLockConfig)
                         fileRetention_group = fileRetention_search.group()
                         pfile.write(fileRetention_group)
+                        pfile.write("\n")
                     except AttributeError:
                         pfile.write('Not Listed')
+                        pfile.write("\n")
             
-
+                    pfile.write("\n")
                     pfile.write('File Level Datalock Mode:')
+                    pfile.write("\n")
                     try:
                         mode_search = re.search(mode, fileLockConfig)
                         mode_group = mode_search.group()
                         pfile.write(mode_group)
+                        pfile.write("\n")
                     except AttributeError:
                         pfile.write('Not Listed')
+                        pfile.write("\n")
                 
-
+                    pfile.write("\n")
                     pfile.write('File Level Datalock Override Expiry:')
+                    pfile.write("\n")
                     try:
                         expiry_search = re.search(expiry, fileLockConfig)
                         expiry_group = expiry_search.group()
                         pfile.write(expiry_group)
+                        pfile.write("\n")
                     except AttributeError:
                         pfile.write('Not Listed')
+                        pfile.write("\n")
 
                 except KeyError:
                     pfile.write('Not Listed')
+                    pfile.write("\n")
         except KeyError:
             pfile.write('There are no Views configuration on this Cohesity Cluster.')
             pfile.write("\n")
@@ -2633,6 +2679,7 @@ for x in pJobs:
 
         # print data to file
         pfile = open(param, "a")
+        pfile.write("\n")
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2839,6 +2886,7 @@ for x in vaults:
         pfile.write("\n")
         pfile.write("\n")
         pfile.write('CLOUD ARCHIVE CONFIGURATION')
+        pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
 
@@ -3028,21 +3076,24 @@ ntpSync = glob.glob(source + '/HC/*NTP_Sync_Check*.json')
 # print data to screen
 for x in ntpSync:
     if os.stat(x).st_size > 5:
-
-        with open(x, "r") as f:
-            content = f.read()
-            content = content.replace('\n', ' ')
-            content = content.replace('}', '} \n')
-
-        output = "(\"10008\" (.*?) )"
-
-        try:
-            output_search = re.search(output, content)
-            output_group = output_search.group()
-            print(output_group)
-        except AttributeError:
-            print('Not Listed')
+        with open(x, 'r') as f:
+            print(f.read())
             print("\n")
+
+        # with open(x, "r") as f:
+        #     content = f.read()
+        #     content = content.replace('\n', ' ')
+        #     content = content.replace('}', '} \n')
+
+        # output = "(\"10008\"\: (.*?) )"
+
+        # try:
+        #     output_search = re.search(output, content)
+        #     output_group = output_search.group()
+        #     print(output_group)
+        # except AttributeError:
+        #     print('Not Listed')
+        #     print("\n")
 
         print("\n")
         print('***If result is anything other than "Pass", please reference file: ' + source + '/HC/*-HC-NTP_Sync_Check-*.json***')
@@ -3057,13 +3108,17 @@ for x in ntpSync:
         pfile.write("\n")
         pfile.write("\n")
 
-        try:
-            output_search = re.search(output, content)
-            output_group = output_search.group()
-            pfile.write(output_group)
-        except AttributeError:
-            pfile.write('Not Listed')
+        with open(x, 'r') as f:
+            pfile.write(f.read())
             pfile.write("\n")
+
+        # try:
+        #     output_search = re.search(output, content)
+        #     output_group = output_search.group()
+        #     pfile.write(output_group)
+        # except AttributeError:
+        #     pfile.write('Not Listed')
+        #     pfile.write("\n")
 
         pfile.write("\n")
         pfile.write('***If result is anything other than "Pass", please reference file: ' + source + '/HC/*-HC-NTP_Sync_Check-*.json***')
@@ -3183,21 +3238,24 @@ binary = glob.glob(source + '/HC/*Binary_Files*.json')
 # print data to screen
 for x in binary:
     if os.stat(x).st_size > 5:
-
-        with open(x, "r") as f:
-            content = f.read()
-            content = content.replace('\n', ' ')
-            content = content.replace('}', '} \n')
-
-        output = "(\"10003\" (.*?) )"
-
-        try:
-            output_search = re.search(output, content)
-            output_group = output_search.group()
-            print(output_group)
-        except AttributeError:
-            print('Not Listed')
+        with open(x, 'r') as f:
+            print(f.read())
             print("\n")
+
+        # with open(x, "r") as f:
+        #     content = f.read()
+        #     content = content.replace('\n', ' ')
+        #     content = content.replace('}', '} \n')
+
+        # output = "(\"10003\"\: (.*?) )"
+
+        # try:
+        #     output_search = re.search(output, content)
+        #     output_group = output_search.group()
+        #     print(output_group)
+        # except AttributeError:
+        #     print('Not Listed')
+        #     print("\n")
 
         print("\n")
         print('***If result is anything other than "Pass", please reference file: ' + source + '/HC/*-HC-Binary_Files_Release_Version_Check-*.json***')
@@ -3212,14 +3270,18 @@ for x in binary:
         pfile.write("\n")
         pfile.write("\n")
 
-        #for x in binary:
-        try:
-            output_search = re.search(output, content)
-            output_group = output_search.group()
-            pfile.write(output_group)
-        except AttributeError:
-            pfile.write('Not Listed')
+        with open(x, 'r') as f:
+            pfile.write(f.read())
             pfile.write("\n")
+
+        #for x in binary:
+        # try:
+        #     output_search = re.search(output, content)
+        #     output_group = output_search.group()
+        #     pfile.write(output_group)
+        # except AttributeError:
+        #     pfile.write('Not Listed')
+        #     pfile.write("\n")
 
         pfile.write("\n")
         pfile.write('***If result is anything other than "Pass", please reference file: ' + source + '/HC/*-HC-Binary_Files_Release_Version_Check-*.json***')

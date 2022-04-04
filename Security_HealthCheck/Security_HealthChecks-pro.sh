@@ -74,7 +74,7 @@ echo -e "\nPulling IO_stats \n"
 /home/cohesity/software/crux/bin/allssh.sh 'iostat | grep -A 1 avg-cpu' > secLogs/CONFIG/$filename-CONFIG-IO_stats-`date +%s`.json
 
 echo -e "\nPulling Cert_validation \n" 
-curl -v "https://$url" 2>$1> secLogs/CONFIG/$filename-CONFIG-Cert_val-`date +%s`.json
+curl -v "https://$url" &> /dev/stdout | tee -a secLogs/CONFIG/$filename-CONFIG-Cert_val-`date +%s`.json
 
 #---------------------------------------------------------------------------------------------------------------#
 #Run API data gathering commands.
@@ -232,7 +232,7 @@ echo "Making secLogs/HC subdirectory to save all logs to..."
 hc_checks=(test-ids=10001, test-ids=10002, test-ids=10003, test-ids=10008, test-ids=10040)
 
 declare -A hc_array
-hc_array=( [test-ids=10001]=Hardware_HDD_dWord [test-ids=10002]=Hardware_HDD_Utility [test-ids=10003]=Binary_Files_Release_Version_Check [test-ids=10008]=NTP_Sync_Check [test-ids=10040]=SSD_Lifetime_Write_Limit Check )
+hc_array=( [test-ids=10001]=Hardware_HDD_dWord [test-ids=10002]=Hardware_HDD_Utility [test-ids=10003]=Binary_Files_Release_Version_Check [test-ids=10008]=NTP_Sync_Check [test-ids=10040]=SSD_Lifetime_Write_Limit_Check )
 
 printf '\n'
 printf '\n'
@@ -249,7 +249,7 @@ do
 
          echo -e "\nCalling $z \n"
          
-         sudo su cohesity hc_cli run -domain $domain -u $username -p $password -v --$z >> secLogs/HC/$filename-HC-$d-`date +%s`.json
+        #  sudo su cohesity hc_cli run -domain $domain -u $username -p '$password' -v --$z >> secLogs/HC/$filename-HC-$d-`date +%s`.json
 
          hc_cli run -domain $domain -u $username -p $password -v --$z >> secLogs/HC/$filename-HC-$d-`date +%s`.json
 
@@ -258,9 +258,9 @@ do
 done
 echo -e "\nCalling ALL HC_CLI Tests \n"
 
-sudo su cohesity hc_cli run -domain $domain -u $username -p $password -v --test-ids=all >> secLogs/HC/$filename-HC_CLI-ALL-`date +%s`.json
+# sudo su cohesity hc_cli run -domain $domain -u $username -p '$password' -v --test-ids=all >> secLogs/HC/$filename-HC_CLI-ALL-`date +%s`.json
 
-hc_cli run -domain $domain -u $username -p $password -v --test-ids=all >> secLogs/HC/$filename-HC_CLI-ALL-`date +%s`.json
+hc_cli run -domain $domain -u $username -p $password -v >> secLogs/HC/$filename-HC_CLI-ALL-`date +%s`.json
 
 #---------------------------------------------------------------------------------------------------------------#
 
