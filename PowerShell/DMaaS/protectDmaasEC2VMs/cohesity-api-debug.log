@@ -1,0 +1,23 @@
+04/14/2022 14:42:58: Prompting for Password
+04/14/2022 14:53:05: {"errorCode":"KQueryParamParseError","message":"Parsing of query params failed with error: validation failure list:\ntypes.0 in query should be one of [Regular Internal]"}
+
+04/14/2022 14:55:10: Not Found
+
+04/14/2022 14:55:37: Not Found
+
+04/14/2022 14:55:54: {"errorCode":"KQueryParamParseError","message":"Parsing of query params failed with error: validation failure list:\ntypes.0 in query should be one of [Regular Internal]"}
+
+04/14/2022 15:02:16: {"errorCode":"KValidationError","message":"validation failure list:\nparsing body body from \"\" failed, because json: cannot unmarshal object into Go struct field .objects of type []*models.EnvSpecificObjectProtectionRequestParams"}
+
+04/14/2022 15:07:52: {"errorCode":"KValidationError","message":"validation failure list:\nparsing body body from \"\" failed, because json: cannot unmarshal object into Go struct field .objects of type []*models.EnvSpecificObjectProtectionRequestParams"}
+
+04/14/2022 15:09:48: {"errorCode":"KValidationError","message":"validation failure list:\nparsing body body from \"\" failed, because json: cannot unmarshal object into Go struct field .objects of type []*models.EnvSpecificObjectProtectionRequestParams"}
+
+04/14/2022 15:15:39: {"errorCode":"KValidationError","message":"validation failure list:\nparsing body body from \"\" failed, because json: cannot unmarshal object into Go struct field .objects of type []*models.EnvSpecificObjectProtectionRequestParams"}
+
+04/14/2022 15:24:23: {"errorCode":"KValidationError","message":"validation failure list:\nparsing body body from \"\" failed, because json: cannot unmarshal object into Go struct field .objects of type []*models.EnvSpecificObjectProtectionRequestParams"}
+
+04/14/2022 15:26:56: {"errorCode":"KValidationError","message":"validation failure list:\nparsing body body from \"\" failed, because json: cannot unmarshal object into Go struct field .objects of type []*models.EnvSpecificObjectProtectionRequestParams"}
+
+04/14/2022 15:28:37: {"errorCode":"KValidationError","message":"validation failure list:\nparsing body body from \"\" failed, because json: cannot unmarshal object into Go struct field .objects of type []*models.EnvSpecificObjectProtectionRequestParams"}
+
