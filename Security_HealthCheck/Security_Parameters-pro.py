@@ -256,7 +256,6 @@ for x in groups:
         pfile.write("\n")
 
         for i in data:
-            pfile.write("\n")
             domain = i['domain']
             if (domain != 'LOCAL'):
                 try_write('Domain:', 'domain', i)
@@ -1792,6 +1791,79 @@ for x in alerts:
 pfile.close()
 
 f.close()
+
+#---------------------------------------------------------------------------------------------------------------#
+
+print("\n")
+print("\n")
+print('COHESITY PROACTIVE MONITORING ENABLED')
+print('#---------------------------------------------------------------------------------------------------------------#')
+
+# load json file
+config = glob.glob(source + '/IRIS/*info*.json')
+
+for x in config:
+
+    if os.stat(x).st_size > 5:
+
+        with open(x, "r") as f:
+            content = f.read()
+            content = content.replace('\n', ' ')
+            content = content.replace('}', '} \n')
+
+        monitoring = "(ACTIVE MONITORING ENABLED     \: (.*?) )"
+
+        # print data to screen
+        print('Cohesity Proactive Monitoring Enabled: ')
+        try:
+            monitoring_search = re.search(monitoring, content)
+            monitoring_group = monitoring_search.group()
+            print(monitoring_group)
+            print("\n")
+        except AttributeError:
+            print('Not Listed')
+
+        # print data to file
+        pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('COHESITY PROACTIVE MONITORING ENABLED')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('Cohesity Proactive Monitoring Enabled: ')
+        try:
+            monitoring_search = re.search(monitoring, content)
+            monitoring_group = monitoring_search.group()
+            pfile.write(monitoring_group)
+            pfile.write("\n")
+        except AttributeError:
+            pfile.write('Not Listed')
+        pfile.write("\n")
+        pfile.write("\n")
+
+    else:
+        print('Cohesity Proactive Monitoring for the Cohesity Cluster is not configured.')
+        print("\n")
+        
+        pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('COHESITY PROACTIVE MONITORING ENABLED')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
+        pfile.write("\n")
+
+        pfile.write('Cohesity Proactive Monitoring for this Cohesity Cluster is not configured.')
+        pfile.write("\n")
+        pfile.write("\n") 
+
+pfile.close()
+
+f.close()
+
 
 #---------------------------------------------------------------------------------------------------------------#
 

@@ -191,11 +191,11 @@ echo "Making secLogs/IRIS subdirectory to save all logs to..."
   mkdir secLogs/IRIS 2> /dev/null
     sleep 5
 
-iris_checks=("alert ls" "syslog-server list" "user list" "role list" "cluster ls-gflags")
+iris_checks=("alert ls" "syslog-server list" "user list" "role list" "cluster ls-gflags" "cluster info")
 #"ad list-centrify-zones domain-name=$domain"
 
 declare -A iris_filenames
-iris_filenames=( [alert \ls]=alert [syslog-server list]=syslog [user list]=users [role list]=roles [cluster ls-gflags]=gflags )
+iris_filenames=( [alert ls]=alert [syslog-server list]=syslog [user list]=users [role list]=roles [cluster ls-gflags]=gflags [cluster info]=info)
 
 printf '\n'
 printf '\n'
