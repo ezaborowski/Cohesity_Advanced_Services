@@ -1,8 +1,12 @@
-# Protect DMaaS AWS EC2 VMs using PowerShell
+# Unprotect an Object using PowerShell
 
 Warning: this code is provided on a best effort basis and is not in any way officially supported or sanctioned by Cohesity. The code is intentionally kept simple to retain value as example code. The code in this repository is provided as-is and the author accepts no liability for damages resulting from its use.
 
-This powershell script protects DMaaS VMware VMs.
+This powershell script unprotects objects in DMaaS.
+
+Note: If the object is the last remaining object in a protection group, the group will be deleted.
+
+Warning: This script has not been tested on every type of protection group and with every permutation of object selections. Please test using a test object/group to ensure correct behavior. If incorrect behavior is noticed, please open an issue on GitHub.
 
 ## Download the script
 
@@ -10,7 +14,7 @@ Run these commands from PowerShell to download the script(s) into your current d
 
 ```powershell
 # Download Commands
-$scriptName = 'protectDmaasVMs'
+$scriptName = 'unprotectDmaasObjects'
 $repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main'
 (Invoke-WebRequest -Uri "$repoUrl/PowerShell/DMaaS/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
 (Invoke-WebRequest -Uri "$repoUrl/PowerShell/DMaaS/$scriptName/cohesity-api.ps1").content | Out-File cohesity-api.ps1; (Get-Content cohesity-api.ps1) | Set-Content cohesity-api.ps1
@@ -19,35 +23,27 @@ $repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/tree/main'
 
 ## Components
 
-* protectDmaasVMs.ps1: the main powershell script
+* unprotectDmaasObjects.ps1: the main powershell script
 * cohesity-api.ps1: the Cohesity REST API helper module
 
 Place both files in a folder together and run the main script like so:
 
 ```powershell
-./protectDmaasVMs.ps1 -region us-east-2 `
-                         -policyName Gold `
-                         -sourceName myVcenter `
-                         -autoProtected $true `
-                         -vmNames myvm1, myvm2 `
-                         -vmList ./vmlist.txt
+./unprotectDmaasObjects.ps1 -region us-east-2 `
+                             -objectName myProtectedObject `
+                             -deleteAllSnapshots $True `
+
 ```
+
+Note: server names must exactly match what is shown in protection sources.
 
 ## Parameters
 
 * -username: (optional) used for password storage only (default is 'DMaaS')
 * -region: DMaaS region to use
-* -sourceName: name of registered M365 protection source
-* -policyName: name of protection policy to use
-* -autoProtected: whether VMware objects are autoProtected
-* -appConsistent: (optional) whether VMware objects are quiesced (default is '$false')
-* -skipPhysicalRDMDisks: (optional) whether to skip backing up Physical RDM Disks (default is '$false')
-* -vmNames: (optional) one or more VM names (comma separated)
-* -vmList: (optional) text file of VM names (one per line)
-* -startTime: (optional) e.g. '18:30' (defaults to 8PM)
-* -timeZone: (optional) e.g. 'America/New_York' (default is 'America/New_York')
-* -incrementalSlaMinutes: (optional) default 60
-* -fullSlaMinutes: (optional) default is 120
+* -objectName: (optional) comma separated list of object names to remove from jobs
+* -objectList: (optional) text file containing object names to remove from jobs
+* -deleteAllSnapshots: (optional) whether all Snapshots are deleted (default to $False)
 
 ## Authenticating to DMaaS
 
