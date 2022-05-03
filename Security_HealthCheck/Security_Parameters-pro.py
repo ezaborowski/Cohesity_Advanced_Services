@@ -7,11 +7,11 @@ from datetime import datetime
 import collections
 import re 
 import subprocess
-from types import NoneType 
+#from types import NoneType 
 import shutil
 
-
-source = raw_input('Please input the directory of the uncompressed secLogs folder (ex: /Users/john.doe/secLogs): ')
+raw_input = input
+source = input('Please input the directory of the uncompressed secLogs folder (ex: /Users/john.doe/secLogs): ')
 
 #---------------------------------------------------------------------------------------------------------------#
 
@@ -44,10 +44,13 @@ def try_print(str1, str2, ind):
         print(str1, json.dumps(ind[str2]))
     except KeyError:
         print(str1, ' Not Listed')
+        #print(' Not Listed')
     except AttributeError:
         print(str1, ' Not Listed')
+        #print(' Not Listed')
     except TypeError:
         print(str1, ' Not Listed')
+        #print(' Not Listed')
 
 # definition for either printing to log a json object or outputing 'Not Listed' if error occurs
 def try_write(str1, str2, ind):
@@ -56,15 +59,15 @@ def try_write(str1, str2, ind):
         pfile.write(json.dumps(ind[str2]))
         pfile.write("\n")
     except KeyError:
-        pfile.write(str1)
+        #pfile.write(str1)
         pfile.write(' Not Listed')
         pfile.write("\n")
     except AttributeError:
-        pfile.write(str1)
+        #pfile.write(str1)
         pfile.write(' Not Listed')
         pfile.write("\n")
     except TypeError:
-        pfile.write(str1)
+        #pfile.write(str1)
         pfile.write(' Not Listed')
         pfile.write("\n")
 
@@ -129,6 +132,10 @@ for x in users:
             try_write('Roles:', 'roles', i)
             try_write('Username:', 'username', i)
             pfile.write("\n")
+        
+        pfile.write("Expected Output:")
+        pfile.write("\n")
+        pfile.write('Look for glaring issues. For example, generic accounts with the Admin Role or Data Security Role.')
 
     else:
         print('Users are not configured for this environment.')
@@ -198,6 +205,10 @@ for x in roles:
                 try_write('Label:', 'label', i)
                 try_write('Role Name:', 'name', i)
                 pfile.write("\n")
+        
+        pfile.write("Expected Output:")
+        pfile.write("\n")
+        pfile.write("Look for glaring issues. For example, Roles that were created that give elevated permissions that could impact cluster operations.")
 
     else:
         print('Roles are not configured for this environment.')
@@ -264,6 +275,10 @@ for x in groups:
                 try_write('SID:', 'sid', i)
                 pfile.write("\n")
 
+        pfile.write("Expected Output:")
+        pfile.write("\n")
+        pfile.write("Look for glaring issues. For example, generic accounts with the Admin Role or Data Security Role.")
+
     else:
         print('Active Directory Groups are not configured for this environment.')
         print("\n")
@@ -325,6 +340,10 @@ for x in ad:
             try_write('Trusted Domains:', 'trustedDomains', i)
             try_write('Preferred Domain Controllers:', 'preferredDomainControllers', i)
             pfile.write("\n")
+
+        pfile.write("Expected Output:")
+        pfile.write("\n")
+        pfile.write("Cohesity Cluster should be a member of AD Domains that are required. Sometimes a production cluster could be added to a QA/Test Domain which could be a security vulnerablity.")
 
     else:
         print('Active Directory is not configured for this environment.')
@@ -690,6 +709,10 @@ for x in config:
         pfile.write("\n")
         pfile.write("\n")
 
+        pfile.write("Expected Output:")
+        pfile.write("\n")
+        pfile.write("The Support Account should have 2FA/MFA configured.")
+
     else:
         print('Two Factor Authentication for Support User is not configured for this environment.')
         print("\n")
@@ -806,6 +829,10 @@ for x in config:
             pfile.write('Not Listed')
         pfile.write("\n")
         pfile.write("\n")
+
+        pfile.write("Expected Output:")
+        pfile.write("\n")
+        pfile.write("Password is unique, 8-character or more & complex, secured, and auditing is in place.")
 
     else:
         print('Support Account Password is not configured for this environment.')
@@ -1391,7 +1418,7 @@ for x in vBoxes:
         for i in data:
             pfile.write("\n")
             try_write('Storage Domain Name:', 'name', i)
-            pfile.write("\n")
+            #pfile.write("\n")
 
             # try:
             sPolicy = json.dumps(i['storagePolicy'])
@@ -1959,7 +1986,7 @@ for x in scheduler:
 
         try:
             scheduler_search = re.findall("(\"receiverEmails\"\: \[ \"(.*?)\" \])|(\"type\"\: \"(.*?)\" \})", content)
-            print(scheduler_search)
+            # print(scheduler_search)
             print("\n")
             for i in scheduler_search:
                 print('Report Email Configuration:', i)
@@ -1978,7 +2005,7 @@ for x in scheduler:
 
         try:
             scheduler_search = re.findall("(\"receiverEmails\"\: \[ \"(.*?)\" \])|(\"type\"\: \"(.*?)\" \})", content)
-            pfile.write(str(scheduler_search))
+            # pfile.write(str(scheduler_search))
             pfile.write("\n")
             for i in scheduler_search:
                 pfile.write('Report Email Configuration:')
@@ -2218,6 +2245,7 @@ for x in views:
         # print data to screen
         try:
             for i in data['views']:
+                print('--------------------------------------')
                 try_print('View Name:', 'name', i)
                 try_print('NFS View Discovery:', 'enableNfsViewDiscovery', i)
                 try_print('Use Global Whitelist:', 'overrideGlobalWhitelist', i)
@@ -2357,6 +2385,8 @@ for x in views:
 
         try:
             for i in data['views']:
+                pfile.write('--------------------------------------')
+                pfile.write("\n")
                 try_write('View Name:', 'name', i)
                 try_write('NFS View Discovery:', 'enableNfsViewDiscovery', i)
                 try_write('Use Global Whitelist:', 'overrideGlobalWhitelist', i)
@@ -2433,21 +2463,25 @@ for x in views:
                 except KeyError:
                     pfile.write('SMB Share Permissions Not Listed')
                     pfile.write("\n")
-
                 
                 pfile.write("\n")
-                ('~~~~~ NFS Root Squash ~~~~~')
+                pfile.write('~~~~~ NFS Root Squash ~~~~~')
                 pfile.write("\n")
                 try:
                     nfsRootSquash = (json.dumps(i['nfsRootSquash']))
                     pfile.write(nfsRootSquash)
                     pfile.write("\n")
+                    pfile.write("\n")
+                    pfile.write("\n")
                     
                 except KeyError:
                     pfile.write('NFS Root Squash Share Permissions Not Listed') 
                     pfile.write("\n")
+                    pfile.write("\n")
+                    pfile.write("\n")
         except KeyError:
             pfile.write('There are no Views configuration on this Cohesity Cluster.')
+            pfile.write("\n")
 
     else:
         print('View/Share Permissions are not configured for this environment.')
@@ -2481,9 +2515,115 @@ f.close()
 # VIEW LEVEL DATALOCK OVERRIDE CONFIGURED
 # GRANULAR DATALOCK CONFIGURED
 
+#---------------------------------------------------------------------------------------------------------------#
+
 print("\n")
 print("\n")
-print('DATALOCK CONFIGURATION')
+print('POLICY DATALOCK CONFIGURATION')
+print('#---------------------------------------------------------------------------------------------------------------#')
+
+# load json file
+views = glob.glob(source + '/API/*protectionPolicies*.json')
+
+for x in views:
+
+    if os.stat(x).st_size > 5:
+
+        with open(x, "r") as f:
+            content = f.read()
+            content = content.replace('\n', ' ')
+            content = content.replace('}', '} \n')
+
+        f = open(x)
+        data = json.load(f)
+
+        # print data to screen
+        try:
+            for i in data:
+                print("\n")
+                print('--------------------------------------')
+                try_print('Policy Name:', 'name', i)
+                
+                print("\n")
+                print('~~~~~ Policy Lock Configuration ~~~~~')
+
+                try:           
+                    policyLockConfig = (json.dumps(i['datalockConfig']))
+                    policyLockConfig = policyLockConfig.replace(',', ', \n')
+                    print(policyLockConfig)
+                    print("\n")
+
+                except KeyError:
+                    print('Not Listed')
+                    print("\n")
+        except KeyError:
+            print('There are no Policies configured on this Cohesity Cluster.')
+            print("\n")   
+
+
+        # print data to file
+        pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('POLICY DATALOCK CONFIGURATION')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
+
+        try:
+            for i in data:
+                pfile.write('--------------------------------------')
+                pfile.write("\n")
+                try_write('Policy Name:', 'name', i)
+
+                pfile.write("\n")
+                pfile.write('~~~~~ Policy Lock Configuration ~~~~~')
+                pfile.write("\n")
+
+                try:           
+                    policyLockConfig = (json.dumps(i['datalockConfig']))
+                    policyLockConfig = policyLockConfig.replace(',', ', \n')
+                    pfile.write(policyLockConfig)
+                    pfile.write("\n")
+                    pfile.write("\n")
+                    pfile.write("\n")
+
+                except KeyError:
+                    pfile.write('Not Listed')
+                    pfile.write("\n")
+                    pfile.write("\n")
+                    pfile.write("\n")
+        except KeyError:
+            pfile.write('There are no Policies configured on this Cohesity Cluster.')
+            pfile.write("\n")
+            pfile.write("\n")
+
+    else:
+        print('Policies are not configured for this environment.')
+        print("\n")
+        
+        pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('POLICY DATALOCK CONFIGURATION')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
+        pfile.write("\n")
+ 
+        pfile.write('Policies are not configured for this environment.')
+        pfile.write("\n")
+        pfile.write("\n")
+    
+pfile.close()
+
+f.close()
+
+#---------------------------------------------------------------------------------------------------------------#
+
+print("\n")
+print("\n")
+print('FILE DATALOCK CONFIGURATION')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2505,117 +2645,90 @@ for x in views:
         try:
             for i in data['views']:
                 print("\n")
+                print('--------------------------------------')
                 try_print('View Name:', 'name', i)
                 try_print('View Datalock Retention Period:', 'dataLockExpiryUsecs', i)
 
                 print("\n")
                 print('~~~~~ File Lock Configuration ~~~~~')
 
-                try:
+                try:           
                     fileLockConfig = (json.dumps(i['fileLockConfig']))
-
-                    autoLock = "(\"autoLockAfterDurationIdle\"\: (.*?)\, )"
-                    lockingProtocol = "(\"lockingProtocol\"\: \"(.*?)\"\, )"
-                    fileRetention = "(\"defaultFileRetentionDurationMsecs\"\: (.*?)\, )"
-                    mode = "(\"mode\"\: \"(.*?)\"\, )"
-                    expiry = "(\"expiryTimestampMsecs\"\: (.*?)\, )"
-
-                    print('AutoLock After Duration:')
+                    fileLockConfig = fileLockConfig.replace(',', ', \n')
+                    print(fileLockConfig)
                     print("\n")
 
-                    try:
-                        autoLock_search = re.search(autoLock, fileLockConfig)
-                        autoLock_group = autoLock_search.group()
-                        print(autoLock_group)
-                    except AttributeError:
-                        print('Not Listed')
+                    # autoLock = "(\"autoLockAfterDurationIdle\"\: (.*?)\, )"
+                    # lockingProtocol = "(\"lockingProtocol\"\: \"(.*?)\"\, )"
+                    # fileRetention = "(\"defaultFileRetentionDurationMsecs\"\: (.*?)\, )"
+                    # mode = "(\"mode\"\: \"(.*?)\" )"
+                    # expiry = "(\"expiryTimestampMsecs\"\: (.*?)\, )"
 
-                    print('File Data Locking Protocol:')
-                    try:
-                        lockingProtocol_search = re.search(lockingProtocol, fileLockConfig)
-                        lockingProtocol_group = lockingProtocol_search.group()
-                        print(lockingProtocol_group)
-                    except AttributeError:
-                        print('Not Listed')
+                    # print('AutoLock After Duration:')
+                    # try:
+                    #     autoLock_search = re.search(autoLock, fileLockConfig)
+                    #     autoLock_group = autoLock_search.group()
+                    #     print(autoLock_group)
+                    # except AttributeError:
+                    #     print('Not Listed')
+
+                    # print('File Data Locking Protocol:')
+                    # try:
+                    #     lockingProtocol_search = re.search(lockingProtocol, fileLockConfig)
+                    #     lockingProtocol_group = lockingProtocol_search.group()
+                    #     print(lockingProtocol_group)
+                    # except AttributeError:
+                    #     print('Not Listed')
                 
-                    print('File Datalock Retention Period:')
-                    try:
-                        fileRetention_search = re.search(fileRetention, fileLockConfig)
-                        fileRetention_group = fileRetention_search.group()
-                        print(fileRetention_group)
-                    except AttributeError:
-                        print('Not Listed')
+                    # print('File Datalock Retention Period:')
+                    # try:
+                    #     fileRetention_search = re.search(fileRetention, fileLockConfig)
+                    #     fileRetention_group = fileRetention_search.group()
+                    #     print(fileRetention_group)
+                    # except AttributeError:
+                    #     print('Not Listed')
             
 
-                    print('File Level Datalock Mode:')
-                    try:
-                        mode_search = re.search(mode, fileLockConfig)
-                        mode_group = mode_search.group()
-                        print(mode_group)
-                    except AttributeError:
-                        print('Not Listed')
+                    # print('File Level Datalock Mode:')
+                    # try:
+                    #     mode_search = re.search(mode, fileLockConfig)
+                    #     mode_group = mode_search.group()
+                    #     print(mode_group)
+                    # except AttributeError:
+                    #     print('Not Listed')
                 
 
-                    print('File Level Datalock Override Expiry:')
-                    try:
-                        expiry_search = re.search(expiry, fileLockConfig)
-                        expiry_group = expiry_search.group()
-                        print(expiry_group)
-                    except AttributeError:
-                        print('Not Listed')
+                    # print('File Level Datalock Override Expiry:')
+                    # try:
+                    #     expiry_search = re.search(expiry, fileLockConfig)
+                    #     expiry_group = expiry_search.group()
+                    #     print(expiry_group)
+                    #     print("\n")
+                    # except AttributeError:
+                    #     print('Not Listed')
+                    #     print("\n")
 
                 except KeyError:
                     print('Not Listed')
+                    print("\n")
         except KeyError:
-            print('There are no Views configuration on this Cohesity Cluster.')
-            print("\n")
-
-
-
-            # try:
-            #     for d in i['fileLockConfig']:
-            #         # print('AutoLock After Duration:', json.dumps(x['autoLockAfterDurationIdle']))
-            #         try_print('AutoLock After Duration:', 'autoLockAfterDurationIdle', d)
-            #         try_print('File Data Locking Protocol:', 'lockingProtocol', d)
-            #         try_print('File Datalock Retention Period:', 'defaultFileRetentionDurationMsecs', d)
-            #         try_print('File Level Datalock Mode:', 'mode', d)
-            #         print('File Level Datalock Mode:', json.dumps(d['mode']))
-
-            #         # try:
-            #         #     print('File Level Datalock Override Expiry:', json.dumps(x['expiryTimestampMsecs']))
-            #         #     print("\n")
-            #         # except KeyError:
-            #         #     print('File Level Datalock Override not configured.')
-            #         #     print("\n")
-            #         # except AttributeError:
-            #         #     print('File Level Datalock Override not configured.')
-            #         #     print("\n")
-            #         # except TypeError:
-            #         #     print('File Level Datalock Override not configured.')
-            #         #     print("\n")
-            # except KeyError:
-            #     print('File DataLock is not configured for this View.')
-            #     print("\n")
-            # # except AttributeError:
-            # #     print('File DataLock is not configured for this View.')
-            # #     print("\n")
-            # # except TypeError:
-            # #     print('File DataLock is not configured for this View.')
-            # #     print("\n")
-   
+            print('There are no Views configured on this Cohesity Cluster.')
+            print("\n")   
 
 
         # print data to file
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('DATALOCK CONFIGURATION')
+        pfile.write('FILE DATALOCK CONFIGURATION')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
 
         try:
             for i in data['views']:
+                pfile.write('--------------------------------------')
+                pfile.write("\n")
                 try_write('View Name:', 'name', i)
                 try_write('View Datalock Retention Period:', 'dataLockExpiryUsecs', i)
 
@@ -2623,80 +2736,90 @@ for x in views:
                 pfile.write('~~~~~ File Lock Configuration ~~~~~')
                 pfile.write("\n")
 
-                try:
+                try:           
                     fileLockConfig = (json.dumps(i['fileLockConfig']))
-
-                    autoLock = "(\"autoLockAfterDurationIdle\"\: (.*?)\, )"
-                    lockingProtocol = "(\"lockingProtocol\"\: \"(.*?)\"\, )"
-                    fileRetention = "(\"defaultFileRetentionDurationMsecs\"\: (.*?)\, )"
-                    mode = "(\"mode\"\: \"(.*?)\"\, )"
-                    expiry = "(\"expiryTimestampMsecs\"\: (.*?)\, )"
-
-                    pfile.write('AutoLock After Duration:')
+                    fileLockConfig = fileLockConfig.replace(',', ', \n')
+                    pfile.write(fileLockConfig)
+                    pfile.write("\n")
+                    pfile.write("\n")
                     pfile.write("\n")
 
-                    try:
-                        autoLock_search = re.search(autoLock, fileLockConfig)
-                        autoLock_group = autoLock_search.group()
-                        pfile.write(autoLock_group)
-                        pfile.write("\n")
-                    except AttributeError:
-                        pfile.write('Not Listed')
-                        pfile.write("\n")
+                    # autoLock = "(\"autoLockAfterDurationIdle\"\: (.*?)\, )"
+                    # lockingProtocol = "(\"lockingProtocol\"\: \"(.*?)\"\, )"
+                    # fileRetention = "(\"defaultFileRetentionDurationMsecs\"\: (.*?)\, )"
+                    # mode = "(\"mode\"\: \"(.*?)\" )"
+                    # expiry = "(\"expiryTimestampMsecs\"\: (.*?)\, )"
 
-                    pfile.write("\n")
-                    pfile.write('File Data Locking Protocol:')
-                    pfile.write("\n")
-                    try:
-                        lockingProtocol_search = re.search(lockingProtocol, fileLockConfig)
-                        lockingProtocol_group = lockingProtocol_search.group()
-                        pfile.write(lockingProtocol_group)
-                        pfile.write("\n")
-                    except AttributeError:
-                        pfile.write('Not Listed')
-                        pfile.write("\n")
+                    # pfile.write('AutoLock After Duration:')
+                    # pfile.write("\n")
+
+                    # try:
+                    #     autoLock_search = re.search(autoLock, fileLockConfig)
+                    #     autoLock_group = autoLock_search.group()
+                    #     pfile.write(autoLock_group)
+                    #     pfile.write("\n")
+                    # except AttributeError:
+                    #     pfile.write('Not Listed')
+                    #     pfile.write("\n")
+
+                    # pfile.write("\n")
+                    # pfile.write('File Data Locking Protocol:')
+                    # pfile.write("\n")
+                    # try:
+                    #     lockingProtocol_search = re.search(lockingProtocol, fileLockConfig)
+                    #     lockingProtocol_group = lockingProtocol_search.group()
+                    #     pfile.write(lockingProtocol_group)
+                    #     pfile.write("\n")
+                    # except AttributeError:
+                    #     pfile.write('Not Listed')
+                    #     pfile.write("\n")
                 
-                    pfile.write("\n")
-                    pfile.write('File Datalock Retention Period:')
-                    pfile.write("\n")
-                    try:
-                        fileRetention_search = re.search(fileRetention, fileLockConfig)
-                        fileRetention_group = fileRetention_search.group()
-                        pfile.write(fileRetention_group)
-                        pfile.write("\n")
-                    except AttributeError:
-                        pfile.write('Not Listed')
-                        pfile.write("\n")
+                    # pfile.write("\n")
+                    # pfile.write('File Datalock Retention Period:')
+                    # pfile.write("\n")
+                    # try:
+                    #     fileRetention_search = re.search(fileRetention, fileLockConfig)
+                    #     fileRetention_group = fileRetention_search.group()
+                    #     pfile.write(fileRetention_group)
+                    #     pfile.write("\n")
+                    # except AttributeError:
+                    #     pfile.write('Not Listed')
+                    #     pfile.write("\n")
             
-                    pfile.write("\n")
-                    pfile.write('File Level Datalock Mode:')
-                    pfile.write("\n")
-                    try:
-                        mode_search = re.search(mode, fileLockConfig)
-                        mode_group = mode_search.group()
-                        pfile.write(mode_group)
-                        pfile.write("\n")
-                    except AttributeError:
-                        pfile.write('Not Listed')
-                        pfile.write("\n")
+                    # pfile.write("\n")
+                    # pfile.write('File Level Datalock Mode:')
+                    # pfile.write("\n")
+                    # try:
+                    #     mode_search = re.search(mode, fileLockConfig)
+                    #     mode_group = mode_search.group()
+                    #     pfile.write(mode_group)
+                    #     pfile.write("\n")
+                    # except AttributeError:
+                    #     pfile.write('Not Listed')
+                    #     pfile.write("\n")
                 
-                    pfile.write("\n")
-                    pfile.write('File Level Datalock Override Expiry:')
-                    pfile.write("\n")
-                    try:
-                        expiry_search = re.search(expiry, fileLockConfig)
-                        expiry_group = expiry_search.group()
-                        pfile.write(expiry_group)
-                        pfile.write("\n")
-                    except AttributeError:
-                        pfile.write('Not Listed')
-                        pfile.write("\n")
+                    # pfile.write("\n")
+                    # pfile.write('File Level Datalock Override Expiry:')
+                    # pfile.write("\n")
+                    # try:
+                    #     expiry_search = re.search(expiry, fileLockConfig)
+                    #     expiry_group = expiry_search.group()
+                    #     pfile.write(expiry_group)
+                    #     pfile.write("\n")
+                    #     pfile.write("\n")
+                    # except AttributeError:
+                    #     pfile.write('Not Listed')
+                    #     pfile.write("\n")
+                    #     pfile.write("\n")
 
                 except KeyError:
                     pfile.write('Not Listed')
                     pfile.write("\n")
+                    pfile.write("\n")
+                    pfile.write("\n")
         except KeyError:
-            pfile.write('There are no Views configuration on this Cohesity Cluster.')
+            pfile.write('There are no Views configured on this Cohesity Cluster.')
+            pfile.write("\n")
             pfile.write("\n")
 
     else:
@@ -2706,7 +2829,7 @@ for x in views:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('DATALOCK CONFIGURATION')
+        pfile.write('FILE DATALOCK CONFIGURATION')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
