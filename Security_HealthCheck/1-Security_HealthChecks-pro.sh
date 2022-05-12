@@ -4,8 +4,8 @@
 printf '\n'
 echo "#---------------------------------------------------------------------------------------------------------------#"
 echo "#Developed by Erin Zaborowski - August 12 2021                                                                  #"
-echo "#Last Updated 12/10/2021                                                                                        #"
-echo "#  -updated parameter choice section: parameters                                                                #"
+echo "#Last Updated 4/1/2022                                                                                          #"
+echo "#                                                                                                               #"
 echo "#                                                                                                               #"
 echo "#---------------------------------------------------------------------------------------------------------------#"
 

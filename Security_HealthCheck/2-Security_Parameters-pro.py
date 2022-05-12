@@ -87,6 +87,11 @@ def valid_file(file_path):
 # KEYSTONE SERVER CONFIGURED
 # SSO CONFIGURED
 
+print('Developed by Erin Zaborowski - August 12 2021')
+print('Last Updated 5/11/2022')
+
+print("\n")
+
 print('All Rows referenced below are in relation to the Security Assessment Scope List, which can be found here: https://docs.google.com/spreadsheets/d/1RT2YynLj0P1kjLgvrzEJNdYyJU1tLh1Geumlsqb4T3U/edit?usp=sharing')
 print("\n")
 print('#---------------------------------------------------------------------------------------------------------------#')
@@ -115,6 +120,11 @@ for x in users:
 
         # print data to file
         pfile = open(param, "a+")
+        pfile.write("\n")
+        pfile.write('Developed by Erin Zaborowski - August 12 2021')
+        pfile.write("\n")
+        pfile.write('Last Updated 5/11/2022')
+        pfile.write("\n")
         pfile.write("\n")
         pfile.write('All Rows referenced below are in relation to the Security Assessment Scope List, which can be found here: https://docs.google.com/spreadsheets/d/1RT2YynLj0P1kjLgvrzEJNdYyJU1tLh1Geumlsqb4T3U/edit?usp=sharing')
         pfile.write("\n")
