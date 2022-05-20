@@ -2,7 +2,6 @@
 # process commandline arguments
 [CmdletBinding()]
 param (
-    [Parameter()][string]$username = 'DMaaS',
     [Parameter(Mandatory = $True)][string]$apiKey,  # apiKey
     [Parameter(Mandatory = $True)][string]$regionId,  # DMaaS SQL Source Region Id
     [Parameter(Mandatory = $True)][string]$saasConn,  # name of SaaS Connection to associate with SQL Source
