@@ -322,6 +322,64 @@ print('ACTIVE DIRECTORY CONFIG    Rows 8, 9, 10, 11')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
+config = glob.glob(source + '/CONFIG/*CONFIG-CLUSTER*.json')
+
+for x in config:
+
+    if os.stat(x).st_size > 5:
+
+        with open(x, "r") as f:
+            content = f.read()
+            content = content.replace('\n', ' ')
+            content = content.replace('}', '} \n')
+
+        domDiscovery = "(trusted_domain_discovery_disabled\: (.*?) )"
+
+        # print data to screen
+        print('Trusted Domain Discovery Disabled: ')
+        try:
+            domDiscovery_search = re.search(domDiscovery, content)
+            domDiscovery_group = domDiscovery_search.group()
+            domDiscovery_group = domDiscovery_group.split(":")
+            print(domDiscovery_group[1])
+            print("\n")
+        except AttributeError:
+            print('Not Listed')
+
+        # print data to file
+        pfile = open(param, "a")
+        pfile.write('Trusted Domain Discovery Disabled: ')
+        try:
+            domDiscovery_search = re.search(domDiscovery, content)
+            domDiscovery_group = domDiscovery_search.group()
+            domDiscovery_group = domDiscovery_group.split(":")
+            pfile.write(domDiscovery_group[1])
+        except AttributeError:
+            pfile.write('Not Listed')
+        #pfile.write(mfa_search.group())
+        pfile.write("\n")
+        pfile.write("\n")
+
+    else:
+        print('Trusted Domain Discovery for this Cohesity Cluster is not configured.')
+        print("\n")
+        
+        pfile = open(param, "a")
+        pfile.write("\n")
+
+        pfile.write('Trusted Domain Discoveryfor this Cohesity Cluster is not configured.')
+        pfile.write("\n")
+        pfile.write("\n") 
+
+pfile.close()
+
+f.close()
+
+#---------------------------------------------------------------------------------------------------------------#
+
+
+
+# load json file
 ad = glob.glob(source + '/API/*activeDirectory*.json')
 
 for x in ad:
@@ -825,24 +883,40 @@ for x in config:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
+
         pfile.write('Is Support User Password set:')
         try:
+            pwSet_search = re.search(pwSet, content)
+            pwSet_group = pwSet_search.group()
+            pwSet_group = pwSet_group.split(":")
             pfile.write(pwSet_group[1])
+            pfile.write("\n")
         except AttributeError:
             pfile.write('Not Listed')
-        pfile.write("\n")
+            pfile.write("\n")
+
         pfile.write('Last Time Support Password Updated:')
         try:
-            pfile.write(str(datetime_time))
-        except NameError:
-            pfile.write('Not Listed')
-        pfile.write("\n")
-        pfile.write('Is Support User Password Converted:')
-        try:
-            pfile.write(pwConv_group[1])
+            time_search = re.search(epoch_time, content)
+            pfile.write(time_search.group())
+            time = (time_search.group())
+            time_split = time.split()
+            # print(time_split[1])
+            # print("\n")
         except AttributeError:
             pfile.write('Not Listed')
-        pfile.write("\n")
+            pfile.write("\n")
+        
+        pfile.write('Is Support User Password Converted:')
+        try:
+            pwConv_search = re.search(pwConv, content)
+            pwConv_group = pwConv_search.group()
+            pwConv_group = pwConv_group.split(":")
+            pfile.write(pwConv_group[1])
+            pfile.write("\n")
+        except AttributeError:
+            pfile.write('Not Listed')
+            pfile.write("\n")
         pfile.write("\n")
 
         pfile.write("Expected Output:")
@@ -913,7 +987,11 @@ for x in config:
         pfile.write("\n")
         pfile.write('Is SUDO Access Enabled:')
         try:
+            sudo_search = re.search(sudo, content)
+            sudo_group = sudo_search.group()
+            sudo_group = sudo_group.split(":")
             pfile.write(sudo_group[1])
+            pfile.write("\n")
         except AttributeError:
             pfile.write('Not Listed')
         pfile.write("\n")
@@ -1398,28 +1476,30 @@ for x in vBoxes:
 
     if os.stat(x).st_size > 5:
 
+        with open(x, "r") as f:
+            content = f.read()
+            content = content.replace('\n', ' ')
+            content = content.replace('}', '} \n')
+
         f = open(x)
         data = json.load(f)
 
         # print data to screen
         for i in data:
             try_print('Storage Domain Name:', 'name', i)
-            # try:
+            try:
+                print('Encryption Policy:')
+
+                storagePolicy = (json.dumps(i['storagePolicy']))
+                encryption = "(\"encryptionPolicy\"\: (.*?)\, )"
             
-            sPolicy = json.dumps(i['storagePolicy'])
-            sPolicy_split = sPolicy.split()
-            print('Encryption Policy:', sPolicy_split[1])
+                encryption_search = re.search(encryption, storagePolicy)
+                encryption_group = encryption_search.group()
+                encryption_split = encryption_group.split(':')
+                print(encryption_split[1])
+            except KeyError:
+                print('View Antivirus Not Configured')
             print('\n')
-            
-            # except KeyError:
-            #     print('Encryption Policy:' + ' Not Listed')
-            #     print('\n')
-            # except AttributeError:
-            #     print('Encryption Policy:' + ' Not Listed')
-            #     print('\n')
-            # except TypeError:
-            #     print('Encryption Policy:' + ' Not Listed')
-            #     print('\n')
 
         # print data to file
         pfile = open(param, "a")
@@ -1430,26 +1510,22 @@ for x in vBoxes:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
 
+        # print data to screen
         for i in data:
-            pfile.write("\n")
             try_write('Storage Domain Name:', 'name', i)
-            #pfile.write("\n")
+            try:
+                pfile.write('Encryption Policy:')
 
-            # try:
-            sPolicy = json.dumps(i['storagePolicy'])
-            sPolicy_split = sPolicy.split()
-            pfile.write('Encryption Policy: ')
-            pfile.write(sPolicy_split[1])
-            pfile.write('\n')
-            # except KeyError:
-            #     pfile.write('Encryption Policy:' + ' Not Listed')
-            #     pfile.write('\n')
-            # except AttributeError:
-            #     pfile.write('Encryption Policy:' + ' Not Listed')
-            #     pfile.write('\n')
-            # except TypeError:
-            #     pfile.write('Encryption Policy:' + ' Not Listed')
-            #     pfile.write('\n')
+                storagePolicy = (json.dumps(i['storagePolicy']))
+                encryption = "(\"encryptionPolicy\"\: (.*?)\, )"
+           
+                encryption_search = re.search(encryption, storagePolicy)
+                encryption_group = encryption_search.group()
+                encryption_split = encryption_group.split(':')
+                pfile.write(encryption_split[1])
+            except KeyError:
+                pfile.write('View Antivirus Not Configured')
+            print('\n')
 
             pfile.write("\n")
             pfile.write("\n")
@@ -1672,14 +1748,17 @@ for x in config:
         print('Encryption Key Rotation Period (Days): ')
         try:
             rotation_search = re.search(rotation, content)
-            rotation_group = rotation_search.group()
-            rotation_group = rotation_group.split(":")
-            # print(rotation_search.group())
-            # print(rotation_group(1))
-            seconds = rotation_group[1]
-            days = (int(seconds))/86400
-            print(days)
-            print("\n")
+            if rotation_search is None:
+                print('Encryption Key set to default - 90 days.')
+            else:
+                rotation_group = rotation_search.group()
+                rotation_group = rotation_group.split(":")
+                # print(rotation_search.group())
+                # print(rotation_group(1))
+                seconds = rotation_group[1]
+                days = (int(seconds))/86400
+                print(days)
+                print("\n")
         except AttributeError:
             print('Not Listed')
 
@@ -1695,14 +1774,17 @@ for x in config:
         pfile.write('Encryption Key Rotation Period (Days): ')
         try:
             rotation_search = re.search(rotation, content)
-            rotation_group = rotation_search.group()
-            rotation_group = rotation_group.split(":")
-            # print(rotation_search.group())
-            # print(rotation_group(1))
-            seconds = rotation_group[1]
-            days = (int(seconds))/86400
-            # pfile.write(rotation_search.group())
-            pfile.write(str(days))
+            if rotation_search is None:
+                print('Encryption Key set to default - 90 days.')
+            else:
+                rotation_group = rotation_search.group()
+                rotation_group = rotation_group.split(":")
+                # print(rotation_search.group())
+                # print(rotation_group(1))
+                seconds = rotation_group[1]
+                days = (int(seconds))/86400
+                # pfile.write(rotation_search.group())
+                pfile.write(str(days))
         except AttributeError:
             pfile.write('Not Listed')
         #pfile.write(mfa_search.group())
@@ -2241,6 +2323,79 @@ print('VIEW/SHARE CONFIGURATIONS    Rows 55, 56, 57, 58, 59, 60, 61, 62, 63, 64'
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
+config = glob.glob(source + '/CONFIG/*CONFIG-CLUSTER*.json')
+
+for x in config:
+
+    if os.stat(x).st_size > 5:
+
+        with open(x, "r") as f:
+            content = f.read()
+            content = content.replace('\n', ' ')
+            content = content.replace('}', '} \n')
+
+        smbAuth = "(disable_smb_auth\: (.*?) )"
+        smbMulti = "(smb_multichannel_enabled\: (.*?) )"
+
+        # print data to screen
+        print('Disable SMB Authentication: ')
+        try:
+            smbAuth_search = re.search(smbAuth, content)
+            smbAuth_group = smbAuth_search.group()
+            smbAuth_group = smbAuth_group.split(":")
+            print(smbAuth_group[1])
+            print("\n")
+        except AttributeError:
+            print('Not Listed')
+        print('SMB Multichannel Enabled: ')
+        try:
+            smbMulti_search = re.search(smbMulti, content)
+            smbMultiy_group = smbMulti_search.group()
+            smbMulti_group = smbMulti_group.split(":")
+            print(smbMulti_group[1])
+            print("\n")
+        except AttributeError:
+            print('Not Listed')
+
+        # print data to file
+        pfile = open(param, "a")
+        pfile.write('Disable SMB Authentication: ')
+        try:
+            smbAuth_search = re.search(smbAuth, content)
+            smbAuth_group = smbAuth_search.group()
+            smbAuth_group = smbAuth_group.split(":")
+            pfile.write(smbAuth_group[1])
+        except AttributeError:
+            pfile.write('Not Listed')
+        pfile.write("\n")
+        pfile.write('SMB Multichannel Enabled: ')
+        try:
+            smbMulti_search = re.search(smbMulti, content)
+            smbMultiy_group = smbMulti_search.group()
+            smbMulti_group = smbMulti_group.split(":")
+            pfile.write(smbMulti_group[1])
+        except AttributeError:
+            pfile.write('Not Listed')
+        pfile.write("\n")
+
+    else:
+        print('SMB Authentication is not configured for this Cohesity Cluster.')
+        print("\n")
+        
+        pfile = open(param, "a")
+        pfile.write("\n")
+
+        pfile.write('SMB Authentication is not configured for this Cohesity Cluster.')
+        pfile.write("\n")
+        pfile.write("\n") 
+
+pfile.close()
+
+f.close()
+
+#---------------------------------------------------------------------------------------------------------------#
+
+# load json file
 views = glob.glob(source + '/API/*views*.json')
 
 for x in views:
@@ -2254,8 +2409,6 @@ for x in views:
 
         f = open(x)
         data = json.load(f)
-
-        
 
         # print data to screen
         try:
@@ -2400,6 +2553,8 @@ for x in views:
 
         try:
             for i in data['views']:
+                pfile.write("\n")
+                pfile.write("\n")
                 pfile.write('--------------------------------------')
                 pfile.write("\n")
                 try_write('View Name:', 'name', i)
@@ -2424,7 +2579,6 @@ for x in views:
                     av_group = av_group.split(",")
                     pfile.write('Antivirus enabled on Views:')
                     pfile.write(av_group[0])
-                    pfile.write("\n")
                 except KeyError:
                     pfile.write('View Antivirus Not Configured')
                     pfile.write("\n")
@@ -2441,7 +2595,6 @@ for x in views:
                     inactivity_group = inactivity_search.group()
                     pfile.write('View Data Protection Configuration Inactivity:')
                     pfile.write(inactivity_group)
-                    pfile.write("\n")
 
                     jobName_search = re.search(jobName, viewProtection)
                     jobName_group = jobName_search.group()
@@ -2453,7 +2606,6 @@ for x in views:
                     pfile.write("\n")
 
 
-                pfile.write("\n")
                 pfile.write('~~~~~ Cohesity View IP Whitelist ~~~~~')
                 pfile.write("\n")
                 try:
@@ -2469,7 +2621,6 @@ for x in views:
                     pfile.write('Cohesity View IP Whitelist Not Listed')
                     pfile.write("\n")
 
-                pfile.write("\n")
                 pfile.write('~~~~~ SMB Share Permissions ~~~~~')
                 pfile.write("\n")
                 try:
@@ -2482,7 +2633,6 @@ for x in views:
                     pfile.write('SMB Share Permissions Not Listed')
                     pfile.write("\n")
                 
-                pfile.write("\n")
                 pfile.write('~~~~~ NFS Root Squash ~~~~~')
                 pfile.write("\n")
                 try:
@@ -3096,12 +3246,26 @@ for x in vaults:
             try_print('Cloud Archive Encryption:', 'encryptionPolicy', i)
             try_print('Customer Managed Encryption Keys:', 'customerManagingEncryptionKeys', i)
             try_print('Encryption Key File was Downloaded:', 'encryptionKeyFileDownloaded', i)
-            print('Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['amazon']['useHttps']))
             try_print('Cloud Archive Compression Policy:', 'compressionPolicy', i)
             try_print('Cloud Archive Source Side Deduplication:', 'dedupEnabled', i)
-            try_print('Cloud Archive Incremental Archive Enabled:', 'incrementalArchivesEnabled', i)       
-            print("\n")
-
+            try_print('Cloud Archive Incremental Archive Enabled:', 'incrementalArchivesEnabled', i)
+            try:
+                print('AWS Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['amazon']['useHttps']))   
+            except KeyError:
+                print('AWS Cloud Archive Secure Connection Not Listed')
+                print("\n")
+            try:
+                print('Azure Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['azure']['useHttps']))   
+            except KeyError:
+                print('Azure Cloud Archive Secure Connection Not Listed')
+                print("\n")
+            try:
+                print('NAS Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['nas']['useHttps']))   
+                print("\n")
+            except KeyError:
+                print('NAS Cloud Archive Secure Connection Not Listed')
+                print("\n")
+            
         # print data to file
         pfile = open(param, "a")
         pfile.write("\n")
@@ -3118,10 +3282,25 @@ for x in vaults:
             try_write('Cloud Archive Encryption:', 'encryptionPolicy', i)
             try_write('Customer Managed Encryption Keys:', 'customerManagingEncryptionKeys', i)
             try_write('Encryption Key File was Downloaded:', 'encryptionKeyFileDownloaded', i)
-            pfile.write('Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['amazon']['useHttps']))
             try_write('Cloud Archive Compression Policy:', 'compressionPolicy', i)
             try_write('Cloud Archive Source Side Deduplication:', 'dedupEnabled', i)
             try_write('Cloud Archive Incremental Archive Enabled:', 'incrementalArchivesEnabled', i)
+            try:
+                pfile.write('Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['amazon']['useHttps']))  
+            except KeyError:
+                pfile.write('Not Listed')
+                pfile.write("\n")
+            try:
+                pfile.write('Azure Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['azure']['useHttps']))   
+            except KeyError:
+                pfile.write('Azure Cloud Archive Secure Connection Not Listed')
+                pfile.write("\n")
+            try:
+                pfile.write('NAS Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['nas']['useHttps']))   
+                pfile.write("\n")
+            except KeyError:
+                pfile.write('NAS Cloud Archive Secure Connection Not Listed')
+                pfile.write("\n")
             pfile.write("\n")
 
     else:
@@ -3448,6 +3627,100 @@ for x in cluster:
 pfile.close()
 
 f.close()
+
+#---------------------------------------------------------------------------------------------------------------#
+
+print("\n")
+print("\n")
+print('COHESITY CLUSTER CREATION DATE    Row 44')
+print('COHESITY CLUSTER HARDWARE    Row 44')
+print('#---------------------------------------------------------------------------------------------------------------#')
+
+# load json file
+config = glob.glob(source + '/IRIS/*info*.json')
+
+for x in config:
+
+    if os.stat(x).st_size > 5:
+
+        with open(x, "r") as f:
+            content = f.read()
+            content = content.replace('\n', ' ')
+            content = content.replace('}', '} \n')
+
+        creation = "(CLUSTER CREATION TIME     \: (.*?) )"
+        model = "(PRODUCT MODEL     \: (.*?) )"
+
+        # print data to screen
+        print('Cohesity Cluster Creation Date/Time: ')
+        try:
+            creation_search = re.search(creation, content)
+            creation_group = creation_search.group()
+            print(creation_group)
+            print("\n")
+        except AttributeError:
+            print('Not Listed')
+        print('Cohesity Cluster Hardware: ')
+        try:
+            model_search = re.search(model, content)
+            model_group = model_search.group()
+            print(model_group)
+            print("\n")
+        except AttributeError:
+            print('Not Listed')
+
+        # print data to file
+        pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('COHESITY CLUSTER CREATION DATE    Row 44')
+        pfile.write('COHESITY CLUSTER HARDWARE    Row 44')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('Cohesity Cluster Creation Date/Time: ')
+        try:
+            creation_search = re.search(creation, content)
+            creation_group = creation_search.group()
+            pfile.write(creation_group)
+            pfile.write("\n")
+        except AttributeError:
+            pfile.write('Not Listed')
+        pfile.write("\n")
+        pfile.write('Cohesity Cluster Hardware: ')
+        try:
+            model_search = re.search(model, content)
+            model_group = model_search.group()
+            pfile.write(model_group)
+            pfile.write("\n")
+        except AttributeError:
+            pfile.write('Not Listed')
+        pfile.write("\n")
+        pfile.write("\n")
+
+    else:
+        print('Cohesity Creation Date not recorded for this Cohesity Cluster.')
+        print("\n")
+        
+        pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('COHESITY CLUSTER CREATION DATE    Row 44')
+        pfile.write('COHESITY CLUSTER HARDWARE    Row 44')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
+        pfile.write("\n")
+
+        print('Cohesity Creation Date not recorded for this Cohesity Cluster.')
+        pfile.write("\n")
+        pfile.write("\n") 
+
+pfile.close()
+
+f.close()
+
 
 #---------------------------------------------------------------------------------------------------------------#
 
