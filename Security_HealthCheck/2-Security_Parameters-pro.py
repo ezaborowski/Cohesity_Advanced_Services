@@ -88,7 +88,7 @@ def valid_file(file_path):
 # SSO CONFIGURED
 
 print('Developed by Erin Zaborowski - August 12 2021')
-print('Last Updated 5/11/2022')
+print('Last Updated 6/2/2022')
 
 print("\n")
 
@@ -348,6 +348,13 @@ for x in config:
 
         # print data to file
         pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('ACTIVE DIRECTORY CONFIG    Rows 8, 9, 10, 11')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
+        pfile = open(param, "a")
         pfile.write('Trusted Domain Discovery Disabled: ')
         try:
             domDiscovery_search = re.search(domDiscovery, content)
@@ -357,7 +364,6 @@ for x in config:
         except AttributeError:
             pfile.write('Not Listed')
         #pfile.write(mfa_search.group())
-        pfile.write("\n")
         pfile.write("\n")
 
     else:
@@ -369,7 +375,6 @@ for x in config:
 
         pfile.write('Trusted Domain Discoveryfor this Cohesity Cluster is not configured.')
         pfile.write("\n")
-        pfile.write("\n") 
 
 pfile.close()
 
@@ -400,12 +405,7 @@ for x in ad:
         # print data to file
         pfile = open(param, "a")
         pfile.write("\n")
-        pfile.write("\n")
-        pfile.write('ACTIVE DIRECTORY CONFIG    Rows 8, 9, 10, 11')
-        pfile.write("\n")
-        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
-        pfile.write("\n")
-
+        
         for i in data:
             pfile.write("\n")
             try_write('Domain Name:', 'domainName', i)
@@ -1106,8 +1106,7 @@ for x in config:
         try:
             smtp_search = re.search(smtp, content)
             smtp_group = smtp_search.group()
-            smtp_group = smtp_group.split()
-            print(smtp_group[3])
+            print(smtp_group)
             print("\n")
         except AttributeError:
             print('Not Listed')
@@ -1132,8 +1131,7 @@ for x in config:
         try:
             smtp_search = re.search(smtp, content)
             smtp_group = smtp_search.group()
-            smtp_group = smtp_group.split()
-            pfile.write(smtp_group[3])
+            pfile.write(smtp_group)
             pfile.write("\n")
         except AttributeError:
             pfile.write('Not Listed')
@@ -1403,6 +1401,66 @@ print('LOCAL GROUPS    Row 37')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
+config = glob.glob(source + '/CONFIG/*CONFIG-CLUSTER*.json')
+
+for x in config:
+
+    if os.stat(x).st_size > 5:
+
+        with open(x, "r") as f:
+            content = f.read()
+            content = content.replace('\n', ' ')
+            content = content.replace('}', '} \n')
+
+        groups = "(local_groups_enabled\: (.*?) )"
+
+        # print data to screen
+        print('Local Groups Enabled: ')
+        try:
+            groups_search = re.search(groups, content)
+            groups_group = groups_search.group()
+            print(groups_group)
+            print("\n")
+        except AttributeError:
+            print('Not Listed')
+
+        # print data to file
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('LOCAL GROUPS    Row 37')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
+        pfile.write('Local Groups Enabled: ')
+        try:
+            groups_search = re.search(groups, content)
+            groups_group = groups_search.group()
+            pfile.write(groups_group)
+        except AttributeError:
+            pfile.write('Not Listed')
+        pfile.write("\n")
+
+
+    else:
+        print('Local Groups not configured for this environment.')
+        print("\n")
+        
+        pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+
+        pfile.write('Local Groups not configured for this environment.')
+        pfile.write("\n")
+        pfile.write("\n")  
+    
+pfile.close()
+
+f.close()
+
+#---------------------------------------------------------------------------------------------------------------#
+
+
+# load json file
 groups = glob.glob(source + '/API/*groups*.json')
 
 for x in groups:
@@ -1425,12 +1483,7 @@ for x in groups:
         # print data to file
         pfile = open(param, "a")
         pfile.write("\n")
-        pfile.write("\n")
-        pfile.write('LOCAL GROUPS    Row 37')
-        pfile.write("\n")
-        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
-        pfile.write("\n")
-
+        
         for i in data:
             pfile.write("\n")
             domain = i['domain']
@@ -2173,16 +2226,61 @@ for x in config:
             content = content.replace('\n', ' ')
             content = content.replace('}', '} \n')
 
-        snmp = "(snmp_config \{(.*?)\})"
+        snmp = "(snmp_config \{(.*?) read_user)"
+        read = "(read_user \{(.*?) encrypted_auth_password)"
+        write = "(write_user \{(.*?) encrypted_auth_password)"
+        trap = "(trap_user \{(.*?) encrypted_auth_password)"
+        op = "(operation\: (.*?) sys_info)"
 
         # print data to screen
         print('SNMP Configuration: ')
         try:
-            search = re.search(snmp, content)
-            print(search.group())
+            search_snmp = re.search(snmp, content)
+            search_snmp_group = (search_snmp.group())
+            search_snmp_group = search_snmp_group.split('read_user')
+            print(search_snmp_group[0])
             print("\n")
         except AttributeError:
             print('Not Listed')
+        if search_snmp is None:
+            print('SNMP not configured on this Cohesity Cluster.')
+        else:
+            print('SNMP Read User Configuration: ')
+            try:
+                search_read = re.search(read, content)
+                search_read_group = (search_read.group())
+                search_read_group = search_read_group.split('encrypted_auth_password')
+                print(search_read_group[0])
+                print("\n")
+            except AttributeError:
+                print('Not Listed')
+            print('SNMP Write User Configuration: ')
+            try:
+                search_write = re.search(write, content)
+                search_write_group = (search_write.group())
+                search_write_group = search_write_group.split('encrypted_auth_password')
+                print(search_write_group[0])
+                print("\n")
+            except AttributeError:
+                print('Not Listed')
+            print('SNMP Trap User Configuration: ')
+            try:
+                search_trap = re.search(trap, content)
+                search_trap_group = (search_trap.group())
+                search_trap_group = search_trap_group.split('encrypted_auth_password')
+                print(search_trap_group[0])
+                print("\n")
+            except AttributeError:
+                print('Not Listed')
+            print('SNMP Operation Configuration: ')
+            try:
+                search_op = re.search(op, content)
+                search_op_group = (search_op.group())
+                search_op_group = search_op_group.split('sys_info')
+                print(search_op_group[0])
+                print("\n")
+            except AttributeError:
+                print('Not Listed')
 
         # print data to file
         pfile = open(param, "a")
@@ -2193,13 +2291,54 @@ for x in config:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SNMP Configuration:')
+        pfile.write('SNMP Configuration: ')
         try:
-            search = re.search(snmp, content)
-            pfile.write(search.group())
+            search_snmp = re.search(snmp, content)
+            search_snmp_group = (search_snmp.group())
+            search_snmp_group = search_snmp_group.split('read_user')
+            pfile.write(search_snmp_group[0])
+            pfile.write("\n")
         except AttributeError:
             pfile.write('Not Listed')
-        #pfile.write(search.group())
+        if search_snmp is None:
+            pfile.write('SNMP not configured on this Cohesity Cluster.')
+        else:
+            pfile.write('SNMP Read User Configuration: ')
+            try:
+                search_read = re.search(read, content)
+                search_read_group = (search_read.group())
+                search_read_group = search_read_group.split('encrypted_auth_password')
+                pfile.write(search_read_group[0])
+                pfile.write("\n")
+            except AttributeError:
+                pfile.write('Not Listed')
+            pfile.write('SNMP Write User Configuration: ')
+            try:
+                search_write = re.search(write, content)
+                search_write_group = (search_write.group())
+                search_write_group = search_write_group.split('encrypted_auth_password')
+                pfile.write(search_write_group[0])
+                pfile.write("\n")
+            except AttributeError:
+                pfile.write('Not Listed')
+            pfile.write('SNMP Trap User Configuration: ')
+            try:
+                search_trap = re.search(trap, content)
+                search_trap_group = (search_trap.group())
+                search_trap_group = search_trap_group.split('encrypted_auth_password')
+                pfile.write(search_trap_group[0])
+                pfile.write("\n")
+            except AttributeError:
+                pfile.write('Not Listed')
+            pfile.write('SNMP Operation Configuration: ')
+            try:
+                search_op = re.search(op, content)
+                search_op_group = (search_op.group())
+                search_op_group = search_op_group.split('sys_info')
+                pfile.write(search_op_group[0])
+                pfile.write("\n")
+            except AttributeError:
+                pfile.write('Not Listed')
         pfile.write("\n")
         pfile.write("\n")
 
@@ -2358,6 +2497,13 @@ for x in config:
             print('Not Listed')
 
         # print data to file
+        pfile = open(param, "a")
+        pfile.write("\n")
+        pfile.write("\n")
+        pfile.write('VIEW/SHARE CONFIGURATIONS    Rows 55, 56, 57, 58, 59, 60, 61, 62, 63, 64')
+        pfile.write("\n")
+        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
+        pfile.write("\n")
         pfile = open(param, "a")
         pfile.write('Disable SMB Authentication: ')
         try:
@@ -2545,12 +2691,7 @@ for x in views:
         # print data to file
         pfile = open(param, "a")
         pfile.write("\n")
-        pfile.write("\n")
-        pfile.write('VIEW/SHARE CONFIGURATIONS    Rows 55, 56, 57, 58, 59, 60, 61, 62, 63, 64')
-        pfile.write("\n")
-        pfile.write('#---------------------------------------------------------------------------------------------------------------#')
-        pfile.write("\n")
-
+        
         try:
             for i in data['views']:
                 pfile.write("\n")
@@ -2674,15 +2815,6 @@ f.close()
 
 #---------------------------------------------------------------------------------------------------------------#
 # DATA PROTECTION POLICY CONFIGURATION
-
-# DATALOCK ENABLED FOR POLICIES
-# FILE DATALOCK CONFIGURED WITHIN PROTECTION POLICIES
-# FILE DATALOCK RETENTION CONFIGURATION (DATALOCK PERIOD)
-# VIEW LEVEL DATALOCK CONFIGURED
-# VIEW LEVEL DATALOCK RETENTION CONFIGURATION (COMPLIANCE/ENTERPRISE)
-# VIEW LEVEL DATALOCK OVERRIDE CONFIGURED
-# GRANULAR DATALOCK CONFIGURED
-
 #---------------------------------------------------------------------------------------------------------------#
 
 print("\n")
@@ -3260,10 +3392,10 @@ for x in vaults:
                 print('Azure Cloud Archive Secure Connection Not Listed')
                 print("\n")
             try:
-                print('NAS Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['nas']['useHttps']))   
+                print('S3 Compatible Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['kS3Compatible']['useHttps']))   
                 print("\n")
             except KeyError:
-                print('NAS Cloud Archive Secure Connection Not Listed')
+                print('S3 Compatible Cloud Archive Secure Connection Not Listed')
                 print("\n")
             
         # print data to file
@@ -3296,10 +3428,10 @@ for x in vaults:
                 pfile.write('Azure Cloud Archive Secure Connection Not Listed')
                 pfile.write("\n")
             try:
-                pfile.write('NAS Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['nas']['useHttps']))   
+                pfile.write('S3 Compatible Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['kS3Compatible']['useHttps']))   
                 pfile.write("\n")
             except KeyError:
-                pfile.write('NAS Cloud Archive Secure Connection Not Listed')
+                pfile.write('S3 Compatible Cloud Archive Secure Connection Not Listed')
                 pfile.write("\n")
             pfile.write("\n")
 
@@ -3577,6 +3709,7 @@ pfile.close()
 print("\n")
 print("\n")
 print('PLATFORM VERSION    Rows 30, 88')
+print('COHESITY CLUSTER DOMAIN NAMES    Rows 30, 88')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3592,6 +3725,7 @@ for x in cluster:
         # print data to screen
         try_print('Cohesity Cluster Software Version:', 'clusterSoftwareVersion', data)
         try_print('Cohesity Cluster Patch Version:', 'patchVersion', data)
+        try_print('Cohesity Cluster Domain Names:', 'domainNames', data)
         print("\n")
 
         # print data to file
@@ -3600,11 +3734,14 @@ for x in cluster:
         pfile.write("\n")
         pfile.write('PLATFORM VERSION    Rows 30, 88')
         pfile.write("\n")
+        pfile.write('COHESITY CLUSTER DOMAIN NAMES    Rows 30, 88')
+        pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
         try_write('Cohesity Cluster Software Version:', 'clusterSoftwareVersion', data)
         try_write('Cohesity Cluster Patch Version:', 'patchVersion', data)
+        try_write('Cohesity Cluster Domain Names:', 'domainNames', data)
         pfile.write("\n")
 
     else:
@@ -3615,6 +3752,8 @@ for x in cluster:
         pfile.write("\n")
         pfile.write("\n")
         pfile.write('PLATFORM VERSION    Rows 30, 88')
+        pfile.write("\n")
+        pfile.write('COHESITY CLUSTER DOMAIN NAMES    Rows 30, 88')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3634,6 +3773,7 @@ print("\n")
 print("\n")
 print('COHESITY CLUSTER CREATION DATE    Row 44')
 print('COHESITY CLUSTER HARDWARE    Row 44')
+print('COHESITY NODE COUNT    Row 44')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3650,6 +3790,7 @@ for x in config:
 
         creation = "(CLUSTER CREATION TIME     \: (.*?) )"
         model = "(PRODUCT MODEL     \: (.*?) )"
+        nodes = "(NODE COUNT    \: (.*?) )"
 
         # print data to screen
         print('Cohesity Cluster Creation Date/Time: ')
@@ -3668,13 +3809,24 @@ for x in config:
             print("\n")
         except AttributeError:
             print('Not Listed')
+        print('Cohesity Node Count: ')
+        try:
+            nodes_search = re.search(nodes, content)
+            nodes_group = nodes_search.group()
+            print(nodes_group)
+            print("\n")
+        except AttributeError:
+            print('Not Listed')
 
         # print data to file
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
         pfile.write('COHESITY CLUSTER CREATION DATE    Row 44')
+        pfile.write("\n")
         pfile.write('COHESITY CLUSTER HARDWARE    Row 44')
+        pfile.write("\n")
+        pfile.write('COHESITY NODE COUNT    Row 44')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3697,6 +3849,15 @@ for x in config:
         except AttributeError:
             pfile.write('Not Listed')
         pfile.write("\n")
+        pfile.write('Cohesity Node Count: ')
+        try:
+            nodes_search = re.search(nodes, content)
+            nodes_group = nodes_search.group()
+            pfile.write(nodes_group)
+            pfile.write("\n")
+        except AttributeError:
+            pfile.write('Not Listed')
+        pfile.write("\n")
         pfile.write("\n")
 
     else:
@@ -3707,7 +3868,10 @@ for x in config:
         pfile.write("\n")
         pfile.write("\n")
         pfile.write('COHESITY CLUSTER CREATION DATE    Row 44')
+        pfile.write("\n")
         pfile.write('COHESITY CLUSTER HARDWARE    Row 44')
+        pfile.write("\n")
+        pfile.write('COHESITY NODE COUNT    Row 44')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
