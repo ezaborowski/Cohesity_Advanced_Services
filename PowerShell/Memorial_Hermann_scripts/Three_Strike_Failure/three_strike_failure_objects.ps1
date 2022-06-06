@@ -17,7 +17,7 @@ param (
 if($useApiKey){
     apiauth -vip $vip -username $username -domain $domain -useApiKey -password $password
 }else{
-    apiauth -vip $vip -username $username -domain $domain -useApiKey -password $password
+    apiauth -vip $vip -username $username -domain $domain -password $password
 }
 
 ### Get the Cluster Information
