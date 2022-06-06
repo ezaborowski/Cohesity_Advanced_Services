@@ -1,6 +1,6 @@
-# Failed Objects within the Last Day
+# Three Strike Failure within last 3 days
 
-Custom Cohesity Report that includes the following Protection Job parameters: Server, Object Name, Environment, Job Name, JobRun Type, Status, StartTime, and Error.
+Custom Cohesity Report that includes the following Protection Job parameters: Object Name, Job Name, and Error Count for Protection Jobs within the last 3 days.
 
 ## Download the script
 
@@ -8,10 +8,10 @@ Run these commands from PowerShell to download the script(s) into your current d
 
 ```powershell
 # Download Commands
-$scriptName = 'failed_objects_last_day'
+$scriptName = 'three_strike_failure_objects'
 $repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/upload/main/PowerShell/Memorial_Hermann'
-(Invoke-WebRequest -Uri "$repoUrl/Failed_Object_LastDay/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
-(Invoke-WebRequest -Uri "$repoUrl/Failed_Object_LastDay/cohesity-api.ps1").content | Out-File cohesity-api.ps1; (Get-Content cohesity-api.ps1) | Set-Content cohesity-api.ps1
+(Invoke-WebRequest -Uri "$repoUrl/Three_Strike_Failure/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
+(Invoke-WebRequest -Uri "$repoUrl/Three_Strike_Failure/cohesity-api.ps1").content | Out-File cohesity-api.ps1; (Get-Content cohesity-api.ps1) | Set-Content cohesity-api.ps1
 # End Download Commands
 ```
 
@@ -23,7 +23,7 @@ $repoURL = 'https://github.com/ezaborowski/Cohesity_Advanced_Services/upload/mai
 Place both files in a folder together and run the main script like so:
 
 ```powershell
-./failed_objects_last_day.ps1 -username myUsername `
+./three_strike_failure_objects.ps1 -username myUsername `
                              -vip myCohesityCluster `
                              -password 'myPassword' `
 
