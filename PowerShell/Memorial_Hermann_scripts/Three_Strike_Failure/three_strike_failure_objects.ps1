@@ -7,7 +7,7 @@ param (
     [Parameter(Mandatory = $True)][string]$username,
     [Parameter()][string]$domain = 'local',
     [Parameter()][switch]$useApiKey,
-    [Parameter(Mandatory = $True)][string]$password = $null
+    [Parameter(Mandatory = $True)][securestring]$password = $null
 )
 
 ### source the cohesity-api helper code
