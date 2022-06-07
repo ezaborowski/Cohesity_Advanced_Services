@@ -201,6 +201,8 @@ for x in roles:
                 try_print('Description:', 'description', i)
                 try_print('Label:', 'label', i)
                 try_print('Role Name:', 'name', i)
+                try_print('Role Privileges:', 'privileges', i)
+                print("\n")
                 print("\n")
 
         # print data to file
@@ -219,6 +221,8 @@ for x in roles:
                 try_write('Description:', 'description', i)
                 try_write('Label:', 'label', i)
                 try_write('Role Name:', 'name', i)
+                try_write('Role Privileges:', 'privileges', i)
+                pfile.write("\n")
                 pfile.write("\n")
         
         pfile.write("Expected Output:")
@@ -400,6 +404,7 @@ for x in ad:
             try_print('Blacklisted Domains:', 'ignoredTrustedDomains', i)
             try_print('Trusted Domains:', 'trustedDomains', i)
             try_print('Preferred Domain Controllers:', 'preferredDomainControllers', i)
+            try_print('Machine Accounts:', 'machineAccounts', i)
             print("\n")
 
         # print data to file
@@ -412,6 +417,7 @@ for x in ad:
             try_write('Blacklisted Domains:', 'ignoredTrustedDomains', i)
             try_write('Trusted Domains:', 'trustedDomains', i)
             try_write('Preferred Domain Controllers:', 'preferredDomainControllers', i)
+            try_write('Machine Accounts:', 'machineAccounts', i)
             pfile.write("\n")
 
         pfile.write("Expected Output:")
