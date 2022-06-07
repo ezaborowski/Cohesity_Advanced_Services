@@ -131,16 +131,12 @@ foreach($SQLServer in $SQLServersToAdd){
         }
     }"
 
-    if(!$connectionId){
     Write-Host "Registering $SQLServer..."
     $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body
 
     Write-Host "Registered $SQLServer successfully!"
     Write-host "$response"
-    }
-    else{
+
+    }else{
         Write-Host "VM $SQLServer not found" -ForegroundColor Yellow
-    }
 }
-
-
