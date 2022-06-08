@@ -23,16 +23,19 @@ $repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Serv
 Run the main script like so:
 
 ```powershell
-./registerDMaasSQLsources.ps1 -apiKey API-KEY -regionId us-east-2 -saasConn "Saas_Connection-Name" -sqlList ./sqlList.txt
+./registerDMaasSQLsources.ps1 -apiKey API-KEY -regionId us-east-2 -saasConn "Saas_Connection-Name" -hostType kWindows -environment kPhysical -physType kHost -phylist ./physList.txt
 ```
 
 ## Parameters
 
 * -apiKey: apiKey generated in DMaaS UI
 * -regionId: DMaaS region to use
-* -saasConn: name of SaaS Connection to associate with SQL Source
-* -sqlFQDN: (optional) one or more SQL FQDNs (comma separated)
-* -sqlList: (optional) text file of SQL FQDNs (one per line)
+* -saasConn: name of SaaS Connection to associate with Physical Source
+* -hostType: Physical Source OS type (kWindows, kLinux)
+* -environment: environment type (kPhysical, kVMware, kAWS, kO365, kNetapp)
+* -physType:  Source type (kHost, kVCenter, kIAMUser, kDomain, kCluster)
+* -physFQDN: (optional) one or more Physical Source FQDNs (comma separated)
+* -phylist: (optional) text file of Physical Source FQDNs (one per line)
 
 
 ## Authenticating to DMaaS

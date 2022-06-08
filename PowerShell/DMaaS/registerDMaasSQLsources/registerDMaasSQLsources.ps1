@@ -39,7 +39,7 @@ $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 # test API Connection
 Write-host "Testing API Connection...`n"
 $headers.Add("apiKey", "$apiKey")
-$apiTest = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/public/mcm/clusters/info' -Method 'GET' -Headers $headers
+$apiTest = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/public/mcm/clusters/info' -Method 'GET' -Headers $headers | out-file -filepath DMaaSSQLLog-(get-date).txt -Append
 
 if(!$apiTest){
     write-host "Invalid API Key" -ForegroundColor Yellow
@@ -49,7 +49,7 @@ if(!$apiTest){
 # validate DMaaS Tenant ID
 Write-host "Validating Tenant ID...`n"
 $headers.Add("accept", "application/json, text/plain, */*")
-$tenant = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/mcm/userInfo' -Method 'GET' -Headers $headers
+$tenant = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/mcm/userInfo' -Method 'GET' -Headers $headers | out-file -filepath DMaaSSQLLog-(get-date).txt -Append
 
 $tenantId = $tenant.user.profiles.tenantId 
 Write-host "Tenant ID: " $tenantId
@@ -57,7 +57,7 @@ Write-host "Tenant ID: " $tenantId
 
 # validate DMaaS Region ID
 Write-host "`nValidating Region ID..."
-$region = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions?tenantId=$tenantId" -Method 'GET' -Headers $headers
+$region = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions?tenantId=$tenantId" -Method 'GET' -Headers $headers | out-file -filepath DMaaSSQLLog-(get-date).txt -Append
 
 foreach($Ids in $region){
 
@@ -74,7 +74,7 @@ foreach($Ids in $region){
 
 # determine SaaS Connector ID
 Write-host "`nDetermining SaaS Connection ID..."
-$connectors = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/rigelmgmt/rigel-groups?tenantId=$tenantId&maxRecordLimit=1000" -Method 'GET' -Headers $headers
+$connectors = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/rigelmgmt/rigel-groups?tenantId=$tenantId&maxRecordLimit=1000" -Method 'GET' -Headers $headers | out-file -filepath DMaaSSQLLog-(get-date).txt -Append
 
 
 $names = $connectors.rigelGroups.groupName
@@ -119,20 +119,20 @@ foreach($SQLServer in $SQLServersToAdd){
     Write-Host "Finding VM $SQLServer"
     
     $body = "{
-        `"environment`": `"kPhysical`",
-        `"connectionId`": $connectionId,
-        `"physicalParams`": {
-            `"endpoint`": `"$SQLServer`",
-            `"hostType`": `"kWindows`",
-            `"physicalType`": `"kHost`",
-            `"applications`": [
-                `"kSQL`"
-            ]
-        }
-    }"
+        `n    `"environment`": `"kPhysical`",
+        `n    `"connectionId`": $connectionId,
+        `n    `"physicalParams`": {
+        `n        `"endpoint`": `"$SQLServer`",
+        `n        `"hostType`": `"kWindows`",
+        `n        `"physicalType`": `"kHost`",
+        `n        `"applications`": [
+        `n            `"kSQL`"
+        `n        ]
+        `n    }
+        `n}"
 
     Write-Host "Registering $SQLServer..."
-    $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body
+    $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body -ContentType 'application/json' | out-file -filepath DMaaSSQLLog-(get-date).txt -Append
 
     Write-Host "Registered $SQLServer successfully!"
     Write-host "$response"
