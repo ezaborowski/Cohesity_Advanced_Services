@@ -10,6 +10,16 @@ param (
     [Parameter(Mandatory = $True)][securestring]$password = $null
 )
 
+# ensure the environment meets the PowerShell Module requirements of 5.1 or above 
+$version = $PSVersionTable.PSVersion
+if($version.major -lt 5.1){
+    write-host "Please upgrade the PowerShell Module to the current revision of 7.2.4 by running the following command from your PowerShell prompt:"
+    write-host "msiexec.exe /package PowerShell-7.2.4-win-x64.msi /quiet ADD_EXPLORER_CONTEXT_MENU_OPENPOWERSHELL=1 ADD_FILE_CONTEXT_MENU_RUNPOWERSHELL=1 REGISTER_MANIFEST=1 USE_MU=1 ENABLE_MU=1"
+}
+else {
+    write-host "PowerShell Module is up to date."
+}
+
 ### source the cohesity-api helper code
 . $(Join-Path -Path $PSScriptRoot -ChildPath cohesity-api.ps1)
 
