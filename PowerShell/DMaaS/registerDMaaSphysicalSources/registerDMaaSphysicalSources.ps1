@@ -52,6 +52,7 @@ if(!$apiTest){
 # validate DMaaS Tenant ID
 Write-host "Validating Tenant ID...`n"
 $headers.Add("accept", "application/json, text/plain, */*")
+#$headers.Add('content-type: application/json')
 $tenant = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/mcm/userInfo' -Method 'GET' -Headers $headers
 
 $tenantId = $tenant.user.profiles.tenantId 
@@ -121,21 +122,32 @@ foreach($physServer in $physServersToAdd){
 
     Write-Host "Finding Physical Server $physServer"
     
-    $body = @{
-        "environment" = "$environment";
-        "connectionId" = $connectionId;
-        "physicalParams" = @{
-            "endpoint" = "$physServer";
-            "hostType" = "$hostType";
-            "physicalType" = "$physType"
-        };
-    }
+    # $body = @{
+    #     "environment" = $environment;
+    #     "connectionId" = $connectionId;
+    #     "physicalParams" = @{
+    #         "endpoint" = $physServer;
+    #         "hostType" = $hostType;
+    #         "physicalType" = $physType
+    #     };
+    # }
 
-    #$body | ConvertTo-Json
+    # $body | ConvertTo-Json
+
+    $body = "{
+        `n    `"environment`": `"$environment`",
+        `n    `"connectionId`": $connectionId,
+        `n    `"physicalParams`": {
+        `n        `"endpoint`": `"$physFQDN`",
+        `n        `"hostType`": `"$hostType`",
+        `n        `"physicalType`": `"$physType`"
+        `n    }
+        `n}"
 
     if($physServer){
+
         Write-Host "Registering $physServer..."
-        $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body
+        $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body -ContentType 'application/json'
 
         Write-host "$response"
     }
