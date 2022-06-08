@@ -7,8 +7,9 @@ param (
     [Parameter(Mandatory = $True)][string]$saasConn,  # name of SaaS Connection to associate with Physical Source
     [Parameter()][array]$physFQDN,  # physical Source FQDN
     [Parameter()][string]$physList = '',  # optional textfile of Physical Servers to protect
-    [Parameter(Mandatory = $True)][string]$hostType = '',  # physical source OS (kWindows, kLinux, kAIX, kVCenter, kIAMUser, kDomain, kCluster)
-    [Parameter(Mandatory = $True)][string]$environment = ''  # source type (kPhysical, kVMware, kAWS, kO365, kNetapp)
+    [Parameter(Mandatory = $True)][string]$hostType,  # physical source OS (kWindows, kLinux)
+    [Parameter(Mandatory = $True)][string]$environment,  # source type (kPhysical, kVMware, kAWS, kO365, kNetapp)
+    [Parameter(Mandatory = $True)][string]$physType  # source type (kHost, kVCenter, kIAMUser, kDomain, kCluster)
 
 )
 
@@ -121,24 +122,25 @@ foreach($physServer in $physServersToAdd){
     Write-Host "Finding Physical Server $physServer"
     
     $body = @{
-        "environment" = $environment;
+        "environment" = "$environment";
         "connectionId" = $connectionId;
         "physicalParams" = @{
-            "endpoint" = $physServer;
-            "hostType" = $hostType;
-            "physicalType" = "kHost"
+            "endpoint" = "$physServer";
+            "hostType" = "$hostType";
+            "physicalType" = "$physType"
         };
     }
 
-    if(!$connectionId){
+    #$body | ConvertTo-Json
+
+    if($physServer){
         Write-Host "Registering $physServer..."
         $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body
 
-        Write-Host "Registered $physServer successfully!"
         Write-host "$response"
     }
 
     else{
-    Write-Host "VM $physServer not found" -ForegroundColor Yellow
+    Write-Host "Server $physServer not found" -ForegroundColor Yellow
     }
 }
