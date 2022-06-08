@@ -7,7 +7,7 @@ param (
     [Parameter(Mandatory = $True)][string]$username,
     [Parameter()][string]$domain = 'local',
     [Parameter()][switch]$useApiKey,
-    [Parameter(Mandatory = $True)][securestring]$password = $null
+    [Parameter(Mandatory = $True)][string]$password = $null
 )
 
 # ensure the environment meets the PowerShell Module requirements of 5.1 or above 
