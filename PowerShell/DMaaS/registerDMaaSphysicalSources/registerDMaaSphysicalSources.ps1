@@ -42,7 +42,7 @@ $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
 # test API Connection
 Write-host "Testing API Connection...`n"
 $headers.Add("apiKey", "$apiKey")
-$apiTest = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/public/mcm/clusters/info' -Method 'GET' -Headers $headers | out-file -filepath DMaaSPhysicalLog-(get-date).txt -Append
+$apiTest = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/public/mcm/clusters/info' -Method 'GET' -Headers $headers 
 
 if(!$apiTest){
     write-host "Invalid API Key" -ForegroundColor Yellow
@@ -53,7 +53,7 @@ if(!$apiTest){
 Write-host "Validating Tenant ID...`n"
 $headers.Add("accept", "application/json, text/plain, */*")
 #$headers.Add('content-type: application/json')
-$tenant = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/mcm/userInfo' -Method 'GET' -Headers $headers | out-file -filepath DMaaSPhysicalLog-(get-date).txt -Append
+$tenant = Invoke-RestMethod 'https://helios.cohesity.com/irisservices/api/v1/mcm/userInfo' -Method 'GET' -Headers $headers
 
 $tenantId = $tenant.user.profiles.tenantId 
 Write-host "Tenant ID: " $tenantId
@@ -61,7 +61,7 @@ Write-host "Tenant ID: " $tenantId
 
 # validate DMaaS Region ID
 Write-host "`nValidating Region ID..."
-$region = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions?tenantId=$tenantId" -Method 'GET' -Headers $headers | out-file -filepath DMaaSPhysicalLog-(get-date).txt -Append
+$region = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions?tenantId=$tenantId" -Method 'GET' -Headers $headers
 
 foreach($Ids in $region){
 
@@ -78,8 +78,7 @@ foreach($Ids in $region){
 
 # determine SaaS Connector ID
 Write-host "`nDetermining SaaS Connection ID..."
-$connectors = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/rigelmgmt/rigel-groups?tenantId=$tenantId&maxRecordLimit=1000" -Method 'GET' -Headers $headers | out-file -filepath DMaaSPhysicalLog-(get-date).txt -Append
-
+$connectors = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/rigelmgmt/rigel-groups?tenantId=$tenantId&maxRecordLimit=1000" -Method 'GET' -Headers $headers 
 
 $names = $connectors.rigelGroups.groupName
 $connections = $connectors.rigelGroups.groupId
@@ -147,7 +146,8 @@ foreach($physServer in $physServersToAdd){
     if($physServer){
 
         Write-Host "Registering $physServer..."
-        $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body -ContentType 'application/json' | out-file -filepath DMaaSPhysicalLog-(get-date).txt -Append
+        $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body -ContentType 'application/json' 
+        $response | out-file -filepath DMaaSPhysicalLog-(get-date).txt -Append
 
         Write-host "$response"
     }
