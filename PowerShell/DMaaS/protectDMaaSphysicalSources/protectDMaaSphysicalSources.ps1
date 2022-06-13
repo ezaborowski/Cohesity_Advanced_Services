@@ -84,7 +84,7 @@ Write-host "Tenant ID: " $tenantId
 Write-host "`nValidating Region ID..."
 $region = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions?tenantId=$tenantId" -Method 'GET' -Headers $headers
 
-foreach($regionIds in $region){
+foreach($Ids in $region){
 
     $regionIds = $region.tenantRegionInfoList.regionId
 
@@ -101,6 +101,8 @@ $headers.Add("regionId", "$regionId")
 
 
 Write-Host "Finding protection policy"
+
+
 
 $policy = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/data-protect/policies?types=DMaaSPolicy" -Method 'GET' -Headers $headers 
 
