@@ -150,38 +150,38 @@ foreach($physServer in $physServersToAdd){
         `n        {
         `n            `"environment`": `"$environment`",
         `n            `"physicalParams`":{
-        `n                     `"objectProtectionType`":`"kFile`",
-        `n                     `"fileObjectProtectionTypeParams`":{
-        `n                              `"indexingPolicy`":{
-        `n                                  `"enableIndexing`":$index,
-        `n                                  `"includePaths`":[],
-        `n                                  `"excludePaths`":[]
-        `n                                },
-        `n                          `"objects`":[{
-        `n                              `"id`":$sourceId,
-        `n                              `"filePaths`":[{
-        `n                                  `"includedPath`":`"$volumes`",
-        `n                                  `"excludedPaths`":[],
-        `n                                  `"skipNestedVolumes`": $skipNested
-        `n                                  }
-        `n                              ],
-        `n                              `"usesPathLevelSkipNestedVolumeSetting`": $usePathLevel,
-        `n                              `"nestedVolumeTypesToSkip`":[],
-        `n                              `"followNasSymlinkTarget`": $nasSymlink
-        `n                              }
-        `n                          ],
-        `n                          `"performSourceSideDeduplication`": $sourceSideDedup,
-        `n                          `"quiesce`": $quiesce,
-        `n                          `"continueOnQuiesceFailure`": $contOnFail,
-        `n                          `"dedupExclusionSourceIds`":[],
-        `n                          `"globalExcludePaths`":[]
-        `n                      }
-        `n                  }
-        `n              }
-        `n              ]
-        `n          }            
-        `n        }
-        `n    ]
+        `n                `"objectProtectionType`":`"kFile`",
+        `n                `"fileObjectProtectionTypeParams`":{
+        `n                    `"indexingPolicy`":{
+        `n                        `"enableIndexing`":$index,
+        `n                        `"includePaths`":[],
+        `n                        `"excludePaths`":[]
+        `n                    },
+        `n                    `"objects`":[{
+        `n                        `"id`":$sourceId,
+        `n                        `"filePaths`":[{
+        `n                            `"includedPath`":`"$volumes`",
+        `n                            `"excludedPaths`":[],
+        `n                            `"skipNestedVolumes`": $skipNested
+        `n                        }
+        `n                    ],
+        `n                        `"usesPathLevelSkipNestedVolumeSetting`": $usePathLevel,
+        `n                        `"nestedVolumeTypesToSkip`":[],
+        `n                        `"followNasSymlinkTarget`": $nasSymlink
+        `n                        }
+        `n                     ],
+        `n                    `"performSourceSideDeduplication`": $sourceSideDedup,
+        `n                    `"quiesce`": $quiesce,
+        `n                    `"continueOnQuiesceFailure`": $contOnFail,
+        `n                    `"dedupExclusionSourceIds`":[],
+        `n                    `"globalExcludePaths`":[]
+        `n                    }
+        `n                }
+        `n            }
+        `n          ]
+        `n        }            
+        `n    }
+        `n]
         `n} "
 
 
@@ -207,7 +207,9 @@ foreach($physServer in $physServersToAdd){
             Write-Host "Protecting $physServer"
             # $response = api post -v2 data-protect/protected-objects $protectionParams
             $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/data-protect/protected-objects' -Method 'POST' -Headers $headers -Body $body -ContentType 'application/json' 
-            $response | ConvertTo-Json
+            $response | out-file -filepath DMaaSPhysicalProtectLog-(get-date).txt -Append
+
+            Write-host "$response"
             }
         else{
             Write-Host "Server $physServer not found" -ForegroundColor Yellow
