@@ -43,7 +43,7 @@ Run the main script like so:
 * -nasSymlink: whether to follow NAS Symlink targets (default is false)
 * -quiesce: optional whether to quiesce the backups (Default is true)
 * -contOnFail: optional whether to continue on quiesce failure (Default is true)
-* -sourceSideDedup = $false,  # optional whether to perform Source Side Deduplication (Default is false)
+* -sourceSideDedup: optional whether to perform Source Side Deduplication (Default is false)
 * -index: optional whether objects are indexed (default is false)
 * -skipPhysicalRDMDisks: optional whether to skip backing up Physical RDM Disks (Default is false)
 * -startTime: e.g. 23:30 for 11:30 PM (default is 20:00)
