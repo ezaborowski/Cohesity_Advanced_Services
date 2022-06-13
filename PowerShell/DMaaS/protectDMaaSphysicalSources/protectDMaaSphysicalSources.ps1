@@ -10,7 +10,7 @@ param (
     [Parameter()][string]$qosPolicy = 'kBackupSSD',  # QoS policy optimizes throughput performance (default is kBackupSSD)
     [Parameter()][string]$abort = 'false', # abort during blackout periods (default is false)
     [Parameter()][string]$environment = 'kPhysical',  # environment type (kPhysical, kVMware, kAWS, kO365, kNetapp, kSQL, kOracle) (default is kPhysical)
-    [Parameter()][string]$volumes = '$ALL_LOCAL_DRIVES',  # which volumes to backup
+    #[Parameter()][string]$volumes = '$ALL_LOCAL_DRIVES',  # which volumes to backup
     [Parameter()][bool]$autoProtected = $true,  # whether Physical objects are autoProtected (default is true)
     [Parameter()][bool]$skipNested = $false,  # whether to skip backing up nested volumes (default is false)
     [Parameter()][bool]$usePathLevel = $true,  # whether to use Path Level Skip Nested Volume Setting (default is true)
@@ -188,7 +188,7 @@ foreach($physServer in $physServersToAdd){
     #     `n} "
 
 
-        $body="{`"policyId`":`"$policyId`",`"startTime`":{`"hour`":$hour,`"minute`":$minute,`"timeZone`":`"$timeZone`"},`"priority`":`"$priority`",`"sla`":[{`"backupRunType`":`"kFull`",`"slaMinutes`":$fullSLA},{`"backupRunType`":`"kIncremental`",`"slaMinutes`":$incSLA}],`"qosPolicy`":`"$qosPolicy`",`"abortInBlackouts`":$abort,`"objects`":[{`"environment`":`"$environment`",`"physicalParams`":{`"objectProtectionType`":`"kFile`",`"fileObjectProtectionTypeParams`":{`"indexingPolicy`":{`"enableIndexing`":$index,`"includePaths`":[],`"excludePaths`":[]},`"objects`":[{`"id`":$regId,`"isAutoprotected`": $autoProtected,`"filePaths`":[{`"includedPath`":`"$volumes`",`"excludedPaths`":[],`"skipNestedVolumes`":$skipNested}],`"usesPathLevelSkipNestedVolumeSetting`":$usePathLevel,`"nestedVolumeTypesToSkip`":[],`"followNasSymlinkTarget`":$nasSymlink}],`"performSourceSideDeduplication`":$sourceSideDedup,`"quiesce`":$quiesce,`"continueOnQuiesceFailure`": $contOnFail,`"dedupExclusionSourceIds`":[],`"globalExcludePaths`":[]}}}]}"
+        $body="{`"policyId`":`"$policyId`",`"startTime`":{`"hour`":$hour,`"minute`":$minute,`"timeZone`":`"$timeZone`"},`"priority`":`"$priority`",`"sla`":[{`"backupRunType`":`"kFull`",`"slaMinutes`":$fullSLA},{`"backupRunType`":`"kIncremental`",`"slaMinutes`":$incSLA}],`"qosPolicy`":`"$qosPolicy`",`"abortInBlackouts`":$abort,`"objects`":[{`"environment`":`"$environment`",`"physicalParams`":{`"objectProtectionType`":`"kFile`",`"fileObjectProtectionTypeParams`":{`"indexingPolicy`":{`"enableIndexing`":$index,`"includePaths`":[],`"excludePaths`":[]},`"objects`":[{`"id`":$regId,`"isAutoprotected`": $autoProtected,`"filePaths`":[{`"includedPath`":"'$ALL_LOCAL_DRIVES'",`"excludedPaths`":[],`"skipNestedVolumes`":$skipNested}],`"usesPathLevelSkipNestedVolumeSetting`":$usePathLevel,`"nestedVolumeTypesToSkip`":[],`"followNasSymlinkTarget`":$nasSymlink}],`"performSourceSideDeduplication`":$sourceSideDedup,`"quiesce`":$quiesce,`"continueOnQuiesceFailure`": $contOnFail,`"dedupExclusionSourceIds`":[],`"globalExcludePaths`":[]}}}]}"
         
 
 
