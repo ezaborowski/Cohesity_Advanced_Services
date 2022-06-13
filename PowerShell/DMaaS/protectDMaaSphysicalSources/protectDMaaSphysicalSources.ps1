@@ -3,6 +3,7 @@
 param (
     [Parameter(Mandatory = $True)][string]$apiKey,  # apiKey
     [Parameter(Mandatory = $True)][string]$regionId,  # DMaaS SQL Source Region Id
+    [Parameter(Mandatory = $True)][string]$policyName,  # protection policy
     [Parameter()][array]$physFQDN,  # physical Source FQDN
     [Parameter()][string]$physList = '',  # optional textfile of Physical Servers to protect
     [Parameter()][string]$priority = 'kMedium',  # protection instance priority (default is kMedium)
