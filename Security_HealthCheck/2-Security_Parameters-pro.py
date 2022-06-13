@@ -1431,6 +1431,7 @@ for x in config:
             print('Not Listed')
 
         # print data to file
+        pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
         pfile.write('LOCAL GROUPS    Row 37')
