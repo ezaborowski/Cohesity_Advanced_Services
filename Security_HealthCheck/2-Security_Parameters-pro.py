@@ -3425,17 +3425,20 @@ for x in vaults:
             try_write('Cloud Archive Source Side Deduplication:', 'dedupEnabled', i)
             try_write('Cloud Archive Incremental Archive Enabled:', 'incrementalArchivesEnabled', i)
             try:
-                pfile.write('Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['amazon']['useHttps']))  
+                pfile.write('Cloud Archive Secure Connection Enabled:')
+                pfile.write(json.dumps(i['config']['amazon']['useHttps'])) 
             except KeyError:
-                pfile.write('Not Listed')
+                pfile.write('Cloud Cloud Archive Secure Connection Not Listed')
                 pfile.write("\n")
             try:
-                pfile.write('Azure Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['azure']['useHttps']))   
+                pfile.write('Azure Cloud Archive Secure Connection Enabled:')
+                pfile.write(json.dumps(i['config']['azure']['useHttps']))
             except KeyError:
                 pfile.write('Azure Cloud Archive Secure Connection Not Listed')
                 pfile.write("\n")
             try:
-                pfile.write('S3 Compatible Cloud Archive Secure Connection Enabled:', json.dumps(i['config']['kS3Compatible']['useHttps']))   
+                pfile.write('S3 Compatible Cloud Archive Secure Connection Enabled:')
+                pfile.write(json.dumps(i['config']['kS3Compatible']['useHttps']))   
                 pfile.write("\n")
             except KeyError:
                 pfile.write('S3 Compatible Cloud Archive Secure Connection Not Listed')
