@@ -127,80 +127,66 @@ foreach($physServer in $physServersToAdd){
     $sourceid = $source.id
 
 # configure protection parameters
-    $body = "{
-        `n    `"policyId`": `"$policyId`",
-        `n    `"startTime`": {
-        `n        `"hour`": [int64]$hour,
-        `n        `"minute`": [int64]$minute,
-        `n        `"timeZone`": `"$timeZone`"
-        `n    },
-        `n    `"priority`": `"$priority`",
-        `n    `"sla`": [
-        `n        {
-        `n            `"backupRunType`": `"kFull`",
-        `n            `"slaMinutes`": $fullSLA
-        `n        },
-        `n        {
-        `n            `"backupRunType`": `"kIncremental`",
-        `n            `"slaMinutes`": $incSLA
-        `n        }
-        `n    ],
-        `n    `"qosPolicy`": `"$qosPolicy`",
-        `n    `"abortInBlackouts`": $abort,
-        `n    `"objects`": [
-        `n        {
-        `n            `"environment`": `"$environment`",
-        `n            `"physicalParams`":{
-        `n                `"objectProtectionType`":`"kFile`",
-        `n                `"fileObjectProtectionTypeParams`":{
-        `n                    `"indexingPolicy`":{
-        `n                        `"enableIndexing`":$index,
-        `n                        `"includePaths`":[],
-        `n                        `"excludePaths`":[]
-        `n                    },
-        `n                    `"objects`":[{
-        `n                        `"id`":$sourceId,
-        `n                        `"filePaths`":[{
-        `n                            `"includedPath`":`"$volumes`",
-        `n                            `"excludedPaths`":[],
-        `n                            `"skipNestedVolumes`": $skipNested
-        `n                        }
-        `n                    ],
-        `n                        `"usesPathLevelSkipNestedVolumeSetting`": $usePathLevel,
-        `n                        `"nestedVolumeTypesToSkip`":[],
-        `n                        `"followNasSymlinkTarget`": $nasSymlink
-        `n                        }
-        `n                     ],
-        `n                    `"performSourceSideDeduplication`": $sourceSideDedup,
-        `n                    `"quiesce`": $quiesce,
-        `n                    `"continueOnQuiesceFailure`": $contOnFail,
-        `n                    `"dedupExclusionSourceIds`":[],
-        `n                    `"globalExcludePaths`":[]
-        `n                    }
-        `n                }
-        `n            }
-        `n          ]
-        `n        }            
-        `n    }
-        `n]
-        `n} "
+    # $body = "{
+    #     `n    `"policyId`": `"$policyId`",
+    #     `n    `"startTime`": {
+    #     `n        `"hour`": [int64]$hour,
+    #     `n        `"minute`": [int64]$minute,
+    #     `n        `"timeZone`": `"$timeZone`"
+    #     `n    },
+    #     `n    `"priority`": `"$priority`",
+    #     `n    `"sla`": [
+    #     `n        {
+    #     `n            `"backupRunType`": `"kFull`",
+    #     `n            `"slaMinutes`": $fullSLA
+    #     `n        },
+    #     `n        {
+    #     `n            `"backupRunType`": `"kIncremental`",
+    #     `n            `"slaMinutes`": $incSLA
+    #     `n        }
+    #     `n    ],
+    #     `n    `"qosPolicy`": `"$qosPolicy`",
+    #     `n    `"abortInBlackouts`": $abort,
+    #     `n    `"objects`": [
+    #     `n        {
+    #     `n            `"environment`": `"$environment`",
+    #     `n            `"physicalParams`":{
+    #     `n                `"objectProtectionType`":`"kFile`",
+    #     `n                `"fileObjectProtectionTypeParams`":{
+    #     `n                    `"indexingPolicy`":{
+    #     `n                        `"enableIndexing`":$index,
+    #     `n                        `"includePaths`":[],
+    #     `n                        `"excludePaths`":[]
+    #     `n                    },
+    #     `n                    `"objects`":[{
+    #     `n                        `"id`":$sourceId,
+    #     `n                        `"filePaths`":[{
+    #     `n                            `"includedPath`":`"$volumes`",
+    #     `n                            `"excludedPaths`":[],
+    #     `n                            `"skipNestedVolumes`": $skipNested
+    #     `n                        }
+    #     `n                    ],
+    #     `n                        `"usesPathLevelSkipNestedVolumeSetting`": $usePathLevel,
+    #     `n                        `"nestedVolumeTypesToSkip`":[],
+    #     `n                        `"followNasSymlinkTarget`": $nasSymlink
+    #     `n                        }
+    #     `n                     ],
+    #     `n                    `"performSourceSideDeduplication`": $sourceSideDedup,
+    #     `n                    `"quiesce`": $quiesce,
+    #     `n                    `"continueOnQuiesceFailure`": $contOnFail,
+    #     `n                    `"dedupExclusionSourceIds`":[],
+    #     `n                    `"globalExcludePaths`":[]
+    #     `n                    }
+    #     `n                }
+    #     `n            }
+    #     `n          ]
+    #     `n        }            
+    #     `n    }
+    #     `n]
+    #     `n} "
 
 
-        # indexing includePaths
-        # if($indexInclude){
-        #     $body.objects.physicalparams.fileObjectProtectionTypeParams.indexingPolicy.indexinclude = @(
-        #         @{
-        #             "$indexInclude"
-        #         }
-        #     )
-        # indexing excludePaths
-        # backup includePaths
-        # backup excludePaths
-        # nestedVolumeTypesToSkip
-        # dedupExclusionSourceIds
-        # globalExcludePaths
-
-
+        $body="{`"policyId`":`"$policyId`",`"startTime`":{`"hour`":$hour,`"minute`":$minute,`"timeZone`":`"$timeZone`"},`"priority`":`"$priority`",`"sla`":[{`"backupRunType`":`"kFull`",`"slaMinutes`":$fullSLA},{`"backupRunType`":`"kIncremental`",`"slaMinutes`":$incSLA}],`"qosPolicy`":`"$qosPolicy`",`"abortInBlackouts`":$abort,`"objects`":[{`"environment`":`"$environment`",`"physicalParams`":{`"objectProtectionType`":`"kFile`",`"fileObjectProtectionTypeParams`":{`"indexingPolicy`":{`"enableIndexing`":$index,`"includePaths`":[],`"excludePaths`":[]},`"objects`":[{`"id`":$sourceId,`"filePaths`":[{`"includedPath`":`"$volumes`",`"excludedPaths`":[],`"skipNestedVolumes`":$skipNested}],`"usesPathLevelSkipNestedVolumeSetting`":$usePathLevel,`"nestedVolumeTypesToSkip`":[],`"followNasSymlinkTarget`":$nasSymlink}],`"performSourceSideDeduplication`":$sourceSideDedup,`"quiesce`":$quiesce,`"continueOnQuiesceFailure`": $contOnFail,`"dedupExclusionSourceIds`":[],`"globalExcludePaths`":[]}}}]}"
         
 
 
