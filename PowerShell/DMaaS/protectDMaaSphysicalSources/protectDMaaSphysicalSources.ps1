@@ -101,9 +101,6 @@ $headers.Add("regionId", "$regionId")
 
 
 Write-Host "Finding protection policy"
-
-
-
 $policy = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/data-protect/policies?types=DMaaSPolicy" -Method 'GET' -Headers $headers 
 
 foreach($pol in $policy.policies){
@@ -127,6 +124,7 @@ foreach($physServer in $physServersToAdd){
 
     $sources = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/data-protect/sources" -Method 'GET' -Headers $headers
     $source = $sources.sources | where-object {$_.name -eq $physServer}
+    $sourceid = $source.id
 
 # configure protection parameters
     $body = "{
