@@ -138,5 +138,5 @@ foreach($SQLServer in $SQLServersToAdd){
     Write-host "$response"
 
     }else{
-        Write-Host "VM $SQLServer not found" -ForegroundColor Yellow
+        Write-Host "SQL Server $SQLServer not found" -ForegroundColor Yellow
 }
