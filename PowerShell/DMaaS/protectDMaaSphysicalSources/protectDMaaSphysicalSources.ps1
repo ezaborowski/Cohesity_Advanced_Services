@@ -124,7 +124,9 @@ foreach($physServer in $physServersToAdd){
 
     $sources = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/data-protect/sources" -Method 'GET' -Headers $headers
     $source = $sources.sources | where-object {$_.name -eq $physServer}
-    $sourceid = $source.id
+    $sourceId = $source.sourceInfoList.registrationId
+    $regId = $sourceId.split(':')
+    $regId = $regId[2]
 
 # configure protection parameters
     # $body = "{
@@ -186,7 +188,7 @@ foreach($physServer in $physServersToAdd){
     #     `n} "
 
 
-        $body="{`"policyId`":`"$policyId`",`"startTime`":{`"hour`":$hour,`"minute`":$minute,`"timeZone`":`"$timeZone`"},`"priority`":`"$priority`",`"sla`":[{`"backupRunType`":`"kFull`",`"slaMinutes`":$fullSLA},{`"backupRunType`":`"kIncremental`",`"slaMinutes`":$incSLA}],`"qosPolicy`":`"$qosPolicy`",`"abortInBlackouts`":$abort,`"objects`":[{`"environment`":`"$environment`",`"physicalParams`":{`"objectProtectionType`":`"kFile`",`"fileObjectProtectionTypeParams`":{`"indexingPolicy`":{`"enableIndexing`":$index,`"includePaths`":[],`"excludePaths`":[]},`"objects`":[{`"id`":$sourceId,`"isAutoprotected`": $autoProtected,`"filePaths`":[{`"includedPath`":`"$volumes`",`"excludedPaths`":[],`"skipNestedVolumes`":$skipNested}],`"usesPathLevelSkipNestedVolumeSetting`":$usePathLevel,`"nestedVolumeTypesToSkip`":[],`"followNasSymlinkTarget`":$nasSymlink}],`"performSourceSideDeduplication`":$sourceSideDedup,`"quiesce`":$quiesce,`"continueOnQuiesceFailure`": $contOnFail,`"dedupExclusionSourceIds`":[],`"globalExcludePaths`":[]}}}]}"
+        $body="{`"policyId`":`"$policyId`",`"startTime`":{`"hour`":$hour,`"minute`":$minute,`"timeZone`":`"$timeZone`"},`"priority`":`"$priority`",`"sla`":[{`"backupRunType`":`"kFull`",`"slaMinutes`":$fullSLA},{`"backupRunType`":`"kIncremental`",`"slaMinutes`":$incSLA}],`"qosPolicy`":`"$qosPolicy`",`"abortInBlackouts`":$abort,`"objects`":[{`"environment`":`"$environment`",`"physicalParams`":{`"objectProtectionType`":`"kFile`",`"fileObjectProtectionTypeParams`":{`"indexingPolicy`":{`"enableIndexing`":$index,`"includePaths`":[],`"excludePaths`":[]},`"objects`":[{`"id`":$regId,`"isAutoprotected`": $autoProtected,`"filePaths`":[{`"includedPath`":`"$volumes`",`"excludedPaths`":[],`"skipNestedVolumes`":$skipNested}],`"usesPathLevelSkipNestedVolumeSetting`":$usePathLevel,`"nestedVolumeTypesToSkip`":[],`"followNasSymlinkTarget`":$nasSymlink}],`"performSourceSideDeduplication`":$sourceSideDedup,`"quiesce`":$quiesce,`"continueOnQuiesceFailure`": $contOnFail,`"dedupExclusionSourceIds`":[],`"globalExcludePaths`":[]}}}]}"
         
 
 
