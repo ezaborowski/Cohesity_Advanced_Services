@@ -206,7 +206,7 @@ foreach($physServer in $physServersToAdd){
         if($source){
             Write-Host "Protecting $physServer"
             # $response = api post -v2 data-protect/protected-objects $protectionParams
-            $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/data-protect/protected-objects' -Method 'POST' -Headers $headers -Body $body
+            $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/data-protect/protected-objects' -Method 'POST' -Headers $headers -Body $body -ContentType 'application/json' 
             $response | ConvertTo-Json
             }
         else{
