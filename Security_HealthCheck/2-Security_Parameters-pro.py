@@ -2496,7 +2496,7 @@ for x in config:
         print('SMB Multichannel Enabled: ')
         try:
             smbMulti_search = re.search(smbMulti, content)
-            smbMultiy_group = smbMulti_search.group()
+            smbMulti_group = smbMulti_search.group()
             smbMulti_group = smbMulti_group.split(":")
             print(smbMulti_group[1])
             print("\n")
