@@ -10,7 +10,7 @@ param (
     [Parameter()][string]$qosPolicy = 'kBackupSSD',  # QoS policy optimizes throughput performance (default is kBackupSSD)
     [Parameter()][string]$abort = 'false', # abort during blackout periods (default is false)
     [Parameter()][string]$environment = 'kPhysical',  # environment type (kPhysical, kVMware, kAWS, kO365, kNetapp, kSQL, kOracle) (default is kPhysical)
-    [Parameter()][string]$volumes = $ALL_LOCAL_DRIVES,  # which volumes to backup
+    [Parameter()][string]$volumes = '$ALL_LOCAL_DRIVES',  # which volumes to backup
     [Parameter()][bool]$autoProtected = $true,  # whether Physical objects are autoProtected (default is true)
     [Parameter()][bool]$skipNested = $false,  # whether to skip backing up nested volumes (default is false)
     [Parameter()][bool]$usePathLevel = $true,  # whether to use Path Level Skip Nested Volume Setting (default is true)
