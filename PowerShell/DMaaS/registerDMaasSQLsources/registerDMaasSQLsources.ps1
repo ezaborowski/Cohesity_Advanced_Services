@@ -130,13 +130,13 @@ foreach($SQLServer in $SQLServersToAdd){
         `n    }
         `n}"
 
+    if($SQLServer){
     Write-Host "Registering $SQLServer..."
     $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body -ContentType 'application/json' 
     $response | out-file -filepath DMaaSSQLLog-(get-date).txt -Append
 
-    Write-Host "Registered $SQLServer successfully!"
     Write-host "$response"
-
+    }
     }else{
         Write-Host "SQL Server $SQLServer not found" -ForegroundColor Yellow
 }
