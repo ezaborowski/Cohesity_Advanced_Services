@@ -23,7 +23,7 @@ $repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Serv
 Run the main script like so:
 
 ```powershell
-./registerDMaasSQLsources.ps1 -apiKey API-KEY -regionId us-east-2 -saasConn "Saas_Connection-Name" -hostType kWindows -environment kPhysical -physType kHost -phylist ./physList.txt
+./registerDMaasSQLsources.ps1 -apiKey API-KEY -regionId us-east-2 -phylist ./physList.txt -quiesce $false
 ```
 
 ## Parameters
