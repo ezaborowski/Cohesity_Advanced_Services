@@ -88,7 +88,7 @@ def valid_file(file_path):
 # SSO CONFIGURED
 
 print('Developed by Erin Zaborowski - August 12 2021')
-print('Last Updated 6/2/2022')
+print('Last Updated 6/16/2022')
 
 print("\n")
 
@@ -116,6 +116,10 @@ for x in users:
             try_print('Domain:', 'domain', i)
             try_print('Roles:', 'roles', i)
             try_print('Username:', 'username', i)
+            try:
+                try_print('User Exempt from MFA:', 'isUserExemptFromMfa', i['mfaInfo'])
+            except KeyError:
+                print("mfaInfo Section Not Listed.")
             print("\n")
 
         # print data to file
@@ -123,7 +127,7 @@ for x in users:
         pfile.write("\n")
         pfile.write('Developed by Erin Zaborowski - August 12 2021')
         pfile.write("\n")
-        pfile.write('Last Updated 5/11/2022')
+        pfile.write('Last Updated 6/16/2022')
         pfile.write("\n")
         pfile.write("\n")
         pfile.write('All Rows referenced below are in relation to the Security Assessment Scope List, which can be found here: https://docs.google.com/spreadsheets/d/1RT2YynLj0P1kjLgvrzEJNdYyJU1tLh1Geumlsqb4T3U/edit?usp=sharing')
@@ -146,6 +150,10 @@ for x in users:
             try_write('Domain:', 'domain', i)
             try_write('Roles:', 'roles', i)
             try_write('Username:', 'username', i)
+            try:
+                try_write('User Exempt from MFA:', 'isUserExemptFromMfa', i['mfaInfo'])
+            except KeyError:
+                pfile.write("mfaInfo Section Not Listed.")
             pfile.write("\n")
         
         pfile.write("Expected Output:")
@@ -3798,9 +3806,9 @@ for x in config:
             content = content.replace('\n', ' ')
             content = content.replace('}', '} \n')
 
-        creation = "(CLUSTER CREATION TIME     \: (.*?) )"
-        model = "(PRODUCT MODEL     \: (.*?) )"
-        nodes = "(NODE COUNT    \: (.*?) )"
+        creation = "(CLUSTER CREATION TIME         \: (.*?)\, (.*?)\-(.*?)\-(.*?) (.*?)\:(.*?)\:(.*?) (.*?) )"
+        model = "(PRODUCT MODEL                 \: (.*?) (.*?) )"
+        nodes = "(NODE COUNT                    \: (.*?) )"
 
         # print data to screen
         print('Cohesity Cluster Creation Date/Time: ')
