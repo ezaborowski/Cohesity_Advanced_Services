@@ -1,4 +1,4 @@
-# Protect DMaaS AWS EC2 VMs using PowerShell
+# Register DMaaS Physical using PowerShell
 
 Warning: this code is provided on a best effort basis and is not in any way officially supported or sanctioned by Cohesity. The code is intentionally kept simple to retain value as example code. The code in this repository is provided as-is and the author accepts no liability for damages resulting from its use.
 
@@ -10,7 +10,7 @@ Run these commands from PowerShell to download the script(s) into your current d
 
 ```powershell
 # Download Commands
-$scriptName = 'registerDMaasSQLsources'
+$scriptName = 'registerDMaaSphysicalSources'
 $repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Services/main'
 (Invoke-WebRequest -Uri "$repoUrl/PowerShell/DMaaS/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
 # End Download Commands
@@ -18,7 +18,7 @@ $repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Serv
 
 ## Components
 
-* registerDMaasSQLsources.ps1: the main powershell script
+* registerDMaaSphysicalSources.ps1: the main powershell script
 
 Run the main script like so:
 

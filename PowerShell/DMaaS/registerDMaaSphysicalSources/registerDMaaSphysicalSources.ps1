@@ -63,7 +63,7 @@ Write-host "Tenant ID: " $tenantId
 Write-host "`nValidating Region ID..."
 $region = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions?tenantId=$tenantId" -Method 'GET' -Headers $headers
 
-foreach($Ids in $region){
+foreach($regionIds in $region){
 
     $regionIds = $region.tenantRegionInfoList.regionId
 
@@ -90,7 +90,7 @@ $saasIds = @($connections)
 [int]$max = $saasNames.Count
 if ([int]$saasIds.count -gt [int]$saasNames.count) { $max = $saasIds.Count; }
  
-$saasList = for ( $i = 0; $i -lt $max; $i++)
+$saasList = for ($i = 0; $i -lt $max; $i++)
 {
     Write-Verbose "$($saasNames[$i]),$($saasIds[$i])"
     [PSCustomObject]@{
