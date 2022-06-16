@@ -59,7 +59,7 @@ Write-host "Tenant ID: " $tenantId
 Write-host "`nValidating Region ID..."
 $region = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions?tenantId=$tenantId" -Method 'GET' -Headers $headers
 
-foreach($Ids in $region){
+foreach($regionIds in $region){
 
     $regionIds = $region.tenantRegionInfoList.regionId
 
