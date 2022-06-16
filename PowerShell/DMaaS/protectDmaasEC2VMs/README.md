@@ -11,9 +11,9 @@ Run these commands from PowerShell to download the script(s) into your current d
 ```powershell
 # Download Commands
 $scriptName = 'protectDmaasEC2VMs'
-$repoURL = 'https://raw.githubusercontent.com/bseltz-cohesity/scripts/master'
-(Invoke-WebRequest -Uri "$repoUrl/dmaas/powershell/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
-(Invoke-WebRequest -Uri "$repoUrl/powershell/cohesity-api/cohesity-api.ps1").content | Out-File cohesity-api.ps1; (Get-Content cohesity-api.ps1) | Set-Content cohesity-api.ps1
+$repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Services/main'
+(Invoke-WebRequest -Uri "$repoUrl/PowerShell/DMaaS/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
+(Invoke-WebRequest -Uri "$repoUrl/PowerShell/DMaaS/$scriptName/cohesity-api.ps1").content | Out-File cohesity-api.ps1; (Get-Content cohesity-api.ps1) | Set-Content cohesity-api.ps1
 # End Download Commands
 ```
 
@@ -36,7 +36,7 @@ Place both files in a folder together and run the main script like so:
 
 * -username: (optional) used for password storage only (default is 'DMaaS')
 * -region: DMaaS region to use
-* -sourceName: name of registered M365 protection source
+* -sourceName: name of registered VMware protection source
 * -policyName: name of protection policy to use
 * -vmNames: (optional) one or more VM names (comma separated)
 * -vmList: (optional) text file of VM names (one per line)
