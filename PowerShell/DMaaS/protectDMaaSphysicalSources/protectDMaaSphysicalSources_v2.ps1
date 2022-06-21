@@ -27,11 +27,13 @@ param (
     [Parameter()][string]$backupRunTypeInc = 'kIncremental', # default 'America/New_York'
     [Parameter()][string]$objectProtectionType = 'kFile', # default 'America/New_York'
     [Parameter()][int]$incSLA = 66,  # incremental SLA minutes
-    [Parameter()][int]$fullSLA = 127  # full SLA minutes
+    [Parameter()][int]$fullSLA = 127,  # full SLA minutes
+    [Parameter(Mandatory = $False)][bool]$deleteAllSnapshots = $False  # whether all Snapshots are deleted (default to $False)
 )
 
-# get date
-$date = Get-Date
+# outfile
+$dateString = (get-date).ToString('yyyy-MM-dd')
+$outfileName = "log-protectDMaasPhysical-$dateString.txt"
 
 # validate startTime
 [int64]$hour, [int64]$minute = $startTime.split(':')
@@ -152,7 +154,7 @@ foreach($physServer in $physServersToAdd){
 
     $sources = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/data-protect/sources" -Method 'GET' -Headers $headers
 
-    $source = $sources.sources | where-object {$_.name -eq $physServer}
+    $source = $sources.sources | where-object {$_.name -eq "$physServer"}
 
     # Write-host "Finding Physical Server $physServer"
     # $sources = (api get -mcmv2 data-protect/sources?environments=kPhysical) | Where-Object {$_.sources.name -eq $physServer}
@@ -162,12 +164,47 @@ foreach($physServer in $physServersToAdd){
     # }
 
     # $source = $sources.sources 
-    
+
     $sourceId = $source.sourceInfoList.registrationId
     $regId = $sourceId.split(':')
     [int64]$regId = $regId[2]
 
+    write-host "Physical Source $physServer Registration Id: $regId"
+
     $environment = $source.environment
+
+    #---------------------------------------------------------------------------------------------------------------#
+
+    Write-Host "Determining if Physical Source is already Protected..."
+
+    $object = (api get -v2 data-protect/search/protected-objects).objects | Where-Object name -eq $physServer
+    if($object){
+        write-host "Unprotecting $physServer in order to assign new Protection configuration." 
+
+        # configure unprotection parameters
+        $unProtectionParams = @{
+            "action" = "UnProtect";
+            "objectActionKey" = $object.environment;
+            "unProtectParams" = @{
+                "objects" = @( 
+                    @{
+                        "id" = $object.id;
+                        "deleteAllSnapshots" = $deleteAllSnapshots;
+                        "forceUnprotect" = $true;
+                    };
+                );
+            };
+            # "snapshotBackendTypes" = $object.environment;
+        }
+
+        # unprotect objects
+        $unprotectResponse = api post -v2 data-protect/protected-objects/actions $unProtectionParams 
+        $unprotectResponse | out-file -filepath ./$outfileName -Append
+        Write-Host "Unprotected $physServer"
+    }
+
+
+    #---------------------------------------------------------------------------------------------------------------#
 
 
     # configure protection parameters 
@@ -243,8 +280,8 @@ foreach($physServer in $physServersToAdd){
         # $response = Invoke-RestMethod "https://helios.cohesity.com/v2/data-protect/protected-objects/$regid" -Method 'PUT' -Headers $headers -Body $bodyJson
         
         $response = api post -v2 data-protect/protected-objects $body
-
-        $response | out-file -filepath ./DMaaSPhysicalProtectLog.txt -Append
+        $response | out-file -filepath ./$outfileName -Append
+        Write-Host "Protected $physServer"
     }else{
         Write-Host "Physical Server $physServer not found" -ForegroundColor Yellow
     }
