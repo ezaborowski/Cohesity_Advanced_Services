@@ -148,20 +148,21 @@ write-host "Policy ID: $policyId"
 
 foreach($physServer in $physServersToAdd){
 
-    # Write-Host "Finding Physical Server $physServer"
+    Write-Host "Finding Physical Server $physServer"
 
-    # $sources = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/data-protect/sources" -Method 'GET' -Headers $headers
+    $sources = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/data-protect/sources" -Method 'GET' -Headers $headers
 
-    # $source = $sources.sources | where-object {$_.name -eq $physServer}
+    $source = $sources.sources | where-object {$_.name -eq $physServer}
 
-    Write-host "Finding Physical Server $physServer"
-    $sources = (api get -mcmv2 data-protect/sources?environments=kPhysical) | Where-Object {$_.sources.name -eq $physServer}
-    if(!$sources){
-        Write-Host "Physical Server $physServer not found!" -ForegroundColor Yellow
-        exit
-    }
+    # Write-host "Finding Physical Server $physServer"
+    # $sources = (api get -mcmv2 data-protect/sources?environments=kPhysical) | Where-Object {$_.sources.name -eq $physServer}
+    # if(!$sources){
+    #     Write-Host "Physical Server $physServer not found!" -ForegroundColor Yellow
+    #     exit
+    # }
 
-    $source = $sources.sources 
+    # $source = $sources.sources 
+    
     $sourceId = $source.sourceInfoList.registrationId
     $regId = $sourceId.split(':')
     [int64]$regId = $regId[2]
