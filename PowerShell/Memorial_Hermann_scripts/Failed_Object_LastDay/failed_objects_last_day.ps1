@@ -7,7 +7,7 @@ param (
     [Parameter(Mandatory = $True)][string]$username,
     [Parameter()][string]$domain = 'local',
     [Parameter()][switch]$useApiKey,
-    [Parameter(Mandatory = $True)][string]$password = $null
+    [Parameter(Mandatory = $True)][secure]$password = $null
 )
 
 # ensure the environment meets the PowerShell Module requirements of 5.1 or above 
@@ -41,9 +41,6 @@ $endtimeusecs = $enddate.PadRight(16,'0')
 $startdate = Get-Date (Get-Date).ToUniversalTime().AddDays(-1) -UFormat %s 
 $starttimeusecs = $startdate.PadRight(16,'0')
 
-# Get Current Date
-$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
-
 ### Get the Failed Object Details
 $failedobjects = api get /public/reports/protectionSourcesJobsSummary?allUnderHierarchy=true`&endTimeUsecs=$endtimeusecs`&reportType=kFailedObjectsReport`&startTimeUsecs=$starttimeusecs`&statuses=kError
 
@@ -51,7 +48,9 @@ $failedobjects = api get /public/reports/protectionSourcesJobsSummary?allUnderHi
 $name = $clusterdetails.name
 $ClusterId = $clusterdetails.id
 
-$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
+# Output Config
+$dateString = (get-date).ToString('yyyy-MM-dd')
+#$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
 $outfileName = "FailedObjectsLastDay-$dateString.csv" 
 "Server,Object Name,Environment,Job Name,JobRun Type,Status,StartTime,Error" | Out-File -FilePath $outfileName
 
