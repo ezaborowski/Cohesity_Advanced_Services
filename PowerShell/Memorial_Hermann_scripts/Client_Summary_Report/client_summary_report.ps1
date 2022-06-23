@@ -41,9 +41,6 @@ $endtimeusecs = $enddate.PadRight(16,'0')
 $startdate = Get-Date (Get-Date).ToUniversalTime().AddDays(-1) -UFormat %s 
 $starttimeusecs = $startdate.PadRight(16,'0')
 
-# Get Current Date
-$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
-
 ### Get the Object Details
 $objectruns = api get /public/reports/protectionSourcesJobsSummary?allUnderHierarchy=true`&endTimeUsecs=$endtimeusecs`&reportType=kProtectionSummaryByObjectTypeReport`&startTimeUsecs=$starttimeusecs
 
@@ -51,7 +48,9 @@ $objectruns = api get /public/reports/protectionSourcesJobsSummary?allUnderHiera
 $name = $clusterdetails.name
 $ClusterId = $clusterdetails.id
 
-$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
+# Output Config
+$dateString = (get-date).ToString('yyyy-MM-dd')
+#$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
 $outfileName = "ClientSummaryReport-$dateString.csv" 
 "Object Name,Total Runs,Successful Runs,Failed Runs,Success(%)" | Out-File -FilePath $outfileName
 
@@ -64,7 +63,12 @@ for ($index=0; $index -lt $objectruns.protectionSourcesJobsSummary.protectionsou
     $warningsnapshots = $objectruns.protectionSourcesJobsSummary[${index}].numWarnings
 
     $successfulruns = $totalsnapshots - ($errorsnapshots + $warningsnapshots)
-    $successpercent = [math]::round($successfulruns/$totalsnapshots, 3)*100
-
+    if($totalsnapshots -gt 0) {
+        $successpercent = [math]::round($successfulruns/$totalsnapshots, 3)*100
+    }
+    else {
+        $successpercent = 100
+    }
+        
     "$objectname,$totalsnapshots,$successfulruns,$errorsnapshots,$successpercent" | Out-File -FilePath $outfileName -Append
 }
