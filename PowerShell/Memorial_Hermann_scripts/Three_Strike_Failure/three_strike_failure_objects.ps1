@@ -1,4 +1,4 @@
-# ### usage: ./three_strike_failed_objects.ps1 -vip 10.10.10.10 -username admin -password pass
+# ### usage: ./three_strike_failure_objects.ps1 -vip 10.10.10.10 -username admin -password pass
 
 ### process commandline arguments
 [CmdletBinding()]
@@ -41,9 +41,6 @@ $endtimeusecs = $enddate.PadRight(16,'0')
 $startdate = Get-Date (Get-Date).ToUniversalTime().AddDays(-1) -UFormat %s 
 $starttimeusecs = $startdate.PadRight(16,'0')
 
-# Get Current Date
-$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
-
 ### Get the Failed Object Details
 $failedobjects = api get /public/reports/protectionSourcesJobsSummary?allUnderHierarchy=true`&endTimeUsecs=$endtimeusecs`&reportType=kFailedObjectsReport`&startTimeUsecs=$starttimeusecs`&statuses=kError
 
@@ -52,7 +49,9 @@ $failedobjects = api get /public/reports/protectionSourcesJobsSummary?allUnderHi
 $name = $clusterdetails.name
 $ClusterId = $clusterdetails.id
 
-$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
+# Output Config
+$dateString = (get-date).ToString('yyyy-MM-dd')
+#$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
 $outfileName = "ThreeStrikeObjectFailures-$dateString.csv" 
 "Object Name,Job Name,Error Count" | Out-File -FilePath $outfileName
 
