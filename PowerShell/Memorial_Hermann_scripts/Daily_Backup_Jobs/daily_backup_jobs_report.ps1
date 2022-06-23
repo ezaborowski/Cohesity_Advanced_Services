@@ -39,10 +39,7 @@ $endtimeusecs = $enddate.PadRight(16,'0')
 
 # Get the Start Date
 $startdate = Get-Date (Get-Date).ToUniversalTime().AddDays(-1) -UFormat %s 
-$starttimeusecs = $startdate.PadRight(16,'0')
-
-# Get Current Date
-$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')                                        
+$starttimeusecs = $startdate.PadRight(16,'0')                                     
                                         
 ### Get the Object Details
 $objectruns = api get /public/reports/protectionSourcesJobsSummary?allUnderHierarchy=true`&endTimeUsecs=$endtimeusecs`&reportType=kProtectionSummaryByObjectTypeReport`&startTimeUsecs=$starttimeusecs
@@ -51,7 +48,9 @@ $objectruns = api get /public/reports/protectionSourcesJobsSummary?allUnderHiera
 $name = $clusterdetails.name
 $ClusterId = $clusterdetails.id
 
-$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
+# Output Config
+$dateString = (get-date).ToString('yyyy-MM-dd')
+#$dateString = (get-date).ToString().Replace(' ','_').Replace('/','-').Replace(':','-')
 $outfileName = "DailyBackupObjectsReport-$dateString.csv" 
 
 "Client,Server,Status,Level,Size (Gb),Started,Duration (min),Expires" | Out-File -FilePath $outfileName
