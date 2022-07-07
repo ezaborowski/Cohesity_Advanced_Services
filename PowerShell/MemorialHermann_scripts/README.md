@@ -28,9 +28,9 @@ Place both files in a folder together and run the main script like so:
 ```
 
 ## Parameters
-* To be updated in the "param" section of the PowerShell Script itself
+* To be updated in the "param" section of the PowerShell Script itself:
 
-* -username: Admin UI username (comma separated)
-* -vip: Cohesity Cluster VIP / FQDN (comma separated)
-* -password: Admin UI password (comma separated)
-* -domain: Admin UI domain (comma separated)
+  * -username: Admin UI username (comma separated)
+  * -vip: Cohesity Cluster VIP / FQDN (comma separated)
+  * -password: Admin UI password (comma separated)
+  * -domain: Admin UI domain (comma separated)
