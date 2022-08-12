@@ -162,17 +162,13 @@ else {
                 $runs = api get /public/protectionJobs?names=$jobName
                 foreach($run in $runs){
                     $policyId =$run.policyId
-                    $policy= api get /public/protectionPolicies/$policyId 
-                    if($policy){ 
-                        [double]$policyRetention = $policy.daysToKeep
-                    }
+                    $policy= api get /public/protectionPolicies/$policyId  
+                    [double]$policyRetention = $policy.daysToKeep
                 }
                 
                 # Expires: Expiration date of Protection Job Run Object Snapshot
                 $expires = @()
-                if($policyRetention){
-                    $expires = $runend.AddDays(+$policyRetention)
-                }
+                $expires = $runend.AddDays(+$policyRetention)
                     
                 "$objectName,$sourceName,$jobName,$clusterName,$status,$level,$sizeGb,$started,$runend,$duration,$expires,$totalsnapshots,$successfulruns,$warningsnapshots,$errorsnapshots,$successpercent" | Out-File -FilePath $outfileName_source -Append
             }
