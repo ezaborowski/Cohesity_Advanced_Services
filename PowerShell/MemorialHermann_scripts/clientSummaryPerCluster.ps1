@@ -2,20 +2,20 @@
 
 ### process commandline arguments
 [CmdletBinding()]
-param (
-    [Parameter()][string]$vips,
-    [Parameter()][string]$usernames,
-    [Parameter()][string]$domains,
-    [Parameter()][string]$passwords
-)
+# param (
+#     [Parameter()][string]$vips,
+#     [Parameter()][string]$usernames,
+#     [Parameter()][string]$domains,
+#     [Parameter()][string]$passwords
+# )
 
 # example of hardcoding credentails:
-# param (
-#     [Parameter()][string]$vips = "10.26.0.8, 10.26.1.4",
-#     [Parameter()][string]$usernames = "ezabor1, ezabor2",
-#     [Parameter()][string]$domains = "cohesity.com, cohesity.com",
-#     [Parameter()][string]$passwords = "password#1, password#2"
-# )
+param (
+    [Parameter()][string]$vips = "10.26.1.15, 10.26.0.230",
+    [Parameter()][string]$usernames = "ezabor, ezabor",
+    [Parameter()][string]$domains = "sre.cohesity.com, sre.cohesity.com",
+    [Parameter()][string]$passwords = "Cohesity#321, Cohesity#321"
+)
 
 # ensure the environment meets the PowerShell Module requirements of 5.1 or above 
 $version = $PSVersionTable.PSVersion
@@ -78,6 +78,36 @@ else {
     $strikeSummary = "StrikeSummary-$dateString.csv" 
     "Object,Source,Job Name,Cluster,Status,Level,Size (Gb),Started,Ended,Duration,Expires,Total,Successful,Warning,Failed,Success(%)" | Out-File -FilePath $outfileName_source
     "Cluster,One Strike,Two Strikes,Three Strikes" | Out-File -FilePath $strikeSummary_source
+  
+    $source = "/Users/erin.zaborowski/Documents/Source_Files/Professional_Services/PROJECTS/Memorial_Hermann/Memorial_Hermann_scripts"
+
+    # Create folder and move old .csv files from previous runs
+    $csv = Get-ChildItem $source\*.csv -Name
+    if($csv){
+        foreach($i in $csv){
+            $folder = $i.split("-")
+            $folder = $folder.split(".")
+        }
+
+        write-host($folder[1])
+        $folderName = $source + "\" + $folder[1]
+        if (Test-Path $folderName) {
+        
+            Write-Host "Folder Exists"
+        }
+        else {
+        
+            #PowerShell Create directory if not exists
+            New-Item $folderName -ItemType Directory
+            Write-Host "Folder Created successfully"
+        }
+
+        foreach($i in $csv){
+            $path = $source + "\" + $i
+            $destination = $folderName + "\" + $i
+            Move-Item -Path $path -Destination $destination
+        }
+}
 
     # Get the End Date
     [long]$endtimeusecs = (([datetime]::Now)-(Get-Date -Date '1/1/1970')).TotalMilliseconds * 1000
@@ -131,8 +161,40 @@ else {
                 $totalsnapshots = $object.numSnapshots
                 $errorsnapshots = $object.numErrors
                 $warningsnapshots = $object.numWarnings
-                $status = $object.lastRunStatus
-                $level = $object.lastRunType
+                $cohesityStatus = $object.lastRunStatus
+                    if($cohesityStatus -eq "kSuccess"){
+                        $status = "Success"
+                    }
+                    elseif($cohesityStatus -eq "kError"){
+                        $status = "Error"
+                    }
+                    elseif($cohesityStatus -eq "kWarning"){
+                        $status = "Warning"
+                    }
+                    elseif($cohesityStatus -eq "kWarn"){
+                        $status = "Warning"
+                    }
+                    elseif($cohesityStatus -eq "kFail"){
+                        $status = "Failure"
+                    }
+                    else{
+                        $status = $cohesityStatus
+                    }
+
+                $cohesityLevel = $object.lastRunType
+                    if($cohesityLevel -eq "kRegular"){
+                        $level = "Regular"
+                    }
+                    elseif($cohesityLevel -eq "kLog"){
+                        $level = "Log"
+                    }
+                    elseif($cohesityLevel -eq "kFull"){
+                        $level = "Full"
+                    }
+                    else{
+                        $level = $cohesityLevel
+                    }
+
                 $runstarttimeepoch = $object.lastRunStartTimeUsecs -replace ".{6}$"
                 $runendtimeepoch = $object.lastRunEndTimeUsecs -replace ".{6}$"
 
@@ -162,18 +224,23 @@ else {
                 $runs = api get /public/protectionJobs?names=$jobName
                 foreach($run in $runs){
                     $policyId =$run.policyId
-                    $policy= api get /public/protectionPolicies/$policyId  
-                    [double]$policyRetention = $policy.daysToKeep
+                    $policy= api get /public/protectionPolicies/$policyId 
+                    if($policy){ 
+                        [double]$policyRetention = $policy.daysToKeep
+                    }
                 }
                 
                 # Expires: Expiration date of Protection Job Run Object Snapshot
                 $expires = @()
-                $expires = $runend.AddDays(+$policyRetention)
+                if($policyRetention){
+                    $expires = $runend.AddDays(+$policyRetention)
+                }
                     
                 "$objectName,$sourceName,$jobName,$clusterName,$status,$level,$sizeGb,$started,$runend,$duration,$expires,$totalsnapshots,$successfulruns,$warningsnapshots,$errorsnapshots,$successpercent" | Out-File -FilePath $outfileName_source -Append
             }
         }
 
+        # Strike Summary
         foreach($failedobject in $failedobjects){
             
             # checking if the numErrors in last 3 days is less than or equal to 3
