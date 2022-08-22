@@ -254,9 +254,10 @@ else {
                 $jobname = $failedobject.jobName
                 $jobruntype = $failedobject.lastRunType
                 $failure = $failedobject.lastRunErrorMsg
-                $errorCount = $numerrors.count
+                $errorCount3 = $numerrors.count
 
-                "$clusterName,,,$errorCount" | Out-File -FilePath $strikeSummary_source -Append
+
+                "$clusterName,,,$errorCount3" | Out-File -FilePath $strikeSummary_source -Append
                 }
 
             if ($numerrors -eq 2)
@@ -266,7 +267,8 @@ else {
                 $jobname = $failedobject.jobName
                 $jobruntype = $failedobject.lastRunType
                 $failure = $failedobject.lastRunErrorMsg
-                $errorCount = $numerrors.count
+                $errorCount2 = $numerrors.count
+                $errorCount = $errorCount2 - $errorCount3
 
                 "$clusterName,,$errorCount," | Out-File -FilePath $strikeSummary_source -Append
                 }
@@ -278,7 +280,8 @@ else {
                 $jobname = $failedobject.jobName
                 $jobruntype = $failedobject.lastRunType
                 $failure = $failedobject.lastRunErrorMsg
-                $errorCount = $numerrors.count
+                $errorCount1 = $numerrors.count
+                $errorCount = $errorCount1 - $errorCount3
 
                 "$clusterName,$errorCount,," | Out-File -FilePath $strikeSummary_source -Append
                 }
