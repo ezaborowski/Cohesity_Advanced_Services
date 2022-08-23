@@ -2408,13 +2408,18 @@ for x in config:
 
         # print data to screen
         print('Global Whitelist: ')
+
         whitelist_search = re.search(gWhitelist, content)
-        search_group = whitelist_search.group()
-        search_group = search_group.split("   ")
-        
-        for x in search_group:
-            print(x)
-            print("\n")
+        try:
+            search_group = whitelist_search.group()
+            search_group = search_group.split("   ")
+
+            for x in search_group:
+                print(x)
+                print("\n")
+
+        except AttributeError:
+            print('Not Listed')
 
         # print data to file
         pfile = open(param, "a")
@@ -2435,12 +2440,19 @@ for x in config:
 
         pfile.write('Global Whitelist:')
         pfile.write("\n")
+        
+
         whitelist_search = re.search(gWhitelist, content)
-        search_group = whitelist_search.group()
-        search_group = search_group.split("   ")
-        for x in search_group:
-            pfile.write(x)
-            pfile.write("\n")
+        try:
+            search_group = whitelist_search.group()
+            search_group = search_group.split("   ")
+
+            for x in search_group:
+                pfile.write(x)
+                pfile.write("\n")
+        except AttributeError:
+            pfile.write('Not Listed')
+            
 
     else:
         print('Global Whitelist is not configured for this environment.')
