@@ -92,14 +92,14 @@ print('Last Updated 6/16/2022')
 
 print("\n")
 
-print('All Rows referenced below are in relation to the Security Assessment Scope List, which can be found here: https://docs.google.com/spreadsheets/d/1RT2YynLj0P1kjLgvrzEJNdYyJU1tLh1Geumlsqb4T3U/edit?usp=sharing')
+print('All Index Reference referenced below are in relation to the Security Assessment Scope List, which can be found here: https://docs.google.com/spreadsheets/d/1i9CdB32Qs90yRHMiNLXBYolGNC1JDg7yV1w3aWzG6bI/edit?usp=sharing')
 print("\n")
 print('#---------------------------------------------------------------------------------------------------------------#')
 print('COHESITY CLUSTER ACCESS MANAGEMENT')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('USERS    Row 3')
+print('USERS    Index Reference 3')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -130,7 +130,7 @@ for x in users:
         pfile.write('Last Updated 6/16/2022')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('All Rows referenced below are in relation to the Security Assessment Scope List, which can be found here: https://docs.google.com/spreadsheets/d/1RT2YynLj0P1kjLgvrzEJNdYyJU1tLh1Geumlsqb4T3U/edit?usp=sharing')
+        pfile.write('All Index References referenced below are in relation to the Security Assessment Scope List, which can be found here: https://docs.google.com/spreadsheets/d/1i9CdB32Qs90yRHMiNLXBYolGNC1JDg7yV1w3aWzG6bI/edit?usp=sharing')
         pfile.write("\n")
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
@@ -140,7 +140,7 @@ for x in users:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('USERS    Row 3')
+        pfile.write('USERS    Index Reference 3')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -173,7 +173,7 @@ for x in users:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('USERS    Row 3')
+        pfile.write('USERS    Index Reference 3')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -190,7 +190,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('ROLES    Row 4')
+print('ROLES    Index Reference 4')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -217,7 +217,7 @@ for x in roles:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('ROLES    Row 4')
+        pfile.write('ROLES    Index Reference 4')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -244,7 +244,7 @@ for x in roles:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('ROLES    Row 4')
+        pfile.write('ROLES    Index Reference 4')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -261,7 +261,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('AD GROUPS    Row 3')
+print('AD GROUPS    Index Reference 3')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -288,7 +288,7 @@ for x in groups:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('AD GROUPS    Row 3')
+        pfile.write('AD GROUPS    Index Reference 3')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -313,7 +313,7 @@ for x in groups:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('AD GROUPS    Row 3')
+        pfile.write('AD GROUPS    Index Reference 3')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -330,7 +330,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('ACTIVE DIRECTORY CONFIG    Rows 8, 9, 10, 11')
+print('ACTIVE DIRECTORY CONFIG    Index References 8, 9, 10, 11')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -362,7 +362,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('ACTIVE DIRECTORY CONFIG    Rows 8, 9, 10, 11')
+        pfile.write('ACTIVE DIRECTORY CONFIG    Index References 8, 9, 10, 11')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -439,7 +439,7 @@ for x in ad:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('ACTIVE DIRECTORY CONFIG    Rows 8, 9, 10, 11')
+        pfile.write('ACTIVE DIRECTORY CONFIG    Index References 8, 9, 10, 11')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -458,7 +458,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('NTLM AUTHENTICATION DISABLED    Row 12')
+print('NTLM AUTHENTICATION DISABLED    Index Reference 12')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -488,7 +488,7 @@ for x in gflags:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('NTLM AUTHENTICATION DISABLED    Row 12')
+        pfile.write('NTLM AUTHENTICATION DISABLED    Index Reference 12')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -513,7 +513,7 @@ for x in gflags:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('NTLM AUTHENTICATION DISABLED    Row 12')
+        pfile.write('NTLM AUTHENTICATION DISABLED    Index Reference 12')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -531,8 +531,8 @@ f.close()
 
 print("\n")
 print("\n")
-print('SSO AUDIT    Row 16')
-print('COHESITY CLUSTER AUTHENTICATION    Row 13')
+print('SSO AUDIT    Index Reference 19')
+print('COHESITY CLUSTER AUTHENTICATION    Index Reference 13')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -554,9 +554,9 @@ for x in basic:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SSO AUDIT    Row 16')
+        pfile.write('SSO AUDIT    Index Reference 19')
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER AUTHENTICATION    Row 13')
+        pfile.write('COHESITY CLUSTER AUTHENTICATION    Index Reference 13')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -576,9 +576,9 @@ for x in basic:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SSO AUDIT    Row 16')
+        pfile.write('SSO AUDIT    Index Reference 19')
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER AUTHENTICATION    Row 13')
+        pfile.write('COHESITY CLUSTER AUTHENTICATION    Index Reference 13')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -596,7 +596,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('2FA CLUSTER AUDIT    Row 20')
+print('2FA CLUSTER AUDIT    ')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -628,7 +628,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('2FA CLUSTER AUDIT    Row 20')
+        pfile.write('2FA CLUSTER AUDIT    ')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -652,7 +652,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('2FA CLUSTER AUDIT    Row 20')
+        pfile.write('2FA CLUSTER AUDIT    ')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -670,7 +670,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('2FA AUDIT LOCAL    Row 20')
+print('2FA AUDIT LOCAL    Index Reference 20')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -691,7 +691,7 @@ for x in basic:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('2FA AUDIT LOCAL    Row 20')
+        pfile.write('2FA AUDIT LOCAL    Index Reference 20')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -708,7 +708,7 @@ for x in basic:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('2FA AUDIT LOCAL    Row 20')
+        pfile.write('2FA AUDIT LOCAL    Index Reference 20')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -726,7 +726,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('2FA SUPPORT AUDIT    Rows 23, 24')
+print('2FA SUPPORT AUDIT    Index Reference 24')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -769,7 +769,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('2FA SUPPORT AUDIT    Rows 23, 24')
+        pfile.write('2FA SUPPORT AUDIT    Index Reference 24')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -807,7 +807,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('2FA SUPPORT AUDIT    Rows 23, 24')
+        pfile.write('2FA SUPPORT AUDIT    Index Reference 24')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -825,7 +825,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('SUPPORT ACCOUNT PASSWORD AUDIT    Row 25')
+print('SUPPORT ACCOUNT PASSWORD AUDIT    Index Reference 25')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -892,7 +892,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SUPPORT ACCOUNT PASSWORD AUDIT    Row 25')
+        pfile.write('SUPPORT ACCOUNT PASSWORD AUDIT    Index Reference 25')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -944,7 +944,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SUPPORT ACCOUNT PASSWORD AUDIT    Row 25')
+        pfile.write('SUPPORT ACCOUNT PASSWORD AUDIT    Index Reference 25')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -962,7 +962,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('SUDO AUDIT    Row 27')
+print('SUDO AUDIT    Index Reference 27')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -994,7 +994,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SUDO AUDIT    Row 27')
+        pfile.write('SUDO AUDIT    Index Reference 27')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1018,7 +1018,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SUDO AUDIT    Row 27')
+        pfile.write('SUDO AUDIT    Index Reference 27')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1036,7 +1036,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('SUPPORT CHANNEL AUDIT    Row 28')
+print('SUPPORT CHANNEL AUDIT    Index Reference 28')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1057,7 +1057,7 @@ for x in cluster:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SUPPORT CHANNEL AUDIT    Row 28')
+        pfile.write('SUPPORT CHANNEL AUDIT    Index Reference 28')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1074,7 +1074,7 @@ for x in cluster:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SUPPORT CHANNEL AUDIT    Row 28')
+        pfile.write('SUPPORT CHANNEL AUDIT    Index Reference 28')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1098,7 +1098,7 @@ print('COHESITY CLUSTER CONFIGURATION')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('SMTP SERVER    Row 33')
+print('SMTP SERVER    Index Reference 33')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1136,7 +1136,7 @@ for x in config:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SMTP SERVER    Row 33')
+        pfile.write('SMTP SERVER    Index Reference 33')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1164,7 +1164,7 @@ for x in config:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SMTP SERVER    Row 33')
+        pfile.write('SMTP SERVER    Index Reference 33')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1182,7 +1182,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('NTP AUTHENTICATION KEY    Row 34')
+print('NTP AUTHENTICATION KEY    Index Reference 34')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1214,7 +1214,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('NTP AUTHENTICATION KEY    Row 34')
+        pfile.write('NTP AUTHENTICATION KEY    Index Reference 34')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1238,7 +1238,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('NTP AUTHENTICATION KEY    Row 34')
+        pfile.write('NTP AUTHENTICATION KEY    Index Reference 34')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1256,7 +1256,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('SELF-SIGNED SSL CERTIFICATE VALIDATION    Row 35')
+print('SELF-SIGNED SSL CERTIFICATE VALIDATION    Index Reference 35')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # print('***To review the Self-Signed SSL Certification Validation Audit, please reference file: ' + source + '/CONFIG/*Cert_val*.json***')
@@ -1291,7 +1291,7 @@ for x in cert:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SELF-SIGNED SSL CERTIFICATE VALIDATION    Row 35')
+        pfile.write('SELF-SIGNED SSL CERTIFICATE VALIDATION    Index Reference 35')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1319,7 +1319,7 @@ for x in cert:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SELF-SIGNED SSL CERTIFICATE VALIDATION    Row 35')
+        pfile.write('SELF-SIGNED SSL CERTIFICATE VALIDATION    Index Reference 35')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1337,7 +1337,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('LOGIN BANNER ENABLED    Row 36')
+print('LOGIN BANNER ENABLED    Index Reference 36')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1369,7 +1369,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('LOGIN BANNER ENABLED    Row 36')
+        pfile.write('LOGIN BANNER ENABLED    Index Reference 36')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1393,7 +1393,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('LOGIN BANNER ENABLED    Row 36')
+        pfile.write('LOGIN BANNER ENABLED    Index Reference 36')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1411,7 +1411,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('LOCAL GROUPS    Row 37')
+print('LOCAL GROUPS    Index Reference 37')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1442,7 +1442,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('LOCAL GROUPS    Row 37')
+        pfile.write('LOCAL GROUPS    Index Reference 37')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1516,7 +1516,7 @@ for x in groups:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('LOCAL GROUPS    Row 37')
+        pfile.write('LOCAL GROUPS    Index Reference 37')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1534,7 +1534,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('STORAGE DOMAIN ENCRYPTION    Row 38')
+print('STORAGE DOMAIN ENCRYPTION    Index Reference 38')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1573,7 +1573,7 @@ for x in vBoxes:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('STORAGE DOMAIN ENCRYPTION    Row 38')
+        pfile.write('STORAGE DOMAIN ENCRYPTION    Index Reference 38')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1605,7 +1605,7 @@ for x in vBoxes:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('STORAGE DOMAIN ENCRYPTION    Row 38')
+        pfile.write('STORAGE DOMAIN ENCRYPTION    Index Reference 38')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1623,8 +1623,8 @@ f.close()
 
 print("\n")
 print("\n")
-print('COHESITY CLUSTER ENCRYPTION    Row 39')
-print('COHESITY NODE TO NODE ENCRYPTION    Row 40')
+print('COHESITY CLUSTER ENCRYPTION    Index Reference 39')
+print('COHESITY NODE TO NODE ENCRYPTION    Index Reference 40')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1665,9 +1665,9 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER ENCRYPTION    Row 39')
+        pfile.write('COHESITY CLUSTER ENCRYPTION    Index Reference 39')
         pfile.write("\n")
-        pfile.write('COHESITY NODE TO NODE ENCRYPTION    Row 40')
+        pfile.write('COHESITY NODE TO NODE ENCRYPTION    Index Reference 40')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1701,9 +1701,9 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER ENCRYPTION    Row 39')
+        pfile.write('COHESITY CLUSTER ENCRYPTION    Index Reference 39')
         pfile.write("\n")
-        pfile.write('COHESITY NODE TO NODE ENCRYPTION    Row 40')
+        pfile.write('COHESITY NODE TO NODE ENCRYPTION    Index Reference 40')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1721,7 +1721,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('KMS PROVIDER    Rows 41, 108')
+print('KMS PROVIDER    Index References 41, 98')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1753,7 +1753,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('KMS PROVIDER    Rows 41, 108')
+        pfile.write('KMS PROVIDER    Index References 41, 98')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1777,7 +1777,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('KMS PROVIDER    Rows 41, 108')
+        pfile.write('KMS PROVIDER    Index References 41, 98')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1795,7 +1795,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('ENCRYPTION KEY ROTATION AUDIT    Row 42')
+print('ENCRYPTION KEY ROTATION AUDIT    Index Reference 42')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1834,7 +1834,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('ENCRYPTION KEY ROTATION AUDIT    Row 42')
+        pfile.write('ENCRYPTION KEY ROTATION AUDIT    Index Reference 42')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1866,7 +1866,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('ENCRYPTION KEY ROTATION AUDIT    Row 42')
+        pfile.write('ENCRYPTION KEY ROTATION AUDIT    Index Reference 42')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1884,8 +1884,8 @@ f.close()
 
 print("\n")
 print("\n")
-print('ALERTING CONFIGURATION    Row 43')
-print('EMAIL CONFIGURATION AUDIT    Row 43')
+print('ALERTING CONFIGURATION    Index Reference 43')
+print('EMAIL CONFIGURATION AUDIT    Index Reference 43')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -1927,9 +1927,9 @@ for x in alerts:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('ALERTING CONFIGURATION    Row 43')
+        pfile.write('ALERTING CONFIGURATION    Index Reference 43')
         pfile.write("\n")
-        pfile.write('EMAIL CONFIGURATION AUDIT    Row 43')
+        pfile.write('EMAIL CONFIGURATION AUDIT    Index Reference 43')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1968,9 +1968,9 @@ for x in alerts:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('ALERTING CONFIGURATION    Row 43')
+        pfile.write('ALERTING CONFIGURATION    Index Reference 43')
         pfile.write("\n")
-        pfile.write('EMAIL CONFIGURATION AUDIT    Row 43')
+        pfile.write('EMAIL CONFIGURATION AUDIT    Index Reference 43')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -1988,7 +1988,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('COHESITY PROACTIVE MONITORING ENABLED    Row 44')
+print('COHESITY PROACTIVE MONITORING ENABLED    Index Reference 44')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2019,7 +2019,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('COHESITY PROACTIVE MONITORING ENABLED    Row 44')
+        pfile.write('COHESITY PROACTIVE MONITORING ENABLED    Index Reference 44')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2042,7 +2042,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('COHESITY PROACTIVE MONITORING ENABLED    Row 44')
+        pfile.write('COHESITY PROACTIVE MONITORING ENABLED    Index Reference 44')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2061,7 +2061,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('LOCAL ADMIN EMAIL    Row 46')
+print('LOCAL ADMIN EMAIL    Index Reference 46')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2086,7 +2086,7 @@ for x in users:
         pfile = open(param, "a+")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('LOCAL ADMIN EMAIL    Row 46')
+        pfile.write('LOCAL ADMIN EMAIL    Index Reference 46')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2106,7 +2106,7 @@ for x in users:
         pfile = open(param, "a+")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('LOCAL ADMIN EMAIL    Row 46')
+        pfile.write('LOCAL ADMIN EMAIL    Index Reference 46')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2127,7 +2127,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('BACKUP SUMMARY REPORTING    Row 47')
+print('BACKUP SUMMARY REPORTING    Index Reference 47')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2163,7 +2163,7 @@ for x in scheduler:
         pfile = open(param, "a+")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('BACKUP SUMMARY REPORTING    Row 47')
+        pfile.write('BACKUP SUMMARY REPORTING    Index Reference 47')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2186,7 +2186,7 @@ for x in scheduler:
         pfile = open(param, "a+")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('BACKUP SUMMARY REPORTING    Row 47')
+        pfile.write('BACKUP SUMMARY REPORTING    Index Reference 47')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2203,7 +2203,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('CLUSTER FIREWALL CONFIGURATION    Row 49')
+print('CLUSTER FIREWALL CONFIGURATION    Index Reference 49')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 print('***To review the Cluster Firewall Configuration, please reference file: ' + source + '/API/*-API-firewall-*.json***')
@@ -2212,7 +2212,7 @@ print('***To review the Cluster Firewall Configuration, please reference file: '
 pfile = open(param, "a")
 pfile.write("\n")
 pfile.write("\n")
-pfile.write('CLUSTER FIREWALL CONFIGURATION    Row 49')
+pfile.write('CLUSTER FIREWALL CONFIGURATION    Index Reference 49')
 pfile.write("\n")
 pfile.write('#---------------------------------------------------------------------------------------------------------------#')
 pfile.write("\n")
@@ -2226,7 +2226,7 @@ pfile.close()
 
 print("\n")
 print("\n")
-print('SNMP, SNMPv3    Rows 50, 51')
+print('SNMP, SNMPv3    Index References 50, 51')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2301,7 +2301,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SNMP, SNMPv3    Rows 50, 51')
+        pfile.write('SNMP, SNMPv3    Index References 50, 51')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2364,7 +2364,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SNMP, SNMPv3    Rows 50, 51')
+        pfile.write('SNMP, SNMPv3    Index References 50, 51')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2388,7 +2388,7 @@ print('COHESITY CLUSTER SMARTFILES CONFIGURATION')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('GLOBAL WHITELIST    Row 54')
+print('GLOBAL WHITELIST    Index Reference 54')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2432,7 +2432,7 @@ for x in config:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('GLOBAL WHITELIST    Row 54')
+        pfile.write('GLOBAL WHITELIST    Index Reference 54')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2468,7 +2468,7 @@ for x in config:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('GLOBAL WHITELIST    Row 54')
+        pfile.write('GLOBAL WHITELIST    Index Reference 54')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2485,7 +2485,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('VIEW/SHARE CONFIGURATIONS    Rows 55, 56, 57, 58, 59, 60, 61, 62, 63, 64')
+print('VIEW/SHARE CONFIGURATIONS    Index References 55, 56, 57, 58, 59, 60, 61, 62, 63, 64')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2527,7 +2527,7 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('VIEW/SHARE CONFIGURATIONS    Rows 55, 56, 57, 58, 59, 60, 61, 62, 63, 64')
+        pfile.write('VIEW/SHARE CONFIGURATIONS    Index References 55, 56, 57, 58, 59, 60, 61, 62, 63, 64')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2826,7 +2826,7 @@ for x in views:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('VIEW/SHARE CONFIGURATIONS    Rows 55, 56, 57, 58, 59, 60, 61, 62, 63, 64')
+        pfile.write('VIEW/SHARE CONFIGURATIONS    Index References 55, 56, 57, 58, 59, 60, 61, 62, 63, 64')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2846,7 +2846,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('POLICY DATALOCK CONFIGURATION    Rows 69, 70')
+print('POLICY DATALOCK CONFIGURATION    Index References 69, 70')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2892,7 +2892,7 @@ for x in views:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('POLICY DATALOCK CONFIGURATION    Rows 69, 70')
+        pfile.write('POLICY DATALOCK CONFIGURATION    Index References 69, 70')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2932,7 +2932,7 @@ for x in views:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('POLICY DATALOCK CONFIGURATION    Rows 69, 70')
+        pfile.write('POLICY DATALOCK CONFIGURATION    Index References 69, 70')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -2950,7 +2950,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('FILE DATALOCK CONFIGURATION    Rows 71, 72')
+print('FILE DATALOCK CONFIGURATION    Index References 71, 72')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -2985,56 +2985,6 @@ for x in views:
                     print(fileLockConfig)
                     print("\n")
 
-                    # autoLock = "(\"autoLockAfterDurationIdle\"\: (.*?)\, )"
-                    # lockingProtocol = "(\"lockingProtocol\"\: \"(.*?)\"\, )"
-                    # fileRetention = "(\"defaultFileRetentionDurationMsecs\"\: (.*?)\, )"
-                    # mode = "(\"mode\"\: \"(.*?)\" )"
-                    # expiry = "(\"expiryTimestampMsecs\"\: (.*?)\, )"
-
-                    # print('AutoLock After Duration:')
-                    # try:
-                    #     autoLock_search = re.search(autoLock, fileLockConfig)
-                    #     autoLock_group = autoLock_search.group()
-                    #     print(autoLock_group)
-                    # except AttributeError:
-                    #     print('Not Listed')
-
-                    # print('File Data Locking Protocol:')
-                    # try:
-                    #     lockingProtocol_search = re.search(lockingProtocol, fileLockConfig)
-                    #     lockingProtocol_group = lockingProtocol_search.group()
-                    #     print(lockingProtocol_group)
-                    # except AttributeError:
-                    #     print('Not Listed')
-                
-                    # print('File Datalock Retention Period:')
-                    # try:
-                    #     fileRetention_search = re.search(fileRetention, fileLockConfig)
-                    #     fileRetention_group = fileRetention_search.group()
-                    #     print(fileRetention_group)
-                    # except AttributeError:
-                    #     print('Not Listed')
-            
-
-                    # print('File Level Datalock Mode:')
-                    # try:
-                    #     mode_search = re.search(mode, fileLockConfig)
-                    #     mode_group = mode_search.group()
-                    #     print(mode_group)
-                    # except AttributeError:
-                    #     print('Not Listed')
-                
-
-                    # print('File Level Datalock Override Expiry:')
-                    # try:
-                    #     expiry_search = re.search(expiry, fileLockConfig)
-                    #     expiry_group = expiry_search.group()
-                    #     print(expiry_group)
-                    #     print("\n")
-                    # except AttributeError:
-                    #     print('Not Listed')
-                    #     print("\n")
-
                 except KeyError:
                     print('Not Listed')
                     print("\n")
@@ -3047,7 +2997,7 @@ for x in views:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('FILE DATALOCK CONFIGURATION    Rows 71, 72')
+        pfile.write('FILE DATALOCK CONFIGURATION    Index References 71, 72')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3071,74 +3021,6 @@ for x in views:
                     pfile.write("\n")
                     pfile.write("\n")
 
-                    # autoLock = "(\"autoLockAfterDurationIdle\"\: (.*?)\, )"
-                    # lockingProtocol = "(\"lockingProtocol\"\: \"(.*?)\"\, )"
-                    # fileRetention = "(\"defaultFileRetentionDurationMsecs\"\: (.*?)\, )"
-                    # mode = "(\"mode\"\: \"(.*?)\" )"
-                    # expiry = "(\"expiryTimestampMsecs\"\: (.*?)\, )"
-
-                    # pfile.write('AutoLock After Duration:')
-                    # pfile.write("\n")
-
-                    # try:
-                    #     autoLock_search = re.search(autoLock, fileLockConfig)
-                    #     autoLock_group = autoLock_search.group()
-                    #     pfile.write(autoLock_group)
-                    #     pfile.write("\n")
-                    # except AttributeError:
-                    #     pfile.write('Not Listed')
-                    #     pfile.write("\n")
-
-                    # pfile.write("\n")
-                    # pfile.write('File Data Locking Protocol:')
-                    # pfile.write("\n")
-                    # try:
-                    #     lockingProtocol_search = re.search(lockingProtocol, fileLockConfig)
-                    #     lockingProtocol_group = lockingProtocol_search.group()
-                    #     pfile.write(lockingProtocol_group)
-                    #     pfile.write("\n")
-                    # except AttributeError:
-                    #     pfile.write('Not Listed')
-                    #     pfile.write("\n")
-                
-                    # pfile.write("\n")
-                    # pfile.write('File Datalock Retention Period:')
-                    # pfile.write("\n")
-                    # try:
-                    #     fileRetention_search = re.search(fileRetention, fileLockConfig)
-                    #     fileRetention_group = fileRetention_search.group()
-                    #     pfile.write(fileRetention_group)
-                    #     pfile.write("\n")
-                    # except AttributeError:
-                    #     pfile.write('Not Listed')
-                    #     pfile.write("\n")
-            
-                    # pfile.write("\n")
-                    # pfile.write('File Level Datalock Mode:')
-                    # pfile.write("\n")
-                    # try:
-                    #     mode_search = re.search(mode, fileLockConfig)
-                    #     mode_group = mode_search.group()
-                    #     pfile.write(mode_group)
-                    #     pfile.write("\n")
-                    # except AttributeError:
-                    #     pfile.write('Not Listed')
-                    #     pfile.write("\n")
-                
-                    # pfile.write("\n")
-                    # pfile.write('File Level Datalock Override Expiry:')
-                    # pfile.write("\n")
-                    # try:
-                    #     expiry_search = re.search(expiry, fileLockConfig)
-                    #     expiry_group = expiry_search.group()
-                    #     pfile.write(expiry_group)
-                    #     pfile.write("\n")
-                    #     pfile.write("\n")
-                    # except AttributeError:
-                    #     pfile.write('Not Listed')
-                    #     pfile.write("\n")
-                    #     pfile.write("\n")
-
                 except KeyError:
                     pfile.write('Not Listed')
                     pfile.write("\n")
@@ -3156,7 +3038,7 @@ for x in views:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('FILE DATALOCK CONFIGURATION    Rows 71, 72')
+        pfile.write('FILE DATALOCK CONFIGURATION    Index References 71, 72')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3179,7 +3061,7 @@ print('DATA PROTECTION POLICY CONFIGURATION')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('PROTECTION JOB SLA ALERT    Row 48')
+print('PROTECTION JOB SLA ALERT    Index Reference 48')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3210,7 +3092,7 @@ for x in pJobs:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('PROTECTION JOB SLA ALERT    Row 48')
+        pfile.write('PROTECTION JOB SLA ALERT    Index Reference 48')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3235,7 +3117,7 @@ for x in pJobs:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('PROTECTION JOB SLA ALERT    Row 48')
+        pfile.write('PROTECTION JOB SLA ALERT    Index Reference 48')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3262,7 +3144,7 @@ print('INFRASTRUCTURE SERVICES')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('REMOTE CLUSTER CONFIGURATION    Rows 78, 79')
+print('REMOTE CLUSTER CONFIGURATION    Index References 77, 78')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3312,7 +3194,7 @@ for x in remote:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('REMOTE CLUSTER CONFIGURATION    Rows 78, 79')
+        pfile.write('REMOTE CLUSTER CONFIGURATION    Index References 77, 78')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3362,7 +3244,7 @@ for x in remote:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('REMOTE CLUSTER REPLICATION    Rows 78, 79')
+        pfile.write('REMOTE CLUSTER REPLICATION    Index References 77, 78')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3380,7 +3262,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('CLOUD ARCHIVE CONFIGURATION    Rows 80, 81, 82, 83')
+print('CLOUD ARCHIVE CONFIGURATION    Index References 79, 80, 81, 82')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3429,7 +3311,7 @@ for x in vaults:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('CLOUD ARCHIVE CONFIGURATION    Rows 80, 81, 82, 83')
+        pfile.write('CLOUD ARCHIVE CONFIGURATION    Index References 79, 80, 81, 82')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3472,7 +3354,7 @@ for x in vaults:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('CLOUD ARCHIVE CONFIGURATION    Rows 80, 81, 82, 83')
+        pfile.write('CLOUD ARCHIVE CONFIGURATION    Index References 79, 80, 81, 82')
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
@@ -3487,69 +3369,6 @@ f.close()
 
 #---------------------------------------------------------------------------------------------------------------#
 
-# print("\n")
-# print("\n")
-# print('CLOUD TARGET CUSTOMER MANAGED ENCRYPTION KEYS')
-# print('#---------------------------------------------------------------------------------------------------------------#')
-
-# # load json file
-# vaults = glob.glob(source + '/API/*-vaults-*.json')
-
-# for x in vaults:
-
-#     if os.stat(x).st_size > 5:
-
-#         f = open(x)
-#         data = json.load(f)
-
-#         # print data to screen
-#         for i in data:
-#             #for x in i['config']:
-#             try_print('Cloud Target Name:', 'name', i)
-#             try_print('Customer Managed Encryption Keys:', 'customerManagingEncryptionKeys', i)
-#             print("\n")
-
-#         # print data to file
-#         pfile = open(param, "a")
-#         pfile.write("\n")
-#         pfile.write("\n")
-#         pfile.write('CLOUD TARGET CUSTOMER MANAGED ENCRYPTION KEYS')
-#         pfile.write("\n")
-#         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
-#         pfile.write("\n")
-
-#         for i in data:
-#             #for x in i['config']:
-#             try_write('Cloud Target Name:', 'name', i)
-#             pfile.write("\n")
-#             try_write('Customer Managed Encryption Keys:', 'customerManagingEncryptionKeys', i)
-#             pfile.write("\n")
-#             pfile.write("\n")
-
-#     else:
-#         print('Customer Managed Encryption Keys are not configured for this environment.')
-#         print("\n")
-        
-#         pfile = open(param, "a")
-#         pfile.write("\n")
-#         pfile.write("\n")
-#         pfile.write('CLOUD TARGET CUSTOMER MANAGED ENCRYPTION KEYS')
-#         pfile.write("\n")
-#         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
-#         pfile.write("\n")
-#         pfile.write("\n")
- 
-#         pfile.write('Customer Managed Encryption Keys are not configured for this environment.')
-#         pfile.write("\n")
-#         pfile.write("\n")
-    
-# pfile.close()
-
-# f.close()
-
-#---------------------------------------------------------------------------------------------------------------#
-# COHESITY CLUSTER HEALTH
-
 print("\n")
 print("\n")
 print('#---------------------------------------------------------------------------------------------------------------#')
@@ -3557,7 +3376,7 @@ print('COHESITY CLUSTER HEALTH')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('NUMBER OF UNRESOLVED ALERTS    Row 85')
+print('NUMBER OF UNRESOLVED ALERTS    Index Reference 84')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3588,7 +3407,7 @@ for x in alerts:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('NUMBER OF UNRESOLVED ALERTS    Row 85')
+        pfile.write('NUMBER OF UNRESOLVED ALERTS    Index Reference 84')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3613,7 +3432,7 @@ for x in alerts:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('NUMBER OF UNRESOLVED ALERTS    Row 85')
+        pfile.write('NUMBER OF UNRESOLVED ALERTS    Index Reference 84')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3631,7 +3450,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('NTP SYNC    Row 86')
+print('NTP SYNC    Index Reference 85')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3667,7 +3486,7 @@ for x in ntpSync:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('NTP SYNC    Row 86')
+        pfile.write('NTP SYNC    Index Reference 85')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3697,7 +3516,7 @@ for x in ntpSync:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('NTP SYNC    Row 86')
+        pfile.write('NTP SYNC    Index Reference 85')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3715,7 +3534,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('OVERALL CLUSTER HEALTH AUDIT    Row 87')
+print('OVERALL CLUSTER HEALTH AUDIT    Index Reference 86')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 print('***To review the Overall Cluster Health Audit, please reference file: ' + source + '/HC/*-HC_CLI-ALL-*.json***')
@@ -3724,7 +3543,7 @@ print('***To review the Overall Cluster Health Audit, please reference file: ' +
 pfile = open(param, "a")
 pfile.write("\n")
 pfile.write("\n")
-pfile.write('OVERALL CLUSTER HEALTH AUDIT    Row 87')
+pfile.write('OVERALL CLUSTER HEALTH AUDIT    Index Reference 86')
 pfile.write("\n")
 pfile.write('#---------------------------------------------------------------------------------------------------------------#')
 pfile.write("\n")
@@ -3738,8 +3557,8 @@ pfile.close()
 
 print("\n")
 print("\n")
-print('PLATFORM VERSION    Rows 30, 88')
-print('COHESITY CLUSTER DOMAIN NAMES    Rows 30, 88')
+print('PLATFORM VERSION    Index Reference 30')
+print('COHESITY CLUSTER DOMAIN NAMES    Index Reference 8')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3762,9 +3581,9 @@ for x in cluster:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('PLATFORM VERSION    Rows 30, 88')
+        pfile.write('PLATFORM VERSION    Index Reference 30')
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER DOMAIN NAMES    Rows 30, 88')
+        pfile.write('COHESITY CLUSTER DOMAIN NAMES    Index Reference 8')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3781,9 +3600,9 @@ for x in cluster:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('PLATFORM VERSION    Rows 30, 88')
+        pfile.write('PLATFORM VERSION    Index Reference 30')
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER DOMAIN NAMES    Rows 30, 88')
+        pfile.write('COHESITY CLUSTER DOMAIN NAMES    Index Reference 8')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3801,9 +3620,9 @@ f.close()
 
 print("\n")
 print("\n")
-print('COHESITY CLUSTER CREATION DATE    Row 44')
-print('COHESITY CLUSTER HARDWARE    Row 44')
-print('COHESITY NODE COUNT    Row 44')
+print('COHESITY CLUSTER CREATION DATE    ')
+print('COHESITY CLUSTER HARDWARE    ')
+print('COHESITY NODE COUNT    ')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3852,11 +3671,11 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER CREATION DATE    Row 44')
+        pfile.write('COHESITY CLUSTER CREATION DATE    ')
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER HARDWARE    Row 44')
+        pfile.write('COHESITY CLUSTER HARDWARE    ')
         pfile.write("\n")
-        pfile.write('COHESITY NODE COUNT    Row 44')
+        pfile.write('COHESITY NODE COUNT    ')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3897,11 +3716,11 @@ for x in config:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER CREATION DATE    Row 44')
+        pfile.write('COHESITY CLUSTER CREATION DATE    ')
         pfile.write("\n")
-        pfile.write('COHESITY CLUSTER HARDWARE    Row 44')
+        pfile.write('COHESITY CLUSTER HARDWARE    ')
         pfile.write("\n")
-        pfile.write('COHESITY NODE COUNT    Row 44')
+        pfile.write('COHESITY NODE COUNT    ')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3920,7 +3739,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('CUSTOM BINARIES    Row 88')
+print('CUSTOM BINARIES    Index Reference 90')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -3955,7 +3774,7 @@ for x in binary:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('CUSTOM BINARIES    Row 88')
+        pfile.write('CUSTOM BINARIES    Index Reference 90')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -3986,7 +3805,7 @@ for x in binary:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('CUSTOM BINARIES    Row 88')
+        pfile.write('CUSTOM BINARIES    Index Reference 90')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4002,73 +3821,6 @@ f.close()
 
 #---------------------------------------------------------------------------------------------------------------#
 
-# print("\n")
-# print("\n")
-# print('LDAP ERRORS IN BRIDGE LOGS')
-# print('#---------------------------------------------------------------------------------------------------------------#')
-
-# # load json file
-# ldap = glob.glob(source + '/HC/*LDAP*.json')
-
-# # print data to screen
-# for x in ldap:
-#     if os.stat(x).st_size > 5:
-
-#         with open (x, "r") as f:
-#             content = f.read()
-#             print(content)
-
-#         print("\n")
-
-#         # print data to file
-#         pfile = open(param, "a")
-#         pfile.write("\n")
-#         pfile.write("\n")
-#         pfile.write('LDAP ERRORS IN BRIDGE LOGS')
-#         pfile.write("\n")
-#         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
-#         pfile.write("\n")
-#         pfile.write("\n")
-
-#         for x in ldap:
-#             with open (x, "r") as f:
-#                 content = f.read()
-#                 pfile.write(content)
-                    
-#         pfile.write("\n")
-#         pfile.write("\n")
-
-#     else:
-#         print('LDAP Errors are not present on this environment.')
-#         print("\n")
-        
-#         pfile = open(param, "a")
-#         pfile.write("\n")
-#         pfile.write("\n")
-#         pfile.write('LDAP ERRORS IN BRIDGE LOGS')
-#         pfile.write("\n")
-#         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
-#         pfile.write("\n")
-#         pfile.write("\n")
-
-#         pfile.write('LDAP Errors are not present on this environment.')
-#         pfile.write("\n")
-#         pfile.write("\n") 
-    
-# pfile.close()
-
-# f.close()
-
-#---------------------------------------------------------------------------------------------------------------#
-# COHESITY CLUSTER SECURITY SETTINGS
-
-
-
-#---------------------------------------------------------------------------------------------------------------#
-# COHESITY LOG SETTINGS
-
-# PERFORM SYSLOG LOG SHIPPING VALIDATION
-
 print("\n")
 print("\n")
 print('#---------------------------------------------------------------------------------------------------------------#')
@@ -4076,7 +3828,7 @@ print('COHESITY LOG SETTINGS')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('AUDIT LOG RETENTION    Row 91')
+print('AUDIT LOG RETENTION    Index Reference 89')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -4103,7 +3855,7 @@ for x in cluster:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('AUDIT LOG RETENTION    Row 91')
+        pfile.write('AUDIT LOG RETENTION    Index Reference 89')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4126,7 +3878,7 @@ for x in cluster:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('AUDIT LOG RETENTION    Row 91')
+        pfile.write('AUDIT LOG RETENTION    Index Reference 89')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4144,7 +3896,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('SMB/NFS AUDIT LOG RETENTION    Row 92')
+print('SMB/NFS AUDIT LOG RETENTION    Index Reference 90')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -4165,7 +3917,7 @@ for x in cluster:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SMB/NFS AUDIT LOG RETENTION    Row 92')
+        pfile.write('SMB/NFS AUDIT LOG RETENTION    Index Reference 90')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4182,7 +3934,7 @@ for x in cluster:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SMB/NFS AUDIT LOG RETENTION    Row 92')
+        pfile.write('SMB/NFS AUDIT LOG RETENTION    Index Reference 90')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4200,7 +3952,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('SMB/NFS AUDIT LOGGING FOR VIEWS    Row 93')
+print('SMB/NFS AUDIT LOGGING FOR VIEWS    Index Reference 91')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -4226,7 +3978,7 @@ for x in views:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SMB/NFS AUDIT LOGGING FOR VIEWS    Row 93')
+        pfile.write('SMB/NFS AUDIT LOGGING FOR VIEWS    Index Reference 91')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4248,7 +4000,7 @@ for x in views:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SMB/NFS AUDIT LOGGING FOR VIEWS    Row 93')
+        pfile.write('SMB/NFS AUDIT LOGGING FOR VIEWS    Index Reference 91')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4266,7 +4018,7 @@ f.close()
 
 print("\n")
 print("\n")
-print('SYSLOG SERVER CONFIGURATION    Row 94')
+print('SYSLOG SERVER CONFIGURATION    Index Reference 92')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -4286,7 +4038,7 @@ for i in syslog:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SYSLOG SERVER CONFIGURATION    Row 94')
+        pfile.write('SYSLOG SERVER CONFIGURATION    Index Reference 92')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4306,7 +4058,7 @@ for i in syslog:
         pfile = open(param, "a")
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('SYSLOG SERVER CONFIGURATION    Row 94')
+        pfile.write('SYSLOG SERVER CONFIGURATION    Index Reference 92')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4336,7 +4088,7 @@ print('HELIOS CLOUD CONFIGURATION')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('HELIOS CONNECTIVITY AUDIT    Row 31')
+print('HELIOS CONNECTIVITY AUDIT    Index Reference 31')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -4429,7 +4181,7 @@ for x in mcmConfig:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('HELIOS CONNECTIVITY AUDIT    Row 31')
+        pfile.write('HELIOS CONNECTIVITY AUDIT    Index Reference 31')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4513,7 +4265,7 @@ for x in mcmConfig:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('HELIOS CONNECTIVITY AUDIT    Row 31')
+        pfile.write('HELIOS CONNECTIVITY AUDIT    Index Reference 31')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4536,7 +4288,7 @@ print('MARKETPLACE APP AUDIT')
 print('#---------------------------------------------------------------------------------------------------------------#')
 print("\n")
 print("\n")
-print('MARKETPLACE APPS    Rows 105, 106, 107')
+print('MARKETPLACE APPS    ')
 print('#---------------------------------------------------------------------------------------------------------------#')
 
 # load json file
@@ -4608,7 +4360,7 @@ for x in apps:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('MARKETPLACE APPS    Rows 105, 106, 107')
+        pfile.write('MARKETPLACE APPS    ')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
@@ -4660,7 +4412,7 @@ for x in apps:
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
         pfile.write("\n")
-        pfile.write('MARKETPLACE APPS    Rows 105, 106, 107')
+        pfile.write('MARKETPLACE APPS    ')
         pfile.write("\n")
         pfile.write('#---------------------------------------------------------------------------------------------------------------#')
         pfile.write("\n")
