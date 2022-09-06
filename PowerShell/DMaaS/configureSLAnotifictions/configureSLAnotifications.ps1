@@ -1,5 +1,5 @@
 
-# ./configureSLAnotifications.ps1 -apiKey ****** -regionId us-east-1 -emailAddresses test@duh.com, blah@test.com -violations All -source server.domain.com
+# ./configureSLAnotifications.ps1 -apiKey ****** -regionId us-east-1 -emailAddresses "test@duh.com, blah@test.com" -violations All -source server.domain.com
 
 # process commandline arguments
 [CmdletBinding()]
@@ -209,6 +209,9 @@ $headers.Add("regionId", "$regionId")
 
         $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/alert-service/alerts/config/notificationRules' -Method 'POST' -Headers $headers -Body $bodyJson -ContentType 'application/json' 
         $response | out-file -filepath ./$outfileName -Append
+
+        $validation = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/alert-service/alerts/metadata/typebucket?accountId=$accountId&tenantId=$tenantId" -Method 'GET' -Headers $headers -ContentType 'application/json' 
+        $validation | out-file -filepath ./$outfileName -Append
 
         #$validateJson = $validate | ConvertTo-Json 
         # write-host "$validateJson"   
