@@ -3,19 +3,49 @@
 ### process commandline arguments
 [CmdletBinding()]
 # param (
-#     [Parameter()][string]$vips,
-#     [Parameter()][string]$usernames,
-#     [Parameter()][string]$domains,
-#     [Parameter()][string]$passwords
+#     [Parameter()][string]$vips, # vips or FQDNs of Cohesity Clusters 
+#     [Parameter()][string]$usernames, # Cohesity UI Admin usernames
+#     [Parameter()][string]$domains, # Cohesity UI domains of usernames
+#     [Parameter()][string]$passwords # Cohesity UI Admin passwords
 # )
 
 # example of hardcoding credentails:
 param (
-    [Parameter()][string]$vips = "10.26.1.15, 10.26.0.230",
+    [Parameter()][string]$vips = "10.26.1.9, 10.26.0.198",
     [Parameter()][string]$usernames = "ezabor, ezabor",
     [Parameter()][string]$domains = "sre.cohesity.com, sre.cohesity.com",
     [Parameter()][string]$passwords = "Cohesity#321, Cohesity#321"
 )
+
+$source = $PSScriptRoot
+
+function write-log {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$False)]
+        [ValidateSet("INFO","WARN","ERROR","FATAL","DEBUG")]
+        [String]
+        $Level = "INFO",
+
+        [Parameter(Mandatory=$True)]
+        [string]
+        $Message,
+
+        [Parameter(Mandatory=$False)]
+        [string]
+        $logfile
+    )
+
+    $Stamp = (Get-Date).toString("yyyy/MM/dd HH:mm:ss")
+    $Line = "$Stamp $Level $Message"
+
+    If($logfile) {
+        Add-Content $logfile -Value $Line
+    }
+    Else {
+        Write-Output $Line
+    }
+}
 
 # ensure the environment meets the PowerShell Module requirements of 5.1 or above 
 $version = $PSVersionTable.PSVersion
@@ -67,30 +97,35 @@ else {
                 }
             }
         }
- 
-    # Output Config
-    $dateString = (get-date).ToString('yyyy-MM-dd')
-    $clientSummary = "ClientSummaryReport-$dateString.csv"
-    $outfileName_source = "ClientSummary_source-$dateString.csv" 
-    $allClients = "AllClientsBackedUp-$dateString.csv" 
-    $unsuccessfulClients = "UnsuccessfulClients-$dateString.csv" 
-    $strikeSummary_source = "StrikeSummary_source-$dateString.csv" 
-    $strikeSummary = "StrikeSummary-$dateString.csv" 
-    "Object,Source,Job Name,Cluster,Status,Level,Size (Gb),Started,Ended,Duration,Expires,Total,Successful,Warning,Failed,Success(%)" | Out-File -FilePath $outfileName_source
-    "Cluster,One Strike,Two Strikes,Three Strikes" | Out-File -FilePath $strikeSummary_source
-  
-    $source = "/Users/erin.zaborowski/Documents/Source_Files/Professional_Services/PROJECTS/Memorial_Hermann/Memorial_Hermann_scripts"
+
+    # Create folder for current .csv files
+
+    $currentFolder = "CSVs"
+
+    if (Test-Path $source\$currentFolder) {
+    
+        Write-Host "Current CSV Folder Exists"
+    }
+    else {
+    
+        #PowerShell Create directory if not exists
+        New-Item $currentFolder -ItemType Directory
+        Write-Host "CSV Folder Created successfully"
+    }
+
+    $csv_source = "$source\$currentFolder"
 
     # Create folder and move old .csv files from previous runs
-    $csv = Get-ChildItem $source\*.csv -Name
-    if($csv){
+    $results = @("ClientSummary_source-*.csv", "ClientSummaryReport-*.csv", "StrikeSummary_Source-*.csv", "UnsuccessfulClients-*.csv") 
+    foreach($result in $results) {
+        $csv = Get-ChildItem $csv_source\$result -Name
         foreach($i in $csv){
             $folder = $i.split("-")
-            $folder = $folder.split(".")
+            #$folder = $folder.split(".")
         }
 
-        write-host($folder[1])
-        $folderName = $source + "\" + $folder[1]
+        write-host($folder[0])
+        $folderName = $csv_source + "\" + $folder[0]
         if (Test-Path $folderName) {
         
             Write-Host "Folder Exists"
@@ -103,11 +138,50 @@ else {
         }
 
         foreach($i in $csv){
-            $path = $source + "\" + $i
+            $path = $csv_source + "\" + $i
             $destination = $folderName + "\" + $i
-            Move-Item -Path $path -Destination $destination
+            Move-Item -Path $path -Destination $destination -Force
         }
-}
+        if(!$csv){
+
+        }
+    }
+
+
+    # Output Config
+    $dateString = (get-date).ToString('yyyy-MM-dd')
+    $clientSummary = "$csv_source\ClientSummaryReport-$dateString.csv"
+    $fullClientSummary = "$csv_source\FullClientSummary-$dateString.csv" 
+    #$allClients = "$csv_source\AllClientsBackedUp-$dateString.csv" 
+    $unsuccessfulClients = "$csv_source\UnsuccessfulClients-$dateString.csv" 
+    $strikeSummary_source = "$csv_source\StrikeSummary_source-$dateString.csv" 
+    #$strikeSummary = "$csv_source\StrikeSummary-$dateString.csv" 
+    
+    # Output headers in csv files
+    "Object,Source,Job Name,Cluster,Status,Level,Size (Gb),Started,Ended,Duration,Expires,Total,Successful,Warning,Failed,Success(%)" | Out-File -FilePath $fullClientSummary
+
+    "Cluster,Total,Successful,Warning,Failed,Success(%)" | Out-File -FilePath $clientSummary
+
+    "Object,Source,Job Name,Cluster,Status,Level,Size (Gb),Started,Ended,Duration,Expires" | Out-File -FilePath $unsuccessfulClients
+
+    "Cluster,One Strike,Two Strikes,Three Strikes" | Out-File -FilePath $strikeSummary_source
+    
+    # Validate that files were created
+    $results = @("FullClientSummary-*.csv", "ClientSummaryReport-*.csv", "StrikeSummary_Source-*.csv", "UnsuccessfulClients-*.csv") 
+    foreach($result in $results) {
+        $csv = Get-ChildItem $source\$result -Name
+        foreach($i in $csv){
+            $folder = $i
+        }
+
+        write-host($folder)
+        if (Test-Path $folder) {
+            Write-Host "Initial Files Exist"
+        }
+        else{
+            break
+        }
+    }
 
     # Get the End Date
     [long]$endtimeusecs = (([datetime]::Now)-(Get-Date -Date '1/1/1970')).TotalMilliseconds * 1000
@@ -146,6 +220,7 @@ else {
 
         ### Get the Failed Object Details
         $failedobjects = api get /public/reports/protectionSourcesJobsSummary?allUnderHierarchy=true`&endTimeUsecs=$endtimeusecs`&reportType=kFailedObjectsReport`&startTimeUsecs=$failedstarttime`&statuses=kError
+
         
         # capture the needed fields
         $clusterName = $clusterdetails.name
@@ -220,7 +295,7 @@ else {
                 $timeSpent = ($timeSpent/1000)
                 $duration = [TimeSpan]::FromMilliseconds([double]$timeSpent)
                 
-                #pulling Cohesity Pollicy data to extrapolate Retention Period of backups
+                # Pulling Cohesity Pollicy data to extrapolate Retention Period of backups
                 $runs = api get /public/protectionJobs?names=$jobName
                 foreach($run in $runs){
                     $policyId =$run.policyId
@@ -236,9 +311,32 @@ else {
                     $expires = $runend.AddDays(+$policyRetention)
                 }
                     
-                "$objectName,$sourceName,$jobName,$clusterName,$status,$level,$sizeGb,$started,$runend,$duration,$expires,$totalsnapshots,$successfulruns,$warningsnapshots,$errorsnapshots,$successpercent" | Out-File -FilePath $outfileName_source -Append
+                # Output data to csv files
+                "$objectName,$sourceName,$jobName,$clusterName,$status,$level,$sizeGb,$started,$runend,$duration,$expires,$totalsnapshots,$successfulruns,$warningsnapshots,$errorsnapshots,$successpercent" | Out-File -FilePath $fullClientSummary -Append
+
+                if($status -eq "Error"){
+                    "$objectName,$sourceName,$jobName,$clusterName,$status,$level,$sizeGb,$started,$runend,$duration,$expires" | Out-File -FilePath $unsuccessfulClients -Append 
+                }
             }
         }
+
+        #---------------------------------------------------------------------------------------------------------------#
+        # Section to perform manipulation of data to find sum and average of all runs per Cohesity Cluster to output into $clientSummary Report
+        $fullClient = Get-ChildItem $source\FullClientSummary-*.csv -Name
+
+        foreach($i in $fullClient){
+            get-content .\$i | ConvertFrom-Csv
+
+            $csv_source = $source + "\" + $i
+            $full_csv_table = Import-Csv $csv_source
+            $convertParams = @{
+                PreContent = "<H1>$("Cohesity Full Client Summary Report")</H1>"
+                PostContent = "<p class='footer'>$(get-date)</p>"
+        }
+
+        "$clusterName,$totalsnapshots,$successfulruns,$warningsnapshots,$errorsnapshots,$successpercent" | Out-File -FilePath $clientSummary -Append
+
+        #---------------------------------------------------------------------------------------------------------------#        
 
         # Strike Summary
         foreach($failedobject in $failedobjects){
@@ -268,9 +366,9 @@ else {
                 $jobruntype = $failedobject.lastRunType
                 $failure = $failedobject.lastRunErrorMsg
                 $errorCount2 = $numerrors.count
-                $errorCount = $errorCount2 - $errorCount3
+                $errorCount2 = $errorCount2 - $errorCount3
 
-                "$clusterName,,$errorCount," | Out-File -FilePath $strikeSummary_source -Append
+                "$clusterName,,$errorCount2," | Out-File -FilePath $strikeSummary_source -Append
                 }
 
             if ($numerrors -eq 1)
@@ -281,9 +379,9 @@ else {
                 $jobruntype = $failedobject.lastRunType
                 $failure = $failedobject.lastRunErrorMsg
                 $errorCount1 = $numerrors.count
-                $errorCount = $errorCount1 - $errorCount3
+                $errorCount1 = $errorCount1 - $errorCount2
 
-                "$clusterName,$errorCount,," | Out-File -FilePath $strikeSummary_source -Append
+                "$clusterName,$errorCount1,," | Out-File -FilePath $strikeSummary_source -Append
                 }
 
         }
@@ -292,3 +390,5 @@ else {
 
 }
 $stopQuery = $null
+
+write-log -logfile "log-protectDMaasPhysical-$dateString.txt"
