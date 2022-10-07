@@ -13,7 +13,7 @@ param (
     [Parameter()][string]$vips = "10.26.1.9, 10.26.0.198",
     [Parameter()][string]$usernames = "ezabor, ezabor",
     [Parameter()][string]$domains = "sre.cohesity.com, sre.cohesity.com",
-    [Parameter()][string]$passwords = "Cohesity#321, Cohesity#321"
+    [Parameter()][string]$passwords = "Cohesity, Cohesity"
 )
 
 $source = $PSScriptRoot
