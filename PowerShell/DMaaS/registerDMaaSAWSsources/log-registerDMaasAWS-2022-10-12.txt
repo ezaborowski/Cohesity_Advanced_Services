@@ -1,0 +1,228 @@
+
+Validating PowerShell Version...
+
+PowerShell Module is up to date.
+
+AWS ID's parsed SUCCESSFULLY!
+
+204166215890
+
+Testing API Connection...
+
+
+Connection with API Key SUCCESSFUL!
+
+
+upgradeInfo
+-----------
+{@{clusterId=1920016082008445; clusterIncarnationId=1654010424646; clusterName=Sagar-660d-ROBO; type=kVirtualRobo; numNodes=1; storageCapacityBytes=589214066517; storageConsumedBytes=5216043008; connec…
+
+
+Validating Tenant ID...
+
+
+Tenant ID: 0012J00002QxadFQAR:b513e27c69/
+
+Validating Region ID...
+
+
+Region ID: us-east-1
+
+Preparing Registration of AWS ID: 
+204166215890
+
+STEP 1 - Registering AWS Account ID 204166215890 in DMaaS...
+
+{
+  "tenantId": "0012J00002QxadFQAR:b513e27c69/",
+  "useCases": [
+    "EC2",
+    "RDS"
+  ],
+  "awsAccountNumber": "204166215890",
+  "destinationRegionId": "us-east-1"
+}
+@{awsAccountNumber=204166215890; awsIamRoleArn=arn:aws:iam::204166215890:role/cohesity-aws-cloud-source-us-east-1-W1wZoGdomM; awsIamRoleName=cohesity-aws-cloud-source-us-east-1-W1wZoGdomM; cloudFormationTemplate={
+  "Metadata": {
+    "Copyright": "Copyright 2021 Cohesity Inc.",
+    "AWS::CloudFormation::Interface": {
+      "ParameterGroups": [
+        {
+          "Label": {
+            "default": "Restrict IAM permissions (Optional)"
+          },
+          "Parameters": [
+            "RoleArnList"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Restrict KMS permissions (Optional)"
+          },
+          "Parameters": [
+            "KMSTagKeyValuePair"
+          ]
+        },
+        {
+          "Label": {
+            "default": "Restrict SSM permissions (Optional)"
+          },
+          "Parameters": [
+            "SSMTagKeyValuePair"
+          ]
+        }
+      ],
+      "ParameterLabels": {
+        "RoleArnList": {
+          "default": "List of allowed IAM Role ARNs"
+        },
+        "KMSTagKeyValuePair": {
+          "default": "Allowed KMS Tag"
+        },
+        "SSMTagKeyValuePair": {
+          "default": "Allowed SSM Tag"
+        }
+      }
+    }
+  },
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "This template creates an IAM role in your account which can be assumed by Cohesity.",
+  "Resources": {
+    "CrossAccountRole": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": {
+          "Fn::If": [
+            "ParametersUsed",
+            "https://cohesity-source-registration.s3.us-east-2.amazonaws.com/hp1/0012J00002QxadFQAR-b513e27c69/role-parameterized-cft-W1wZoGdomM.json",
+            "https://cohesity-source-registration.s3.us-east-2.amazonaws.com/hp1/0012J00002QxadFQAR-b513e27c69/role-cft-W1wZoGdomM.json"
+          ]
+        },
+        "Parameters": {
+          "RoleArnList": {
+            "Ref": "RoleArnList"
+          },
+          "KMSTagKeyValuePair": {
+            "Ref": "KMSTagKeyValuePair"
+          },
+          "SSMTagKeyValuePair": {
+            "Ref": "SSMTagKeyValuePair"
+          },
+          "CohesityCrossAccountRoleName": {
+            "Fn::FindInMap": [
+              "StackParameters",
+              "CohesityCrossAccountRole",
+              "Name"
+            ]
+          },
+          "ControlPlaneRoleArn": {
+            "Fn::FindInMap": [
+              "StackParameters",
+              "ControlPlaneRole",
+              "Arn"
+            ]
+          },
+          "MacroName": {
+            "Fn::If": [
+              "ParametersUsed",
+              {
+                "Fn::GetAtt": [
+                  "Macro",
+                  "Outputs.MacroName"
+                ]
+              },
+              ""
+            ]
+          }
+        }
+      }
+    },
+    "Macro": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://cohesity-source-registration.s3.us-east-2.amazonaws.com/hp1/0012J00002QxadFQAR-b513e27c69/macro-cft-W1wZoGdomM.yaml"
+      },
+      "Condition": "ParametersUsed"
+    }
+  },
+  "Mappings": {
+    "StackParameters": {
+      "CohesityCrossAccountRole": {
+        "Name": "cohesity-aws-cloud-source-us-east-1-W1wZoGdomM"
+      },
+      "ControlPlaneRole": {
+        "Arn": "arn:aws:iam::466241180685:role/c-cp-r-acs-0012J00002QxadFQAR-b513e27c69-mASlDXFdJU"
+      }
+    }
+  },
+  "Parameters": {
+    "RoleArnList": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Note: Use this field if you would like to limit the recovery of EC2 instances to only those that had these Role ARNs attached to them at the backup time. Usage: <arn1>,<arn2>,... See https://helios-help.cohesity.com/en/articles/5715547-run-cloudformation-template to read more.",
+      "AllowedPattern": "(^arn:aws:iam::\\d{12}:role/[\\w=,.@/*?-]+)(,arn:aws:iam::\\d{12}:role/[\\w=,.@/*?-]+)*$|^$"
+    },
+    "KMSTagKeyValuePair": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Note: Use this field if you would like to limit the backup of encrypted EC2 & RDS instances to only those that are encrypted using AWS KMS Key with specified tag. Usage: key$value. See https://helios-help.cohesity.com/en/articles/5715547-run-cloudformation-template to read more.",
+      "AllowedPattern": "^[\\w: ./=+-@]+\\$[\\w: ./*?=+-@]+$|^$"
+    },
+    "SSMTagKeyValuePair": {
+      "Type": "String",
+      "Default": "",
+      "Description": "Note: Use this field if you would like to limit the available targets for File and Folder recovery to only those VMs with the specified tag. Usage: key$value. See https://helios-help.cohesity.com/en/articles/5715547-run-cloudformation-template to read more.",
+      "AllowedPattern": "^[\\w: ./=+-@]+\\$[\\w: ./*?=+-@]+$|^$"
+    }
+  },
+  "Conditions": {
+    "ParametersUsed": {
+      "Fn::Not": [
+        {
+          "Fn::And": [
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "RoleArnList"
+                },
+                ""
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "KMSTagKeyValuePair"
+                },
+                ""
+              ]
+            },
+            {
+              "Fn::Equals": [
+                {
+                  "Ref": "SSMTagKeyValuePair"
+                },
+                ""
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "Outputs": {
+    "CohesityCrossAccountRoleArn": {
+      "Description": "The role Cohesity uses to access resources inside your account.",
+      "Value": {
+        "Fn::GetAtt": [
+          "CrossAccountRole",
+          "Outputs.CohesityCrossAccountRoleArn"
+        ]
+      }
+    }
+  }
+}
+; cloudFormationTemplateUrl=https://console.aws.amazon.com//cloudformation/home#/stacks/create/review?templateURL=https://cohesity-source-registration.s3.us-east-2.amazonaws.com/hp1/0012J00002QxadFQAR-b513e27c69/cohesity-cft-W1wZoGdomM.json; destinationRegionId=us-east-1; tenantCpRoleArn=arn:aws:iam::466241180685:role/c-cp-r-acs-0012J00002QxadFQAR-b513e27c69-mASlDXFdJU; tenantId=0012J00002QxadFQAR:b513e27c69/; useCases=System.Object[]}
+
+Validating Registration of AWS Account ID 204166215890 in DMaaS...
+
+
