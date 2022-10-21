@@ -4,26 +4,141 @@
 printf '\n'
 echo "#---------------------------------------------------------------------------------------------------------------#"
 echo "#Developed by Erin Zaborowski - August 12 2021                                                                  #"
-echo "#Last Updated 4/1/2022                                                                                          #"
+echo "#Last Updated 10/21/2022                                                                                        #"
 echo "#                                                                                                               #"
 echo "#                                                                                                               #"
 echo "#---------------------------------------------------------------------------------------------------------------#"
 
-printf '\n'
-echo "Please enter Cluster address (ex: localhost:8053 or mycluster.mydomain.com): "
-read -e url
+# Reset
+Color_Off=$'\e[m'       # Text Reset
+
+# Regular Colors
+Black=$'\e[0;30m'        # Black
+Red=$'\e[0;31m'          # Red
+Green=$'\e[0;32m'        # Green
+Yellow=$'\e[0;33m'       # Yellow
+Blue=$'\e[0;34m'         # Blue
+Purple=$'\e[0;35m'       # Purple
+Cyan=$'\e[0;36m'         # Cyan
+White=$'\e[0;37m'        # White
+
+# Bold
+BBlack=$'\e[1;30m'       # Black
+BRed=$'\e[1;31m'         # Red
+BGreen=$'\e[1;32m'       # Green
+BYellow=$'\e[1;33m'      # Yellow
+BBlue=$'\e[1;34m'        # Blue
+BPurple=$'\e[1;35m'      # Purple
+BCyan=$'\e[1;36m'        # Cyan
+BWhite=$'\e[1;37m'       # White
+
+
 printf '\n'
 echo "Please enter a prefix to append to output files: "
 read -e filename
+
 printf '\n'
-echo "Please enter a Local Cohesity Cluster UI domain (ex: LOCAL or your active directory domain): "
-read -e domain
+echo "Please enter Cohesity Cluster IP Address or FQDN (ex: localhost:8053 or clusterFQDN): "
+read -e url
+  while [[ "$url" =~ [^a-zA-Z0-9.:] || -z "$url" ]]
+    do 
+      printf '\n'
+      echo "${BRed}Cohesity Cluster IP Address / FQDN cannot be blank or contain special characters!${Color_Off}"
+      printf '\n'
+      echo "${Yellow}Please enter a valid Cohesity Cluster IP Address or FQDN (ex: localhost:8053 or clusterFQDN): ${Color_Off}"
+      printf '\n'
+      read -e url
+    done 
+
 printf '\n'
-echo "Please enter a Local Cohesity Cluster UI username: "
+echo "Please enter a Cohesity Cluster UI username that is associated with the Admin Role: "
 read -e username
+  while [[ "$username" =~ [^a-zA-Z0-9.:] || -z "$username" ]]
+    do 
+      printf '\n'
+      echo "${BRed}Cohesity Cluster UI username cannot be blank or contain special characters!${Color_Off}"
+      printf '\n'
+      echo "${Yellow}Please enter a valid Cohesity Cluster UI username that is associated with the Admin Role: ${Color_Off}"
+      printf '\n'
+      read -e username
+    done 
+
 printf '\n'
-echo "Please enter a Local Cohesity Cluster UI password: "
+echo "Please enter the Cohesity Cluster UI username password: "
 read -es password
+  while [ -z "$password" ]
+    do 
+      printf '\n'
+      echo "${BRed}Cohesity Cluster UI username password cannot be blank!${Color_Off}"
+      printf '\n'
+      echo "${Yellow}Please enter a valid Cohesity Cluster UI username password: ${Color_Off}"
+      printf '\n'
+      read -es password
+    done 
+
+printf '\n'
+echo "Please enter the domain associated with the Cohesity Cluster UI user (ex: LOCAL or your active directory domain): "
+read -e domain
+  while [[ "$domain" =~ [^a-zA-Z0-9.:] || -z "$domain" ]]
+    do 
+      printf '\n'
+      echo "${BRed}Cohesity Cluster UI user domain cannot be blank or contain special characters!${Color_Off}"
+      printf '\n'
+      echo "${Yellow}Please enter a valid domain associated with the Cohesity Cluster UI user (ex: LOCAL or your active directory domain): ${Color_Off}"
+      printf '\n'
+      read -e domain
+    done 
+
+printf '\n'
+
+printf '\n'
+echo "Cohesity Cluster Credential validation..."
+printf '\n'
+while ! token=`curl -X POST -k "https://$url/irisservices/api/v1/public/accessTokens" -H "accept: application/json" -H "content-type: application/json" -d "{ \"domain\": \"$domain\", \"password\": \"$password\", \"username\": \"$username\"}" | cut -d : -f 2 | cut -d, -f1 `
+  do
+  printf '\n'
+  echo "Please enter Cohesity Cluster IP Address or FQDN (ex: localhost:8053 or clusterFQDN): "
+  read -e url
+    while [[ "$url" =~ [^a-zA-Z0-9.:] || -z "$url" ]]
+      do 
+        echo "Cohesity Cluster IP Address / FQDN cannot be blank or contain special characters!"
+        echo "Please enter a valid Cohesity Cluster IP Address or FQDN (ex: localhost:8053 or clusterFQDN): "
+        read -e url
+      done 
+
+  printf '\n'
+  echo "Please enter a Cohesity Cluster UI username that is associated with the Admin Role: "
+  read -e username
+    while [[ "$username" =~ [^a-zA-Z0-9.:] || -z "$username" ]]
+      do 
+        echo "Cohesity Cluster UI username cannot be blank or contain special characters!"
+        echo "Please enter a valid Cohesity Cluster UI username that is associated with the Admin Role: "
+  read -e username
+      done 
+
+  printf '\n'
+  echo "Please enter the Cohesity Cluster UI username password: "
+  read -es password
+    while [ -z "$password" ]
+      do 
+        echo "Cohesity Cluster UI username password cannot be blank!"
+        echo "Please enter a valid Cohesity Cluster UI username password: "
+  read -es password
+      done 
+
+  printf '\n'
+  echo "Please enter the domain associated with the Cohesity Cluster UI user (ex: LOCAL or your active directory domain): "
+  read -e domain
+    while [[ "$domain" =~ [^a-zA-Z0-9.:] || -z "$domain" ]]
+      do 
+        echo "Cohesity Cluster UI user domain cannot be blank or contain special characters!"
+        echo "Please enter a valid domain associated with the Cohesity Cluster UI user (ex: LOCAL or your active directory domain): "
+        read -e domain
+      done 
+  printf '\n'
+
+printf '\n'
+echo "Cohesity Cluster Credentials verified successfully!"
 printf '\n'
 
 
@@ -94,7 +209,7 @@ echo "Making secLogs/API subdirectory to save all logs to..."
 #  mkdir secLogs/API/$filename-API-certificates 2> /dev/null
     sleep 5
 
-api_checks=(basicClusterInfo, activeDirectory, ldapProvider, domainControllers, antivirusGroups, icapConnectionStatus, infectedFiles, alerts, roles, users, groups, remoteClusters, vaults, viewBoxes, views, alertNotificationRules, idps, cluster, apps, protectionJobs, scheduler, protectionPolicies)
+api_checks=(basicClusterInfo, activeDirectory, ldapProvider, domainControllers, antivirusGroups, icapConnectionStatus, infectedFiles, alerts, roles, users, groups, remoteClusters, vaults, viewBoxes, alertNotificationRules, idps, cluster, apps, protectionJobs, scheduler, protectionPolicies)
 api_stats_checks=(storage, viewBoxes, vaults, protectionJobs)
 #public/ldapProvider/{id}/status
 
@@ -137,6 +252,10 @@ curl -X GET -k "https://$url/irisservices/api/v2/kerberos-providers" -H "accept:
 echo -e "\nCalling keystone \n"
 
 curl -X GET -k "https://$url/irisservices/api/v2/keystones" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-keystone-`date +%s`.json
+
+echo -e "\nCalling views \n"
+
+curl -X GET -k "https://$url/irisservices/api/v2/views" -H "accept: application/json" -H "Authorization: Bearer $token" | python -m json.tool > secLogs/API/$filename-API-keystone-`date +%s`.json
 
 
 echo -e "\nCalling mcmConfig \n"
@@ -269,5 +388,5 @@ tar czvfP secLogs.tar.gz secLogs/
 
 printf '\n'
 echo "Files compressed in /home/support/secLogs.tar.gz. Please SCP this file to your desktop."
-echo "Example: cget_token clusterID token /home/support/secLogs.tar.gz"
+echo "Example: copull clusterID token /home/support/secLogs.tar.gz"
 printf '\n'

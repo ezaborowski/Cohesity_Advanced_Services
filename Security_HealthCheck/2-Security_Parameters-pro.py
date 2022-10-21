@@ -9,9 +9,44 @@ import re
 import subprocess
 #from types import NoneType 
 import shutil
+import csv
 
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+# while True:
+#     raw_input = input
+#     source = input('Please input the directory of the uncompressed secLogs folder (ex: /Users/john.doe/secLogs): ')
+#     if source.isalnum() == True:
+#
+#     else:
+#         print("secLogs directory cannot be blank or contain special characters")
+#         raw_input = input
+#         source = input('Please input the directory of the uncompressed secLogs folder (ex: /Users/john.doe/secLogs): ')
+
+# ask user to input secLogs filepath
 raw_input = input
 source = input('Please input the directory of the uncompressed secLogs folder (ex: /Users/john.doe/secLogs): ')
+apiSource = source + "/" + "API"
+
+# check if file path is correct
+while os.path.isdir(apiSource) == False:
+    print(bcolors.FAIL + "Did not find the appropriate subfolders listed under: "+str(source)+'. Please check the directory path, spelling, and try again.' + bcolors.ENDC)
+
+    source = None  
+    apiSource = None
+    raw_input = input
+    source = input(bcolors.WARNING + 'Please input a valid file path of the uncompressed secLogs folder (ex: /Users/john.doe/secLogs): ' + bcolors.ENDC)
+    apiSource = source + "/" + "API"
 
 #---------------------------------------------------------------------------------------------------------------#
 
@@ -2153,7 +2188,18 @@ for x in scheduler:
             scheduler_search = re.findall("(\"receiverEmails\"\: \[ \"(.*?)\" \])|(\"type\"\: \"(.*?)\" \})", content)
             # print(scheduler_search)
             print("\n")
+
+            # cull out duplicates
+            emailList = []
+            dupList = []
+
             for i in scheduler_search:
+                if i not in emailList:
+                    emailList.append(i)
+                else:
+                    dupList.append(i)
+
+            for i in emailList:
                 print('Report Email Configuration:', i)
         except AttributeError:
             print('Not Listed')
@@ -2172,7 +2218,18 @@ for x in scheduler:
             scheduler_search = re.findall("(\"receiverEmails\"\: \[ \"(.*?)\" \])|(\"type\"\: \"(.*?)\" \})", content)
             # pfile.write(str(scheduler_search))
             pfile.write("\n")
+
+            # cull out duplicates
+            emailList = []
+            dupList = []
+
             for i in scheduler_search:
+                if i not in emailList:
+                    emailList.append(i)
+                else:
+                    dupList.append(i)
+
+            for i in emailList:
                 pfile.write('Report Email Configuration:')
                 pfile.write(str(i))
         except AttributeError:
@@ -2243,8 +2300,11 @@ for x in config:
 
         snmp = "(snmp_config \{(.*?) read_user)"
         read = "(read_user \{(.*?) encrypted_auth_password)"
+        read_2 = "(read_user \{(.*?) auth_protocol)"
         write = "(write_user \{(.*?) encrypted_auth_password)"
+        write_2 = "(write_user \{(.*?) auth_protocol)"
         trap = "(trap_user \{(.*?) encrypted_auth_password)"
+        trap_2 = "(trap_user \{(.*?) auth_protocol)"
         op = "(operation\: (.*?) sys_info)"
 
         # print data to screen
@@ -2268,6 +2328,12 @@ for x in config:
                 print(search_read_group[0])
                 print("\n")
             except AttributeError:
+                search_read = re.search(read_2, content)
+                search_read_group = (search_read.group())
+                search_read_group = search_read_group.split('auth_protocol')
+                print(search_read_group[0])
+                print("\n")
+            except AttributeError:
                 print('Not Listed')
             print('SNMP Write User Configuration: ')
             try:
@@ -2277,12 +2343,24 @@ for x in config:
                 print(search_write_group[0])
                 print("\n")
             except AttributeError:
+                search_write = re.search(write_2, content)
+                search_write_group = (search_write.group())
+                search_write_group = search_write_group.split('auth_protocol')
+                print(search_write_group[0])
+                print("\n")
+            except AttributeError:
                 print('Not Listed')
             print('SNMP Trap User Configuration: ')
             try:
                 search_trap = re.search(trap, content)
                 search_trap_group = (search_trap.group())
                 search_trap_group = search_trap_group.split('encrypted_auth_password')
+                print(search_trap_group[0])
+                print("\n")
+            except AttributeError:
+                search_trap = re.search(trap_2, content)
+                search_trap_group = (search_trap.group())
+                search_trap_group = search_trap_group.split('auth_protocol')
                 print(search_trap_group[0])
                 print("\n")
             except AttributeError:
@@ -2296,6 +2374,7 @@ for x in config:
                 print("\n")
             except AttributeError:
                 print('Not Listed')
+        
 
         # print data to file
         pfile = open(param, "a")
@@ -2315,8 +2394,10 @@ for x in config:
             pfile.write("\n")
         except AttributeError:
             pfile.write('Not Listed')
+            pfile.write("\n")
         if search_snmp is None:
             pfile.write('SNMP not configured on this Cohesity Cluster.')
+            pfile.write("\n")
         else:
             pfile.write('SNMP Read User Configuration: ')
             try:
@@ -2326,7 +2407,14 @@ for x in config:
                 pfile.write(search_read_group[0])
                 pfile.write("\n")
             except AttributeError:
+                search_read = re.search(read_2, content)
+                search_read_group = (search_read.group())
+                search_read_group = search_read_group.split('auth_protocol')
+                pfile.write(search_read_group[0])
+                pfile.write("\n")
+            except AttributeError:
                 pfile.write('Not Listed')
+                pfile.write("\n")
             pfile.write('SNMP Write User Configuration: ')
             try:
                 search_write = re.search(write, content)
@@ -2335,7 +2423,14 @@ for x in config:
                 pfile.write(search_write_group[0])
                 pfile.write("\n")
             except AttributeError:
+                search_write = re.search(write_2, content)
+                search_write_group = (search_write.group())
+                search_write_group = search_write_group.split('auth_protocol')
+                pfile.write(search_write_group[0])
+                pfile.write("\n")
+            except AttributeError:
                 pfile.write('Not Listed')
+                pfile.write("\n")
             pfile.write('SNMP Trap User Configuration: ')
             try:
                 search_trap = re.search(trap, content)
@@ -2344,7 +2439,14 @@ for x in config:
                 pfile.write(search_trap_group[0])
                 pfile.write("\n")
             except AttributeError:
+                search_trap = re.search(trap_2, content)
+                search_trap_group = (search_trap.group())
+                search_trap_group = search_trap_group.split('auth_protocol')
+                pfile.write(search_trap_group[0])
+                pfile.write("\n")
+            except AttributeError:
                 pfile.write('Not Listed')
+                pfile.write("\n")
             pfile.write('SNMP Operation Configuration: ')
             try:
                 search_op = re.search(op, content)
@@ -2354,6 +2456,7 @@ for x in config:
                 pfile.write("\n")
             except AttributeError:
                 pfile.write('Not Listed')
+                pfile.write("\n")
         pfile.write("\n")
         pfile.write("\n")
 
@@ -2589,7 +2692,8 @@ for x in views:
                 print('--------------------------------------')
                 try_print('View Name:', 'name', i)
                 try_print('NFS View Discovery:', 'enableNfsViewDiscovery', i)
-                try_print('Use Global Whitelist:', 'overrideGlobalWhitelist', i)
+                #try_print('Use Global Whitelist:', 'overrideGlobalWhitelist', i)
+                try_print('Override Global Whitelist:', 'overrideGlobalWhitelist', i)
                 try_print('SMB View Discovery:', 'enableSmbViewDiscovery', i)
                 try_print('SMB Encryption:', 'enableSmbEncryption', i)
                 try_print('SMB Encryption Enforced:', 'enforceSmbEncryption', i)
@@ -2727,7 +2831,8 @@ for x in views:
                 pfile.write("\n")
                 try_write('View Name:', 'name', i)
                 try_write('NFS View Discovery:', 'enableNfsViewDiscovery', i)
-                try_write('Use Global Whitelist:', 'overrideGlobalWhitelist', i)
+                #try_write('Use Global Whitelist:', 'overrideGlobalWhitelist', i)
+                try_write('Override Global Whitelist:', 'overrideGlobalWhitelist', i)
                 try_write('SMB View Discovery:', 'enableSmbViewDiscovery', i)
                 try_write('SMB Encryption:', 'enableSmbEncryption', i)
                 try_write('SMB Encryption Enforced:', 'enforceSmbEncryption', i)
