@@ -1,5 +1,5 @@
 
-# ./registerDMaaSAWSsources.ps1 -apiKey #### -regionId us-east-1 -AWSid ####
+# ./registerDMaaSAWSsources.ps1 -apiKey #### -regionId us-east-1 -AWSid #### -roleARN "AWS_ARN"
 
 # install PowerShell on macOS: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos?view=powershell-7.2
 # install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
@@ -11,16 +11,34 @@
 param (
     [Parameter(Mandatory = $True)][string]$apiKey,  # apiKey
     [Parameter(Mandatory = $True)][string]$regionId,  # DMaaS SQL Source Region Id
-    #[Parameter(Mandatory = $True)][string]$saasConn,  # name of SaaS Connection to associate with Physical Source
     [Parameter()][array]$AWSid,  # AWS Account ID
-    [Parameter()][string]$AWSlist = ''  # optional textfile of AWS Account Id's to protect
-
+    [Parameter()][string]$AWSlist = '',  # optional textfile of AWS Account Id's to protect
+    [Parameter()][string]$roleARN,  # AWS ARN associated with CFT Deployment IAM Role
+    [Parameter()][string]$ARNlist = ''  # optional textfile of AWS ARN's associated with CFT Deployment IAM Roles
 )
 
 # set static variables
 $dateString = (get-date).ToString('yyyy-MM-dd')
 $outfileName = "$PSScriptRoot\log-registerDMaasAWS-$dateString.txt"
-$dest = $PSScriptRoot
+$finalOutput = "$PSScriptRoot\log-DMaaSAWSinfo-$dateString.txt"
+
+# create CFT folder
+$cftFolder = "CFT"
+
+    if (Test-Path $PSScriptRoot\$cftFolder) {
+    
+        Write-Host "CFT Folder already exists."
+        Write-Output "CFT Folder already exists." | Out-File -FilePath $outfileName -Append 
+    }
+    else {
+    
+        #PowerShell Create directory if not exists
+        New-Item $cftFolder -ItemType Directory
+        Write-Host "CFT Folder Created SUCCESSFULLY!" -ForegroundColor Green
+        Write-Output "CFT Folder Created SUCCESSFULLY!" | Out-File -FilePath $outfileName -Append 
+    }
+
+    $awsCFT = "$PSScriptRoot\$cftFolder"
 
 # ensure the environment meets the PowerShell Module requirements of 5.1 or above 
 
@@ -68,9 +86,39 @@ if($AWStoAdd.Count -eq 0){
     write-output $AWStoAdd | Out-File -FilePath $outfileName -Append 
 }
 
-$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+# gather list of AWS ARN's to use to Register
+$ARNtoAdd = @()
+foreach($ARN in $roleARN){
+    $ARNtoAdd += $ARN
+}
+if ('' -ne $ARNlist){
+    if(Test-Path -Path $ARNlist -PathType Leaf){
+        $roleARN = Get-Content $ARNlist
+        foreach($ARN in $roleARN){
+            $AWStoAdd += [string]$ARN
+        }
+    }else{
+        Write-Host "`nAWS ARN list $ARNlist not found!" -ForegroundColor Yellow 
+        Write-Output "`nAWS ARN list $ARNlist not found!" | Out-File -FilePath $outfileName -Append 
+        exit
+    }
+}
+
+$ARNtoAdd = @($ARNtoAdd | Where-Object {$_ -ne ''})
+
+if($ARNtoAdd.Count -eq 0){
+    Write-Host "`nNo AWS ID's specified!" -ForegroundColor Yellow  
+    Write-Output "`nNo AWS ID's specified!" | Out-File -FilePath $outfileName -Append 
+    exit
+}else{
+    Write-Host "`nAWS ARN's parsed SUCCESSFULLY!`n" -ForegroundColor Green 
+    Write-Output "`nAWS ARN's parsed SUCCESSFULLY!`n" | Out-File -FilePath $outfileName -Append 
+    write-output $ARNtoAdd | Out-File -FilePath $outfileName -Append 
+}
 
 # test API Connection
+$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+
 Write-host "`nTesting API Connection...`n" 
 Write-Output "`nTesting API Connection...`n" | Out-File -FilePath $outfileName -Append 
 $headers.Add("apiKey", "$apiKey")
@@ -164,86 +212,194 @@ foreach($AWSaccount in $AWStoAdd){
         # register DMaaS AWS Account - STEP 1
         $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/dms/tenants/regions/aws-cloud-source' -Method 'POST' -Headers $headers -Body $bodyJson -ContentType 'application/json' 
         $response | ConvertTo-Json
-        Write-host "$response" -ForegroundColor Green 
+        # Write-host "$response" -ForegroundColor Green 
         write-output "$response" | Out-File -FilePath $outfileName -Append
 
-        #---------------------------------------------------------------------------------------------------------------#
+        # write the response CFT to file
+        $awsCFTfile = "$awsCFT\$AWSaccount-$dateString.cft"
+        write-output "$response" | Out-File -FilePath $awsCFTfile -force 
 
-        # PULL CFT FROM $response OUTPUT
-        # SAVE AS .cft
+        # edit CFT file to remove api response data
+        $cftJSON = Get-Content -path $awsCFTfile
+        
+        $cftJSON_first = $cftJSON[1..($cftJSON.count - 1)]
+        $cftJSON = $cftJSON_first
 
-        #---------------------------------------------------------------------------------------------------------------#
+        $cftJSON_second = $cftJSON[0..($cftJSON.count - 2)]
+        $cftJSON = $cftJSON_second
 
+        $awsCFTjson = "$awsCFT\$AWSaccount-$dateString.json"
+        Write-Output "$cftJSON" | Set-Content -path $awsCFTjson  
+        # Write-Output "$cftJSON" | out-file -filepath $awsCFTjson -force 
+        "{" + (Get-Content $awsCFTjson | Out-String) | Set-Content $awsCFTjson
+        $cftJSON = Get-Content -path $awsCFTjson
+        write-host "Step 1 of DMaaS AWS Account Registration completed SUCCESSFULLY!" -ForegroundColor Green
+        write-host "CFT Template Body: $cftJSON"
+        write-host "CFT Template Location: $awsCFTjson"
+
+        }
+
+    else{
+        Write-Host "`nNo AWS Account ID available to Register!`n" -ForegroundColor Yellow 
+        write-output "`nNo AWS Account ID available to Register!`n" | Out-File -FilePath $outfileName -Append 
+    }
+
+        
+#---------------------------------------------------------------------------------------------------------------#
+
+        # deploy the CFT Template against the AWS Account ID
+
+        # Set-AWSCredentials -AccessKey AKIAIOSFODNN7EXAMPLE -SecretKey wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY -StoreAs MyMainUserProfile
+        # Validate: Get-AWSCredential -ListProfileDetail
+        # Initialize-AWSDefaults -ProfileName MyMainUserProfile -Region us-west-2
+    
+    foreach($awsARN in $ARNtoAdd){
+        if($cftJSON){
+
+            $awsCreds = Get-AWSCredential -ListProfileDetail
+            $awsDefault = $awsCreds | where ProfileName -eq "default" 
+            write-host "If you are getting AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: https://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT" -ForegroundColor Yellow
+            write-output "If you are getting AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: https://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT" | Out-File -FilePath $outfileName -Append
+            if($awsDefault){
+                $creds = (Use-STSRole -RoleArn "$awsARN" -RoleSessionName "cohesityCFTdeployment").Credentials
+                # need to provide credentials from an IAM User to call functions
+                    # $creds.AccessKeyId
+                    # $creds.SecretAccessKey
+                    # $creds.SessionToken
+                    # $creds.Expiration
+
+
+                Set-DefaultAWSRegion -Region $regionId
+                # Validate: Get-DefaultAWSRegion
+
+                # New-CFNStack - https://docs.aws.amazon.com/powershell/latest/reference/items/New-CFNStack.html
+
+                $cfnStack = New-CFNStack -StackName cohesity-dmaas -TemplateBody "$cftJSON" -Capability "CAPABILITY_NAMED_IAM"
+                write-output "$cfnStack" | Out-File -FilePath $outfileName -Append
+
+                # monitor AWS CFT Template deployment
+                $cftStatus = Get-CFNStack -StackName cohesity-dmaas 
+                $cftStatus = $cftStatus.StackStatus
+                    while($cftStatus -ne "CREATE_COMPLETE"){
+                        $cftStatus = Get-CFNStack -StackName cohesity-dmaas
+                        $cftStatus = $cftStatus.StackStatus
+                        sleep 15
+                        write-host "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" -ForegroundColor Yellow 
+                        write-output "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus"| Out-File -FilePath $outfileName -Append 
+                    }
+
+                    write-host "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" -ForegroundColor Green 
+                    write-output "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus"| Out-File -FilePath $outfileName -Append 
+                }
+
+            else{
+                Write-Host "`nNo CFT created to deploy!`n" -ForegroundColor Yellow 
+                write-output "`nNo CFT created to deploy!`n" | Out-File -FilePath $outfileName -Append 
+            }
+        }
+    }
+
+
+#---------------------------------------------------------------------------------------------------------------#
+
+        # validate CloudFormation Stack Output
+
+    if($cftStatus -eq "CREATE_COMPLETE"){
         Write-Host "`nValidating Registration of AWS Account ID $AWSaccount in DMaaS...`n" 
         write-output "`nValidating Registration of AWS Account ID $AWSaccount in DMaaS...`n" | Out-File -FilePath $outfileName -Append 
 
-        # validate STEP 1
+        # validate STEP 1 and successful CFT Deployment
         $validation = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions/aws-cloud-source-verify?tenantId=$tenantId&destinationRegionId=$regionId&awsAccountNumber=$AWSaccount" -Method 'GET' -Headers $headers
         $validation | ConvertTo-Json 
         Write-host "$validation" -ForegroundColor Green
         write-output "$validation" | Out-File -FilePath $outfileName -Append
+        }
+
+    else {
+        Write-Host "`nCFT did NOT deploy successfully!`n" -ForegroundColor Yellow 
+        write-output "`nCFT did NOT deploy successfully!`n" | Out-File -FilePath $outfileName -Append 
     }
+
+#---------------------------------------------------------------------------------------------------------------#
+
+        # fetch AWS ARN 
+
+    if(!$validation){
+        Write-Host "`nFetching AWS ARN associated with Registration of AWS Account ID $AWSaccount in DMaaS...`n" 
+        write-output "`nFetching AWS ARN associated with Registration of AWS Account ID $AWSaccount in DMaaS...`n" | Out-File -FilePath $outfileName -Append 
+
+        $fetch = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions/aws-cloud-source?tenantId=$tenantId&destinationRegionId=$regionId&awsAccountNumber=$AWSaccount" -Method 'GET' -Headers $headers
+        
+        $fetch | ConvertTo-Json
+        Write-host "$fetch" -ForegroundColor Green
+        write-output "$fetch" | Out-File -FilePath $outfileName -Append
+
+        # edit fetch response to pull AWS ARN's
+        $iam_role_arn = $fetch | select -expandproperty awsIamRoleArn
+        write-host "AWS awsIamRoleName: $iam_role_arn" -ForegroundColor Green
+        write-output $iam_role_arn | out-file -filepath $outfileName -Append
+
+        $cp_role_arn = $fetch | select -expandproperty tenantCpRoleArn
+        write-host "AWS tenantCpRoleArn: $cp_role_arn" -ForegroundColor Green
+        write-output $cp_role_arn | out-file -filepath $outfileName -Append
+        }
+    
+    else{
+        Write-Host "`nCould not validate deployment of CFT Template!`n" -ForegroundColor Yellow 
+        write-output "`nCould not validate deployment of CFT Template!`n" | Out-File -FilePath $outfileName -Append 
+    }
+
+#---------------------------------------------------------------------------------------------------------------#
+
+    # final portion of AWS Registration
+    if($iam_role_arn){
+        Write-Host "`nProcessing AWS ARN associated with Registration of AWS Account ID $AWSaccount in DMaaS...`n" 
+
+        $finalBody = @{
+            "environment" = "kAWS";
+            "awsParams" = @{
+                "subscriptionType" = "kAWSCommercial";
+                "standardParams" = @{
+                    "authMethodType" = "kUseIAMRole";
+                    "iamRoleAwsCredentials" = @{
+                        "iamRoleArn" = "$iam_role_arn";
+                        "cpIamRoleArn" = "$cp_role_arn"
+                    }
+                }
+            }
+        }
+
+
+        Write-Host "`nFinalizing Registration of AWS Account ID $AWSaccount in DMaaS...`n" 
+
+        # prepare body of REST API Call
+        $bodyJson = $finalBody | ConvertTo-Json 
+        write-host "$bodyJson"  
+        write-output "$bodyJson" | Out-File -FilePath $outfileName -Append  
+        $bodyJson = ConvertTo-Json -Compress -Depth 99 $finalBody 
+
+        $final = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $bodyJson -ContentType 'application/json' 
+        $final | ConvertTo-Json
+        Write-host "$final" -ForegroundColor Green
+        write-output "$final" | Out-File -FilePath $outfileName -Append
+                
+        if($final){
+            Write-host "`nRegistration of $AWSaccount SUCCESSFUL!`n" -ForegroundColor Green
+            write-output "`nRegistration of $AWSaccount SUCCESSFUL!`n"  | Out-File -FilePath $outfileName -Append
+            write-output "`nRegistration of $AWSaccount SUCCESSFUL!`n"  | Out-File -FilePath $finalOutput -Append
+            write-output "$final" | out-file -filepath $finalOutput -Append
+        }
+
+        else{
+            Write-host "`nRegistration of $AWSaccount UNSUCCESSFUL!`n" -ForegroundColor Red 
+            write-output "`nRegistration of $AWSaccount UNSUCCESSFUL!`n"  | Out-File -FilePath $outfileName -Append
+            write-output "`nRegistration of $AWSaccount UNSUCCESSFUL!`n"  | Out-File -FilePath $finalOutput -Append
+        }
+
+        }
 
     else{
-    Write-Host "`nNo AWS Account ID available to Register!`n" -ForegroundColor Yellow 
-    write-output "`nNo AWS Account ID available to Register!`n" | Out-File -FilePath $outfileName -Append 
+        Write-Host "`nNo valid AWS ARN's retrieved!`n" -ForegroundColor Yellow 
+        write-output "`nNo valid AWS ARN's retrieved!`n" | Out-File -FilePath $outfileName -Append 
     }
-  }
-
-# #---------------------------------------------------------------------------------------------------------------#
-
-# # final portion of AWS Registration
-
-# $body = @{
-#     "environment" = "kAWS";
-#     "awsParams" = @(
-#         "subscriptionType" = "kAWSCommercial";
-#         "standardParams" = @(
-#             "authMethodType" = "kUseIAMRole";
-#             "iamRoleAwsCredentials" = @(
-#                 "iamRoleArn" = "{{iam_role_arn}}";
-#                 "cpIamRoleArn" = "{{cp_role_arn}}"
-#             )
-#         )
-#     )
-# }
-
-# $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/data-protect/sources/registrations' -Method 'POST' -Headers $headers -Body $body
-# $response | ConvertTo-Json
-
-
-# $body = @{
-#     "useCases" = @(
-#         "EC2";
-#         "RDS"
-#     )
-    
-#     "tenantId" = "$tenantId";
-#     "destinationRegionId" = "$regionId";
-#     "awsAccountNumber" = "$AWSid"
-# }
-
-
-# if($AWSaccount){
-
-#     Write-Host "Registering AWS Account ID $AWSid..."
-
-#     $bodyJson = $body | ConvertTo-Json 
-#     write-host "$bodyJson"   
-#     $bodyJson = ConvertTo-Json -Compress -Depth 99 $body 
-
-#     $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/dms/tenants/regions/aws-cloud-source' -Method 'POST' -Headers $headers -Body $bodyJson -ContentType 'application/json' 
-    
-#     $response | ConvertTo-Json
-
-#     $response  
-   
-#     Write-host "$response"
-# }
-
-# else{
-# Write-Host "AWS Account ID $AWSid not registered" -ForegroundColor Yellow
-# }
-# }
-
-
+}

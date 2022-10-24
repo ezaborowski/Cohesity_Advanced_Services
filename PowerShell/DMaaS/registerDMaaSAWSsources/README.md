@@ -1,8 +1,8 @@
-# Register DMaaS Physical using PowerShell
+# Register DMaaS AWS Source using PowerShell
 
 Warning: this code is provided on a best effort basis and is not in any way officially supported or sanctioned by Cohesity. The code is intentionally kept simple to retain value as example code. The code in this repository is provided as-is and the author accepts no liability for damages resulting from its use.
 
-This powershell script registers DMaaS SQL Sources.
+This powershell script registers DMaaS AWS Sources.
 
 ## Download the script
 
@@ -10,32 +10,32 @@ Run these commands from PowerShell to download the script(s) into your current d
 
 ```powershell
 # Download Commands
-$scriptName = 'registerDMaaSphysicalSources'
-$repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Services/main'
+$scriptName = 'registerDMaaSAWSsources'
+$repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Services/main/PowerShell/DMaaS'
 (Invoke-WebRequest -Uri "$repoUrl/PowerShell/DMaaS/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
 # End Download Commands
 ```
 
 ## Components
 
-* registerDMaaSphysicalSources.ps1: the main powershell script
+* registerDMaaSAWSsources.ps1: the main powershell script
 
 Run the main script like so:
 
 ```powershell
-./registerDMaasSQLsources.ps1 -apiKey API-KEY -regionId us-east-2 -saasConn "Saas_Connection-Name" -hostType kWindows -environment kPhysical -physType kHost -phylist ./physList.txt
+./registerDMaaSAWSsources.ps1 -apiKey XXXXXXX -regionId us-east-1 -AWSid XXXXXXX -roleArn "AWS_ARN"
 ```
 
 ## Parameters
 
 * -apiKey: apiKey generated in DMaaS UI
 * -regionId: DMaaS region to use
-* -saasConn: name of SaaS Connection to associate with Physical Source
-* -hostType: Physical Source OS type (kWindows, kLinux)
-* -environment: environment type (kPhysical, kVMware, kAWS, kO365, kNetapp)
-* -physType:  Source type (kHost, kVCenter, kIAMUser, kDomain, kCluster)
-* -physFQDN: (optional) one or more Physical Source FQDNs (comma separated)
-* -phylist: (optional) text file of Physical Source FQDNs (one per line)
+* -AWSid: (optional) one or more AWS Account ID's (comma separated)
+* -AWSlist: (optional) text file of AWS Account ID's (one per line) 
+    * it is mandatory that you use one of either AWSid or AWSlist
+* -roleARN:  (optional) AWS ARN associated with CFT Deployment IAM Role
+* -ARNlist =  (optional) text file of AWS ARN's associated with CFT Deployment IAM Roles  
+    * it is mandatory that you use one of either roleARN or ARNlist
 
 
 ## Authenticating to DMaaS
