@@ -31,10 +31,10 @@ Run the main script like so:
 * -apiKey: apiKey generated in DMaaS UI
 * -regionId: DMaaS region to use
 * -AWSid: (optional) one or more AWS Account ID's (comma separated)
-* -AWSlist: (optional) text file of AWS Account ID's (one per line) 
+* -AWSlist: (optional) text file of AWS Account ID's (one per line)
     * it is mandatory that you use one of either AWSid or AWSlist
-* -roleARN:  (optional) AWS ARN associated with CFT Deployment IAM Role
-* -ARNlist =  (optional) text file of AWS ARN's associated with CFT Deployment IAM Roles  
+* -roleARN: (optional) AWS ARN associated with CFT Deployment IAM Role
+* -ARNlist: (optional) text file of AWS ARN's associated with CFT Deployment IAM Roles  
     * it is mandatory that you use one of either roleARN or ARNlist
 
 
