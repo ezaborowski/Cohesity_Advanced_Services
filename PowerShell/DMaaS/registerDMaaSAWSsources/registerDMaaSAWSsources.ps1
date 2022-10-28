@@ -1,9 +1,10 @@
 
 # ./registerDMaaSAWSsources.ps1 -apiKey #### -regionId us-east-1 -AWSid #### -roleARN "AWS_ARN"
 
-# install PowerShell on macOS: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos?view=powershell-7.2
+# install PowerShell, if on macOS: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos?view=powershell-7.2
 # install AWS CLI: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions
 # install AWS CLI for Powershell: https://matthewdavis111.com/aws/deploy-cloudformation-powershell/
+# upgrade PowerShell Module to current revision of 7.2.4: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2#msi
 
 
 # process commandline arguments
@@ -214,15 +215,15 @@ foreach($AWSaccount in $AWStoAdd){
 
         # prepare body of REST API Call
         $bodyJson = $body | ConvertTo-Json 
-        write-host "STEP 1 DMaaS AWS Accout Registration API Payload: `n$bodyJson"  
-        write-output "$dateTime    INFO    STEP 1 DMaaS AWS Accout Registration API Payload: `n$bodyJson" | Out-File -FilePath $outfileName -Append  
+        write-host "`nSTEP 1 DMaaS AWS Accout Registration API Payload: `n$bodyJson"  
+        write-output "`n$dateTime    INFO    STEP 1 DMaaS AWS Accout Registration API Payload: `n$bodyJson" | Out-File -FilePath $outfileName -Append  
         $bodyJson = ConvertTo-Json -Compress -Depth 99 $body 
 
         # register DMaaS AWS Account - STEP 1
         $response = Invoke-RestMethod 'https://helios.cohesity.com/v2/mcm/dms/tenants/regions/aws-cloud-source' -Method 'POST' -Headers $headers -Body $bodyJson -ContentType 'application/json' 
         $response | ConvertTo-Json
         # Write-host "$response" -ForegroundColor Green 
-        write-output "$dateTime    INFO    Response from STEP 1 DMaaS AWS Accout Registration API: `n$response" | Out-File -FilePath $outfileName -Append
+        write-output "`n$dateTime    INFO    Response from STEP 1 DMaaS AWS Accout Registration API: `n$response" | Out-File -FilePath $outfileName -Append
 
         # write the response CFT to file
         $awsCFTfile = "$awsCFT\$AWSaccount-$dateString.cft"
@@ -249,7 +250,7 @@ foreach($AWSaccount in $AWStoAdd){
         # Write-Output "$cftJSON" | out-file -filepath $awsCFTjson -force 
         "{" + (Get-Content $awsCFTjson | Out-String) | Set-Content $awsCFTjson
         $cftJSON = Get-Content -path $awsCFTjson
-        write-host "Step 1 of DMaaS AWS Account Registration completed SUCCESSFULLY!" -ForegroundColor Green
+        write-host "`nStep 1 of DMaaS AWS Account Registration completed SUCCESSFULLY!" -ForegroundColor Green
         write-host "CFT Template Body: `n$cftJSON"
         write-host "CFT Template Location: `n$awsCFTjson"
         write-output "`n$dateTime    INFO    Step 1 of DMaaS AWS Account Registration completed SUCCESSFULLY!" | Out-File -FilePath $outfileName
