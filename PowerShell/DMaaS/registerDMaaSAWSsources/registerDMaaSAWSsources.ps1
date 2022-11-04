@@ -288,7 +288,7 @@ foreach($AWSaccount in $AWStoAdd){
 
     # Set-AWSCredentials -AccessKey xxxxxx -SecretKey xxxxxxx -StoreAs MyMainUserProfile
     # Validate: Get-AWSCredential -ListProfileDetail
-    # Initialize-AWSDefaults -ProfileName MyMainUserProfile -Region us-west-2
+    # Initialize-AWSDefaultConfiguration -ProfileName MyMainUserProfile -Region us-west-2
 
     Write-Host "`nSTEP 3 - Deploying CloudFormation Template in AWS Account ID $AWSaccount...`n" 
     write-output "`n$dateTime    INFO    STEP 3 - Deploying CloudFormation Template in AWS Account ID $AWSaccount...`n" | Out-File -FilePath $outfileName -Append 
@@ -305,6 +305,7 @@ foreach($AWSaccount in $AWStoAdd){
             $UserProfile = read-host -prompt "Please input storeAs Profile Name associated with AWS Account ID $AWSaccount : "
     
             Set-AWSCredentials -AccessKey $AccessKey -SecretKey $SecretKey -StoreAs $UserProfile
+            Initialize-AWSDefaultConfiguration -ProfileName $UserProfile -Region $awsRegion
         }
         else{
             foreach($awsARN in $ARNtoAdd){
