@@ -23,19 +23,23 @@ $repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Serv
 Run the main script like so:
 
 ```powershell
-./registerDMaaSAWSsources.ps1 -apiKey XXXXXXX -regionId us-east-1 -AWSid XXXXXXX -roleArn "AWS_ARN"
+./registerDMaaSAWSsources.ps1 -apiKey XXXXXXX -regionId us-east-1 -awsRegion us-east-2 -AWSid XXXXXXX -roleArn "AWS_ARN"
+
+./registerDMaaSAWSsources.ps1 -apiKey XXXXXXX -regionId us-east-1 -awsRegion us-east-2 -AWSid XXXXXXX -awsLogin
 ```
 
 ## Parameters
 
 * -apiKey: apiKey generated in DMaaS UI
 * -regionId: DMaaS region where AWS Account ID is to be Registered
+* -awsRegion: AWS region where AWS Account ID is Registered
 * -AWSid: (optional) one or more AWS Account ID's (comma separated)
 * -AWSlist: (optional) text file of AWS Account ID's (one per line)
     * it is mandatory that you use one of either AWSid or AWSlist (or both can be used, if needed)
 * -roleARN: (optional) AWS IAM ARN associated with CFT Deployment IAM Role (comma separated)
 * -ARNlist: (optional) text file of AWS IAM ARN's associated with CFT Deployment IAM Roles (one per line)
-    * it is mandatory that you use one of either roleARN or ARNlist (or both can be used, if needed)
+    * it is mandatory that you use one of either roleARN or ARNlist (or both can be used, if needed), UNLESS using -awsLogin switch and then neither of these variables should be used
+* -awsLogin: (optional) switch to enable prompting of AWS Account AccessKey, SecretKey, and AWS Profile Name instead of script assuming AWS IAM Role
 
 
 ## Authenticating to DMaaS

@@ -1,5 +1,5 @@
 
-# ./registerDMaaSAWSsources.ps1 -apiKey #### -regionId us-east-1 -AWSid #### -roleARN "AWS_ARN"
+# ./registerDMaaSAWSsources.ps1 -apiKey #### -regionId us-east-1 -awsRegion us-east-2 -AWSid #### -roleARN "AWS_ARN"
 
 # install PowerShell, if on macOS: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-macos?view=powershell-7.2
 # upgrade PowerShell Module to current revision of 7.2.4: https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2#msi
@@ -12,12 +12,13 @@
 param (
     [Parameter(Mandatory = $True)][string]$apiKey,  # apiKey generated in DMaaS UI
     [Parameter(Mandatory = $True)][string]$regionId,  # DMaaS region where AWS Account ID is to be Registered
+    [Parameter(Mandatory = $True)][string]$awsRegion,  # AWS region where AWS Account ID is Registered
     [Parameter()][array]$AWSid,  # (optional) one or more AWS Account ID's (comma separated)
     [Parameter()][string]$AWSlist = '',  # (optional) text file of AWS Account ID's (one per line)
         # it is MANDATORY that you use one of either AWSid or AWSlist (or both can be used, if needed)
     [Parameter()][string]$roleARN,  # (optional) AWS IAM ARN associated with CFT Deployment IAM Roles (comma separated)
     [Parameter()][string]$ARNlist = '',  # (optional) text file of AWS IAM ARN's associated with CFT Deployment IAM Roles (one per line)
-        # it is MANDATORY that you use one of either roleARN or ARNlist (or both can be used, if needed)
+        # it is MANDATORY that you use one of either roleARN or ARNlist (or both can be used, if needed), UNLESS using -awsLogin switch and then neither of these variables should be used
     [Parameter()][switch]$awsLogin  # (optional) call switch if using AWS Credentials instead of assuming AWS Role
 )
 
@@ -283,11 +284,11 @@ foreach($AWSaccount in $AWStoAdd){
         
 #---------------------------------------------------------------------------------------------------------------#
 
-        # deploy the CFT Template against the AWS Account ID
+    # deploy the CFT Template against the AWS Account ID
 
-        # Set-AWSCredentials -AccessKey xxxxxx -SecretKey xxxxxxx -StoreAs MyMainUserProfile
-        # Validate: Get-AWSCredential -ListProfileDetail
-        # Initialize-AWSDefaults -ProfileName MyMainUserProfile -Region us-west-2
+    # Set-AWSCredentials -AccessKey xxxxxx -SecretKey xxxxxxx -StoreAs MyMainUserProfile
+    # Validate: Get-AWSCredential -ListProfileDetail
+    # Initialize-AWSDefaults -ProfileName MyMainUserProfile -Region us-west-2
 
     Write-Host "`nSTEP 3 - Deploying CloudFormation Template in AWS Account ID $AWSaccount...`n" 
     write-output "`n$dateTime    INFO    STEP 3 - Deploying CloudFormation Template in AWS Account ID $AWSaccount...`n" | Out-File -FilePath $outfileName -Append 
@@ -297,36 +298,93 @@ foreach($AWSaccount in $AWStoAdd){
     Write-Host "`nCurrent AWS Credentials Set:`n$awsCreds" 
     write-output "`n$dateTime    INFO    Current AWS Credentials Set:`n$awsCreds`n" | Out-File -FilePath $outfileName -Append 
     
-    # if($cftJSON){ 
-    #     if($awsLogin -eq $true){
-    #         $AccessKey = read-host -prompt "Please input the AWS Account AccessKey associated with Account ID $AWSaccount : "
-    #         $SecretKey = read-host -prompt "Please input the AWS Account SecretKey associated with Account ID $AWSaccount : "
-    #         $UserProfile = read-host -prompt "Please input storeAs Profile Name associated with AWS Account ID $AWSaccount : "
+    if($cftJSON){ 
+        if($awsLogin -eq $true){
+            $AccessKey = read-host -prompt "Please input the AWS Account AccessKey associated with Account ID $AWSaccount : "
+            $SecretKey = read-host -prompt "Please input the AWS Account SecretKey associated with Account ID $AWSaccount : "
+            $UserProfile = read-host -prompt "Please input storeAs Profile Name associated with AWS Account ID $AWSaccount : "
     
-    #         Set-AWSCredentials -AccessKey $AccessKey -SecretKey $SecretKey -StoreAs $UserProfile
-    #     }
-    #     else{
-    #         foreach($awsARN in $ARNtoAdd){
+            Set-AWSCredentials -AccessKey $AccessKey -SecretKey $SecretKey -StoreAs $UserProfile
+        }
+        else{
+            foreach($awsARN in $ARNtoAdd){
                         
-    #             if($awsCreds){
-    #                 $creds = (Use-STSRole -RoleArn "$awsARN" -RoleSessionName "cohesityCFTdeployment").Credentials
-    #                 # need to provide credentials from an IAM User to call functions
-    #                     # $creds.AccessKeyId
-    #                     # $creds.SecretAccessKey
-    #                     # $creds.SessionToken
-    #                     # $creds.Expiration
+                if($awsCreds){
+                    $creds = (Use-STSRole -RoleArn "$awsARN" -RoleSessionName "cohesityCFTdeployment").Credentials
+                    # need to provide credentials from an IAM User to call functions
+                        # $creds.AccessKeyId
+                        # $creds.SecretAccessKey
+                        # $creds.SessionToken
+                        # $creds.Expiration
 
-    #                 Set-DefaultAWSRegion -Region $regionId
-    #                 # Validate: Get-DefaultAWSRegion
+                }
 
-    #             }
+                else{
+                    Write-Host "`nNo AWS Credentials initialized on this box! If you are experiencing AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: `nhttps://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT`n" -ForegroundColor Yellow 
+                    write-output "`n$dateTime    WARN    No AWS Credentials initialized on this box! If you are experiencing AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: `nhttps://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT`n" | Out-File -FilePath $outfileName -Append
+                }
+            }
+        }
+                Set-DefaultAWSRegion -Region $awsRegion
+                # Validate: Get-DefaultAWSRegion
 
-    #             else{
-    #                 Write-Host "`nNo Default AWS Credentials initialized on this box! If you are experiencing AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: `nhttps://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT`n" -ForegroundColor Yellow 
-    #                 write-output "`n$dateTime    WARN    No Default AWS Credentials initialized on this box! If you are experiencing AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: `nhttps://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT`n" | Out-File -FilePath $outfileName -Append
-    #             }
-    #         }
-    #     }
+                # New-CFNStack - https://docs.aws.amazon.com/powershell/latest/reference/items/New-CFNStack.html
+
+                $cfnStack = New-CFNStack -StackName cohesity-dmaas -TemplateBody "$cftJSON" -Capability "CAPABILITY_NAMED_IAM"
+                write-output "`n$dateTime    INFO    Response from AWS CFT Deployment API: `n$cfnStack" | Out-File -FilePath $outfileName -Append
+
+                # monitor AWS CFT Template deployment
+                $cftStatus = Get-CFNStack -StackName cohesity-dmaas 
+                $cftStatus = $cftStatus.StackStatus
+                    while($cftStatus -ne "CREATE_COMPLETE"){
+                        $cftStatus = Get-CFNStack -StackName cohesity-dmaas
+                        $cftStatus = $cftStatus.StackStatus
+                        sleep 15
+                        write-host "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" -ForegroundColor Yellow 
+                        write-output "`n$dateTime    INFO    Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" | Out-File -FilePath $outfileName -Append 
+
+                        if($cftStatus -eq "ROLLBACK_COMPLETE"){
+                            write-host "`nCFT Template Deployment FAILED! Please reference the Events section on the AWS CFT Template webpage for further details." -ForegroundColor Yellow
+                            write-output "`n$dateTime    WARN    CFT Template Deployment FAILED! Please reference the Events section on the AWS CFT Template webpage for further details." | Out-File -FilePath $outfileName -Append 
+
+                            # output CFT Creation Events
+                            $stackEvents = Get-CFNStackEvent -StackName "cohesity-dmaas" -Region $awsRegion
+                            Write-Host "`n'cohesity-dmaas' AWS CFT Stack Creation Events: `n$stackEvents`n" -ForegroundColor Yellow 
+                            write-output "`n$dateTime    WARN    'cohesity-dmaas' AWS CFT Stack Creation Events: `n$stackEvents`n" | Out-File -FilePath $outfileName -Append
+
+                        }
+                    }
+
+                    write-host "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" -ForegroundColor Green 
+                    write-output "`n$dateTime    INFO    Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus"| Out-File -FilePath $outfileName -Append 
+
+                    # output CFT Creation Events
+                    $stackEvents = Get-CFNStackEvent -StackName "cohesity-dmaas" -Region $awsRegion
+                    Write-Host "`n'cohesity-dmaas' AWS CFT Stack Creation Events: `n$stackEvents`n" -ForegroundColor Green 
+                    write-output "`n$dateTime    INFO    'cohesity-dmaas' AWS CFT Stack Creation Events: `n$stackEvents`n" | Out-File -FilePath $outfileName -Append
+    }
+    else{
+        Write-Host "`nNo CFT created to deploy!`n" -ForegroundColor Yellow 
+        write-output "`n$dateTime    WARN    No CFT created to deploy!`n" | Out-File -FilePath $outfileName -Append
+        }
+
+    #---------------------------------------------------------------------------------------------------------------#
+        
+    
+    # foreach($awsARN in $ARNtoAdd){
+    #     if($cftJSON){             
+    #         if($awsCreds){
+    #             $creds = (Use-STSRole -RoleArn "$awsARN" -RoleSessionName "cohesityCFTdeployment").Credentials
+    #             # need to provide credentials from an IAM User to call functions
+    #                 # $creds.AccessKeyId
+    #                 # $creds.SecretAccessKey
+    #                 # $creds.SessionToken
+    #                 # $creds.Expiration
+
+
+    #             Set-DefaultAWSRegion -Region $regionId
+    #             # Validate: Get-DefaultAWSRegion
+
     #             # New-CFNStack - https://docs.aws.amazon.com/powershell/latest/reference/items/New-CFNStack.html
 
     #             $cfnStack = New-CFNStack -StackName cohesity-dmaas -TemplateBody "$cftJSON" -Capability "CAPABILITY_NAMED_IAM"
@@ -350,70 +408,23 @@ foreach($AWSaccount in $AWStoAdd){
 
     #                 write-host "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" -ForegroundColor Green 
     #                 write-output "`n$dateTime    INFO    Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus"| Out-File -FilePath $outfileName -Append 
-               
-    # }
-    # else{
-    #     Write-Host "`nNo CFT created to deploy!`n" -ForegroundColor Yellow 
-    #     write-output "`n$dateTime    WARN    No CFT created to deploy!`n" | Out-File -FilePath $outfileName -Append
+    #             }
+
+    #         else{
+    #             Write-Host "`nNo Default AWS Credentials initialized on this box! If you are experiencing AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: `nhttps://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT`n" -ForegroundColor Yellow 
+    #             write-output "`n$dateTime    WARN    No Default AWS Credentials initialized on this box! If you are experiencing AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: `nhttps://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT`n" | Out-File -FilePath $outfileName -Append
+    #         }
     #     }
-
-    #---------------------------------------------------------------------------------------------------------------#
-        
-    
-    foreach($awsARN in $ARNtoAdd){
-        if($cftJSON){             
-            if($awsCreds){
-                $creds = (Use-STSRole -RoleArn "$awsARN" -RoleSessionName "cohesityCFTdeployment").Credentials
-                # need to provide credentials from an IAM User to call functions
-                    # $creds.AccessKeyId
-                    # $creds.SecretAccessKey
-                    # $creds.SessionToken
-                    # $creds.Expiration
-
-
-                Set-DefaultAWSRegion -Region $regionId
-                # Validate: Get-DefaultAWSRegion
-
-                # New-CFNStack - https://docs.aws.amazon.com/powershell/latest/reference/items/New-CFNStack.html
-
-                $cfnStack = New-CFNStack -StackName cohesity-dmaas -TemplateBody "$cftJSON" -Capability "CAPABILITY_NAMED_IAM"
-                write-output "`n$dateTime    INFO    Response from AWS CFT Deployment API: `n$cfnStack" | Out-File -FilePath $outfileName -Append
-
-                # monitor AWS CFT Template deployment
-                $cftStatus = Get-CFNStack -StackName cohesity-dmaas 
-                $cftStatus = $cftStatus.StackStatus
-                    while($cftStatus -ne "CREATE_COMPLETE"){
-                        $cftStatus = Get-CFNStack -StackName cohesity-dmaas
-                        $cftStatus = $cftStatus.StackStatus
-                        sleep 15
-                        write-host "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" -ForegroundColor Yellow 
-                        write-output "`n$dateTime    INFO    Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" | Out-File -FilePath $outfileName -Append 
-
-                        if($cftStatus -eq "ROLLBACK_COMPLETE"){
-                            write-host "`nCFT Template Deployment FAILED! Please reference the Events section on the AWS CFT Template webpage for further details." -ForegroundColor Yellow
-                            write-output "`n$dateTime    WARN    CFT Template Deployment FAILED! Please reference the Events section on the AWS CFT Template webpage for further details." | Out-File -FilePath $outfileName -Append 
-                        }
-                    }
-
-                    write-host "Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus" -ForegroundColor Green 
-                    write-output "`n$dateTime    INFO    Cohesity-DMaaS AWS CFT Stack Deployment Status: $cftStatus"| Out-File -FilePath $outfileName -Append 
-                }
-
-            else{
-                Write-Host "`nNo Default AWS Credentials initialized on this box! If you are experiencing AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: `nhttps://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT`n" -ForegroundColor Yellow 
-                write-output "`n$dateTime    WARN    No Default AWS Credentials initialized on this box! If you are experiencing AWS permissions errors, please reference the following section of the Cohesity DMaaS Guide: `nhttps://docs.cohesity.com/baas/data-protect/aws-account-requirements.htm?tocpath=Amazon%20Web%20Services%7C_____1#IAMUserPermissionstoExecuteCFT`n" | Out-File -FilePath $outfileName -Append
-            }
-        }
-        else{
-            Write-Host "`nNo CFT created to deploy!`n" -ForegroundColor Yellow 
-            write-output "`n$dateTime    WARN    No CFT created to deploy!`n" | Out-File -FilePath $outfileName -Append
-        }
-    }
+    #     else{
+    #         Write-Host "`nNo CFT created to deploy!`n" -ForegroundColor Yellow 
+    #         write-output "`n$dateTime    WARN    No CFT created to deploy!`n" | Out-File -FilePath $outfileName -Append
+    #     }
+    # }
 
 
 #---------------------------------------------------------------------------------------------------------------#
 
-        # validate CloudFormation Stack Output
+    # validate CloudFormation Stack Output
 
     if($cftStatus -eq "CREATE_COMPLETE"){
         Write-Host "`nSTEP 4 - Validating DMaaS can communicate to AWS Account ID $AWSaccount using CFT Template Roles...`n" 
