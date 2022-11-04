@@ -306,6 +306,7 @@ foreach($AWSaccount in $AWStoAdd){
     
             Set-AWSCredentials -AccessKey $AccessKey -SecretKey $SecretKey -StoreAs $UserProfile
             Initialize-AWSDefaultConfiguration -ProfileName $UserProfile -Region $awsRegion
+            Set-AWSCredentials -ProfileName $UserProfile 
         }
         else{
             foreach($awsARN in $ARNtoAdd){
