@@ -123,17 +123,35 @@ if($AWSid){
                 "subnetId" = " $subnetId";
                 "securityGroupId" = " $securityGroupId";
                 "vpcId" = " $vpcId";
-                "tags" = @(
-                    {
-                    "$AWStags"
-                    }
-                )
+                # "tags" = @(
+                #     {
+                #     "$AWStags"
+                #     }
+                # )
             }
         }
     }
 
     #$body = "{`n    `"tenantId`": `"{{tenantId}}`",`n    `"connectorType`": `"AWS`",`n    `"useCase`": `"Ec2Backup`",`n    `"name`": `"{{accountId}}-{{rigelRegionId}}-{{regionId}}`",`n    `"numberOfRigels`": 1,`n    `"regionId`": `"{{regionId}}`",`n    `"rigelCloudInfraInfo`": {`n        `"awsRigelInfraInfo`": {`n            `"accountNumber`": `"{{accountNumber}}`",`n            `"regionId`": `"{{rigelRegionId}}`",`n            `"subnetId`": `"{{subnetId}}`",`n            `"securityGroupId`": `"{{sgId}}`",`n            `"vpcId`": `"{{vpcId}}`",`n            `"tags`": []`n        }`n    }`n}"
 
+    if($AWStags -gt 1){
+        foreach($AWStag in $AWStags){
+            $body.rigelCloudInfraInfo.awsRigelInfraInfo = @(
+            @{
+                "tags" = "$AWStag";
+                }
+            )    
+        }
+    }
+    elif($AWStags -eq 1){
+        foreach($AWStag in $AWStags){
+            $body.rigelCloudInfraInfo.awsRigelInfraInfo = @(
+            @{
+                "tags" = "$AWStag"
+                }
+            )    
+        }
+    }
 
     Write-Host "`nDeploying DMaaS SaaS Connection for AWS Account ID $AWSaccount...`n" 
     write-output "`n$dateTime    INFO    Deploying DMaaS SaaS Connection for AWS Account ID $AWSaccount...`n" | Out-File -FilePath $outfileName -Append     
