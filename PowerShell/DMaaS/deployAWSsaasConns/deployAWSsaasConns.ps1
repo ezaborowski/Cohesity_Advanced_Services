@@ -16,7 +16,7 @@ param (
     [Parameter(Mandatory = $True)][string]$securityGroupId,  # AWS Network Security Group
     [Parameter(Mandatory = $True)][string]$vpcId,  # AWS VPC Id
     [Parameter()][int]$saasNo = 1,  # (optional) Number of AWS SaaS Connector EC2 Instances to create
-    [Parameter()][string]$AWStags  # (optional) AWS SaaS Connector EC2 Instance Tags (comma separated)
+    [Parameter()][array]$AWStags  # (optional) AWS SaaS Connector EC2 Instance Tags (comma separated)
 
 )
 
@@ -136,7 +136,7 @@ if($AWSid){
 
     if($AWStags -gt 1){
         foreach($AWStag in $AWStags){
-            $body.rigelCloudInfraInfo.awsRigelInfraInfo = @(
+            $body.rigelCloudInfraInfo.awsRigelInfraInfo += @($body.rigelCloudInfraInfo.awsRigelInfraInfo =
             @{
                 "tags" = "$AWStag";
                 }
@@ -145,7 +145,7 @@ if($AWSid){
     }
     elif($AWStags -eq 1){
         foreach($AWStag in $AWStags){
-            $body.rigelCloudInfraInfo.awsRigelInfraInfo = @(
+            $body.rigelCloudInfraInfo.awsRigelInfraInfo += @($body.rigelCloudInfraInfo.awsRigelInfraInfo =
             @{
                 "tags" = "$AWStag"
                 }
