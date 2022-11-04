@@ -24,7 +24,7 @@ $repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Serv
 Run the main script like so:
 
 ```powershell
-./deployAWSsaasConns.ps1 -apiKey #### -DMaaSregionId us-east-1 -AWSregionId us-east-1 -AWSid #### -subnetId subnet-#### -securityGroupId sg-#### -vpcId vpc-#### -saasNo 2 -AWStags label=value, label=value
+./deployAWSsaasConns.ps1 -apiKey #### -DMaaSregionId us-east-1 -AWSregionId us-east-1 -AWSid #### -subnetId subnet-#### -securityGroupId sg-#### -vpcId vpc-#### -saasNo 2 -AWStags "label=value", "label=value"
 ```
 
 ## Parameters
