@@ -136,8 +136,7 @@ if($AWSid){
 
     if($AWStags -gt 1){
         foreach($AWStag in $AWStags){
-            $body.rigelCloudInfraInfo.awsRigelInfraInfo += @($body.rigelCloudInfraInfo.awsRigelInfraInfo =
-            @{
+            $body.rigelCloudInfraInfo.awsRigelInfraInfo = @($body.rigelCloudInfraInfo.awsRigelInfraInfo + @{
                 "tags" = "$AWStag";
                 }
             )    
@@ -145,8 +144,7 @@ if($AWSid){
     }
     elif($AWStags -eq 1){
         foreach($AWStag in $AWStags){
-            $body.rigelCloudInfraInfo.awsRigelInfraInfo += @($body.rigelCloudInfraInfo.awsRigelInfraInfo =
-            @{
+            $body.rigelCloudInfraInfo.awsRigelInfraInfo = @($body.rigelCloudInfraInfo.awsRigelInfraInfo + @{
                 "tags" = "$AWStag"
                 }
             )    
