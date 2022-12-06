@@ -11,7 +11,7 @@ Run these commands from PowerShell to download the script(s) into your current d
 ```powershell
 # Download Commands
 $scriptName = 'deployAWSsaasConns'
-$repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Services/main/PowerShell/DMaaS/main'
+$repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Services/main/'
 (Invoke-WebRequest -Uri "$repoUrl/PowerShell/DMaaS/$scriptName/$scriptName.ps1").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "$scriptName.ps1"
 (Invoke-WebRequest -Uri "$repoUrl/PowerShell/DMaaS/$scriptName/README.md").content | Out-File "$scriptName.ps1"; (Get-Content "$scriptName.ps1") | Set-Content "README.md"
 # End Download Commands
@@ -24,7 +24,7 @@ $repoURL = 'https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Serv
 Run the main script like so:
 
 ```powershell
-./deployAWSsaasConns.ps1 -apiKey #### -DMaaSregionId us-east-1 -AWSregionId us-east-1 -AWSid #### -subnetId subnet-#### -securityGroupId sg-#### -vpcId vpc-#### -saasNo 2 -AWStags "label=value", "label=value"
+./deployAWSsaasConns.ps1 -apiKey #### -DMaaSregionId us-east-1 -AWSregionId us-east-1 -AWSid #### -subnetId subnet-#### -securityGroupId sg-#### -vpcId vpc-#### -saasNo 2 -AWStag "label=value", "label=value" -connAdd
 ```
 
 ## Parameters
@@ -37,7 +37,9 @@ Run the main script like so:
 * -securityGroupId: AWS Network Security Group
 * -vpcId: AWS VPC Id
 * -saasNo: (optional) Number of AWS SaaS Connector EC2 Instances to create
-* -AWStags: (optional) AWS SaaS Connector EC2 Instance Tags (comma separated)
+* -AWStag: (optional) AWS SaaS Connector EC2 Instance Tags (comma separated). example: "label=value", "label2=value2"
+* -AWStags: (optional) text file of AWS SaaS Connector EC2 Instance Tags (one per line)
+* -connAdd: switch to append to command line when adding addition DMaaS AWS SaaS Connectors to an already existing SaaS Connection Group
 
 ## Authenticating to DMaaS
 
