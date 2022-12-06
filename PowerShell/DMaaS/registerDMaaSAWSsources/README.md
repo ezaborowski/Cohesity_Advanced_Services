@@ -4,6 +4,15 @@ Warning: this code is provided on a best effort basis and is not in any way offi
 
 This powershell script registers DMaaS AWS Sources.
 
+## Prerequisites
+
+The user running the script must first set AWS Admin Credentials within Powershell by using the following commands:
+```powershell
+Set-AWSCredentials -AccessKey xxxxxx -SecretKey xxxxxxx -StoreAs MyMainUserProfile
+Validate: Get-AWSCredential -ListProfileDetail
+Initialize-AWSDefaultConfiguration -ProfileName MyMainUserProfile -Region us-west-2
+```
+
 ## Download the script
 
 Run these commands from PowerShell to download the script(s) into your current directory

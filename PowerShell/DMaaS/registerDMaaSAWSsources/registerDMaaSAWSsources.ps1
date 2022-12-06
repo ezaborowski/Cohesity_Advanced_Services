@@ -16,7 +16,7 @@ param (
     [Parameter()][array]$AWSid,  # (optional) one or more AWS Account ID's (comma separated)
     [Parameter()][string]$AWSlist = '',  # (optional) text file of AWS Account ID's (one per line)
         # it is MANDATORY that you use one of either AWSid or AWSlist (or both can be used, if needed)
-    [Parameter()][string]$roleARN,  # (optional) AWS IAM ARN associated with CFT Deployment IAM Roles (comma separated)
+    [Parameter()][array]$roleARN,  # (optional) AWS IAM ARN associated with CFT Deployment IAM Roles (comma separated)
     [Parameter()][string]$ARNlist = '',  # (optional) text file of AWS IAM ARN's associated with CFT Deployment IAM Roles (one per line)
         # it is MANDATORY that you use one of either roleARN or ARNlist (or both can be used, if needed), UNLESS using -awsLogin switch and then neither of these variables should be used
     [Parameter()][switch]$awsLogin  # (optional) call switch if using AWS Credentials instead of assuming AWS Role
@@ -177,22 +177,19 @@ else{
 Write-host "`nValidating DMaaS Region ID...`n" 
 write-output "`n$dateTime    INFO    Validating DMaaS Region ID...`n" | Out-File -FilePath $outfileName -Append 
 $region = Invoke-RestMethod "https://helios.cohesity.com/v2/mcm/dms/tenants/regions?tenantId=$tenantId" -Method 'GET' -Headers $headers
+$regions = $region.tenantRegionInfoList.regionId
 
-foreach($regionIds in $region){
+$compareRegion = Compare-Object -IncludeEqual -ReferenceObject $regions -DifferenceObject $regionId -ExcludeDifferent
+$verRegion = $compareRegion.InputObject | where-object{$compareRegion.SideIndicator -eq "=="}
 
-    $regionIds = $region.tenantRegionInfoList.regionId
-
-    $compareRegion = Compare-Object -IncludeEqual -ReferenceObject $regionIds -DifferenceObject $regionId -ExcludeDifferent
-
-    if(!$compareRegion){
-        write-host "`nThere are no matching DMaaS Region Ids asssociated with the specified Tenant ID!" -ForegroundColor Yellow 
-        write-output "`n$dateTime    WARN    There are no matching DMaaS Region Ids asssociated with the specified Tenant ID!" | Out-File -FilePath $outfileName -Append 
-        exit
-    }else{
-        Write-Host "`nDMaaS Region ID: $regionId" -ForegroundColor Green
-        write-output "`n$dateTime    INFO    DMaaS Region ID: $regionId" | Out-File -FilePath $outfileName -Append 
-    }
-
+if($verRegion){
+    Write-Host "`nDMaaS Region ID Verified: $verRegion" -ForegroundColor Green
+    write-output "`n$dateTime    INFO    DMaaS Region ID Verified: $verRegion`n" | Out-File -FilePath $outfileName -Append 
+}
+else{
+    write-host "`nThere are no matching DMaaS Region Ids asssociated with the specified Tenant ID!" -ForegroundColor Yellow 
+    write-output "`n$dateTime    WARN    There are no matching DMaaS Region Ids asssociated with the specified Tenant ID!" | Out-File -FilePath $outfileName -Append 
+    exit
 }
 
 
