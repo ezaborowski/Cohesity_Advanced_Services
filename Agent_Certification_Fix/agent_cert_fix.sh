@@ -284,6 +284,15 @@ if [[ -n "${selected[@]}" ]]; then
     
             for x in "${v6_5_selected[@]}"; do 
                 if [ $x == "AIX" ]; then 
+
+                    # printf '\n'
+                    # echo "Please enter Cohesity UI Admin Username to allow gflag application: "
+                    # read -e username
+
+                    # printf '\n'
+                    # echo "Please enter the Cohesity Cluster UI Username password: "
+                    # read -es password
+
                     agent="cohesity_agent_6.5.1f_cpd_aix_java.bff"
                     valid_checkSum="64b151166c0ad1ab365179bbb0cfcfabd218e2ade98b7b11feca934b386c4020"
 
@@ -299,6 +308,10 @@ if [[ -n "${selected[@]}" ]]; then
 
                     if [ $checkSum_valid == "true" ]; then
                         updated_6_5_1_agents[$x]+=" $agent"
+
+                    echo "Applying Gflag for AIX Agent Upgrade (magneto_master_agent_sw_set_force_upgradable=true)..."
+                    echo "Please enter Cohesity UI Admin User Credentials:"
+                    iris_cli cluster update-gflag service-name=magneto gflag-name=magneto_master_agent_sw_set_force_upgradable gflag-value=true effective-now=true reason="Set gflag to update aix java agent"
 
                     fi
                 fi
@@ -342,6 +355,10 @@ if [[ -n "${selected[@]}" ]]; then
 
                     if [ $checkSum_valid == "true" ]; then 
                         updated_6_6_agents[$x]+=" $agent"
+
+                    echo "Applying Gflag for AIX Agent Upgrade (magneto_master_agent_sw_set_force_upgradable=true)..."
+                    echo "Please enter Cohesity UI Admin User Credentials:"
+                    iris_cli cluster update-gflag service-name=magneto gflag-name=magneto_master_agent_sw_set_force_upgradable gflag-value=true effective-now=true reason="Set gflag to update aix java agent"
 
                     fi
                 fi
@@ -443,6 +460,10 @@ if [[ -n "${selected[@]}" ]]; then
                     if [ $checkSum_valid == "true" ]; then 
                         updated_6_6_0d_ent_agents[$x]+=" $agent"
 
+                    echo "Applying Gflag for AIX Agent Upgrade (magneto_master_agent_sw_set_force_upgradable=true)..."
+                    echo "Please enter Cohesity UI Admin User Credentials:"
+                    iris_cli cluster update-gflag service-name=magneto gflag-name=magneto_master_agent_sw_set_force_upgradable gflag-value=true effective-now=true reason="Set gflag to update aix java agent"
+
                     fi
                 fi
             done
@@ -483,6 +504,10 @@ if [[ -n "${selected[@]}" ]]; then
 
                     if [ $checkSum_valid == "true" ]; then 
                         updated_6_8_1_agents[$x]+=" $agent"
+
+                    echo "Applying Gflag for AIX Agent Upgrade (magneto_master_agent_sw_set_force_upgradable=true)..."
+                    echo "Please enter Cohesity UI Admin User Credentials:"
+                    iris_cli cluster update-gflag service-name=magneto gflag-name=magneto_master_agent_sw_set_force_upgradable gflag-value=true effective-now=true reason="Set gflag to update aix java agent"
 
                     fi
                 fi
@@ -592,6 +617,10 @@ if [[ -n "${selected[@]}" ]]; then
 
                     if [ $checkSum_valid == "true" ]; then 
                         updated_7_0_agents[$x]+=" $agent"
+
+                    echo "Applying Gflag for AIX Agent Upgrade (magneto_master_agent_sw_set_force_upgradable=true)..."
+                    echo "Please enter Cohesity UI Admin User Credentials:"
+                    iris_cli cluster update-gflag service-name=magneto gflag-name=magneto_master_agent_sw_set_force_upgradable gflag-value=true effective-now=true reason="Set gflag to update aix java agent"
 
                     fi
                 fi
