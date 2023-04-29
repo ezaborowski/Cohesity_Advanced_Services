@@ -231,8 +231,10 @@ for i in "${!version_values[@]}"; do
 	opt_string+="${version_values[$i]};" # (${opt_labels[$i]});"
 done
 
+printf '\n'
+printf '\n'
 echo "Which Version Cohesity is installed on this Cluster?"
-echo "If you need to choose more than one Cohesity Version, please choose one version per script run (ie: run the script for each version needed)."
+echo "(please choose ONE)"
 printf '\n'
 prompt_for_multiselect selection "$opt_string"
 
