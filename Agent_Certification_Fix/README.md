@@ -14,7 +14,7 @@ Please SSH into the Cohesity CLI using the 'support' User, and run the following
 
 ```bash
 # download commands
-curl -O https://raw.githubusercontent.com/bseltz-cohesity/scripts/master/python/agentCertificateCheck/agentCertificateCheck.py
+curl -O https://raw.githubusercontent.com/ezaborowski/Cohesity_Advanced_Services/main/Agent_Certification_Fix/agent_cert_fix.sh
 chmod +x agent_cert_fix.sh
 
 # end download commands
