@@ -10,7 +10,15 @@ IMPORTANT: The /home/cohesity/bin/installers/agent_installer_files.json file mus
 
 * agent_cert_fix.sh: the main bash script 
 
-Please SSH into the Cohesity CLI using the 'support' User, and run the following commands: 
+## Download the Script
+
+Please SSH into the Cohesity CLI using the 'support' User, and elevate to the 'cohesity' User by running the following:
+
+```bash
+sudo su cohesity
+```
+
+To Download the agent_cert_fix.sh script, please run the following commands: 
 
 ```bash
 # download commands
@@ -19,6 +27,7 @@ chmod +x agent_cert_fix.sh
 
 # end download commands
 ```
+
 ## How to Run Script
 
 Ensure the script is being running from a Node on the Cohesity Cluster:
