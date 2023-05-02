@@ -236,7 +236,8 @@ done
 
 printf '\n'
 printf '\n'
-echo "Which Version Cohesity is installed on this Cluster?"
+echo "Which Version Cohesity is installed on this Cluster? "
+echo "Use the <spacebar> to select a version and then click <Enter>"
 echo "(please choose ONE)"
 printf '\n'
 prompt_for_multiselect selection "$opt_string"
@@ -274,7 +275,8 @@ if [[ -n "${selected[@]}" ]]; then
 
             printf '\n'
             printf '\n'
-            echo "Which Agents do you need to update for Cohesity v$y?"
+            echo echo "Which Agents do you need to update for Cohesity v$y?"
+            echo "Use the <spacebar> to select a version and then click <Enter>"
             printf '\n'
             prompt_for_multiselect v6_5_selection "$v6_5_string"
 
@@ -332,7 +334,8 @@ if [[ -n "${selected[@]}" ]]; then
 
             printf '\n'
             printf '\n'
-            echo "Which Agents do you need to update for Cohesity v$y?"
+            echo echo "Which Agents do you need to update for Cohesity v$y?"
+            echo "Use the <spacebar> to select a version and then click <Enter>"
             printf '\n'
             prompt_for_multiselect v6_6_selection "$v6_6_string"
 
@@ -379,7 +382,8 @@ if [[ -n "${selected[@]}" ]]; then
 
             printf '\n'
             printf '\n'
-            echo "Which Agents do you need to update for Cohesity v$y?"
+            echo echo "Which Agents do you need to update for Cohesity v$y?"
+            echo "Use the <spacebar> to select a version and then click <Enter>"
             printf '\n'
             prompt_for_multiselect v6_6d_selection "$v6_6d_string"
 
@@ -437,7 +441,8 @@ if [[ -n "${selected[@]}" ]]; then
 
             printf '\n'
             printf '\n'
-            echo "Which Agents do you need to update for Cohesity v$y?"
+            echo echo "Which Agents do you need to update for Cohesity v$y?"
+            echo "Use the <spacebar> to select a version and then click <Enter>"
             printf '\n'
             prompt_for_multiselect v6_6d_selection "$v6_6d_string"
 
@@ -482,7 +487,8 @@ if [[ -n "${selected[@]}" ]]; then
 
             printf '\n'
             printf '\n'
-            echo "Which Agents do you need to update for Cohesity v$y?"
+            echo echo "Which Agents do you need to update for Cohesity v$y?"
+            echo "Use the <spacebar> to select a version and then click <Enter>"
             printf '\n'
             prompt_for_multiselect v6_8_1_selection "$v6_8_1_string"
 
@@ -496,7 +502,7 @@ if [[ -n "${selected[@]}" ]]; then
             for x in "${v6_8_1_selected[@]}"; do 
                 if [ $x == "AIX" ]; then 
                     agent="cohesity_agent_6.8.1_u2_p10_cpd_aix_java.bff"
-                    valid_checkSum="f524782d1ee243d2eae89a098768c3ad01dcc8b99b43022744f67ada77cef07f"
+                    valid_checkSum="a7720b47fceb094f28dc5ff15fd0a507a651872f669cb56903bfa8d896a5637c"
                     printf '\n'
                     printf '\n'
                     echo "Downloading Updated $x Agent: $agent"
@@ -595,7 +601,8 @@ if [[ -n "${selected[@]}" ]]; then
 
             printf '\n'
             printf '\n'
-            echo "Which Agents do you need to update for Cohesity v$y?"
+            echo echo "Which Agents do you need to update for Cohesity v$y?"
+            echo "Use the <spacebar> to select a version and then click <Enter>"
             printf '\n'
             prompt_for_multiselect v7_0_selection "$v7_0_string"
 
