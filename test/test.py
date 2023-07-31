@@ -3,21 +3,33 @@
 from contextlib import contextmanager
 from pyhesity import *
 from time import sleep
+import os
+import json
 
 
+firewall_profile = "iris_cli -username=admin firewall-profile ls-active"
+    
+firewallOutput = (os.popen(firewall_profile).read()).strip()
 
-### Gets the Protection Job ID from the corresponding Job Name
-def get_fw_profile(firewall):
-    firewall_profile = f"iris_cli -username=admin firewall-profile ls-active"
-    profileName = firewall_profile[0]['PROFILE NAME']
-    ipset = firewall_profile[0]['IPSET ENTRIES']
-    #job = [j for j in job if j['name'].lower() == jobname.lower()]
-    if len(firewall_profile) != 0:
+with open(firewall.json, 'w') as json_file:
+    json.dump(firewallOutput, json_file)
+    
+
+for x in firewall.json:
+    if os.stat(x).st_size > 5:
+        f = open(x)
+        data = json.load(f)
         
-        if(profileName == "Replication"):
-            replication_ips = ipset
-            print(f"IPset Entries: {replication_ips}")
-            
+        for i in data:
+            profileName = i['PROFILE NAME']
+            ipset = i['IPSET ENTRIES']
+
+            if(profileName == "Replication"):
+                replicationIps = ipset
+                print("Current Replication IPset Entries: ")
+                print(replicationIps)
+        
+                    
     else:
-        print(f"Isolated Cluster Replication Firewall did not populate proplery!")
+        print("Isolated Cluster Replication Firewall did not populate proplery!")
         
