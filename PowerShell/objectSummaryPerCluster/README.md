@@ -35,9 +35,9 @@ Place both files in a folder together and run the main script like so:
   * -domains: Admin UI domain (comma separated)           - Required
   * -passwords: Admin UI password (comma separated)       - Optional
   * -apiKeys: Admin UI apiKey (comma separated)           - Optional
-    If no passwords or apiKeys are defined, you will be prompted for the password and it will be encrypted and stored locally on the machine that the script was run from.
+    * -If no passwords or apiKeys are defined, you will be prompted for the password and it will be encrypted and stored locally on the machine that the script was run from.
   * -skipVersionChk: If set to True, will skip the PowerShell version check (is False by default)
-    Example: ./objectSummaryPerCluster.ps1 -skipVersionChk True
+    * -Example: ./objectSummaryPerCluster.ps1 -skipVersionChk True
 
 
 * To update the locally stored encrypted Password / APIkey:
