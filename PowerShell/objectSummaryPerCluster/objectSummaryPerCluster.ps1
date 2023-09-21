@@ -5,9 +5,11 @@
 param (
     [Parameter()][string]$vips = "", # vips or FQDNs of Cohesity Clusters 
     [Parameter()][string]$usernames = "", # Cohesity UI Admin usernames
-    [Parameter()][string]$domains = "", # Cohesity UI domains of usernames
+    [Parameter()][string]$domains = "", # Cohesity UI domains of usernames (only if utilizing Active Directory Users for login)
     [Parameter()][string]$passwords = "", # Cohesity UI Admin passwords
-    [Parameter()][string]$apiKeys = ""   # Cohesity UI APIkeys
+    [Parameter()][string]$apiKeys = "",   # Cohesity UI APIkeys
+    # [Parameter()][int]$days = 1   # Days of data to pull (defaults to 1)
+    [Parameter()][bool]$skipVersionChk = $false   # Skips the Version Check at the beginning of script (defaults to False)
 )
 
 # example:
@@ -51,17 +53,16 @@ function pass_log{
     
     Write-Host "`nPASS    $statement`n" -ForegroundColor Green
     Write-Output "`n$dateTime    PASS    $statement`n" | Out-File -FilePath $outfileName -Append
-
 }
 
-function runTimes{
-    param ([int64]$timeUsecs)
+# function runTimes{
+#     param ([int64]$timeUsecs)
     
-    $timeEpoch = $timeUsecs -replace ".{6}$"
-    [datetime]$timeHR = Get-Date -UnixTimeSeconds $timeEpoch | Get-Date -Format G
+#     $timeEpoch = $timeUsecs -replace ".{6}$"
+#     [datetime]$timeHR = Get-Date -UnixTimeSeconds $timeEpoch | Get-Date -Format G
 
-    return $timeHR    
-}
+#     return $timeHR    
+# }
 
 
 # Size: Number of Logical Bytes Protected (Gb) for Object
@@ -78,26 +79,53 @@ $outfileName = "$PSScriptRoot\log-BackupSummary-$dateString.txt"
 
 # ensure the environment meets the PowerShell Module requirements of 5.1 or above 
 $version = $PSVersionTable.PSVersion
-if($version.major -lt 5.1){
-    fail_log "Please upgrade the PowerShell Module to the current revision of 7.2.4 by downloading from the Microsoft site:"
-    warn_log "https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows?view=powershell-7.2#msi"
-}
-else {
-    info_log "PowerShell Module is up to date."
+if($skipVersionChk == $False){
+    if($version.major -lt 7){
+        warn_log "Current PowerShell Version is: " + $version.major + "." + $version.minor
+        fail_log "For this script to function properly, the PowerShell version must be at least 7.1. Please upgrade the PowerShell Module to the latest revision of 7.2.4 by downloading from the Microsoft site:"
+        warn_log "https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows"
+        exit
+        }
+    else {
+        info_log "PowerShell Module is up to date."
+        }
+    }
 
+else {
     # source the cohesity-api helper code
     . $(Join-Path -Path $PSScriptRoot -ChildPath cohesity-api.ps1)
 
     # compiling credentials per Cohesity Cluster
     $credentials = @()
+
+    if(!$vips){
+        fail_log "Cohesity Cluster VIP(s) must be specified!"
+        exit
+        }
+
     $vip = $vips -split ","
         $vip = $vip.replace(' ', '')
     $username = $usernames -split(",")
         $username = $username.replace(' ', '')
     $domain = $domains -split(",")
         $domain = $domain.replace(' ', '')
+
+    if($username.count -lt $vip.count){
+        fail_log "One Cohesity Cluster Username must be specified per Cluster VIP listed!"
+        exit
+        }
+
+    if(!$passwords -and !$apiKeys){
+        For($i=0; $i -lt $username.count; $i++){
+            $credentials += [pscustomobject] @{
+            username = $username[$i]
+            vip = $vip[$i]
+            domain = $domain[$i]
+            }
+        }
+    }
     
-    if(!$apiKeys){
+    elseif($passwords){
         $password = $passwords -split(",")
             $password = $password.replace(' ', '')
         For($i=0; $i -lt $username.count; $i++){
@@ -109,7 +137,8 @@ else {
                 }
             }
         }
-    if(!$passwords){
+
+    elseif($apiKeys){
         $apiKey = $apiKeys -split(",")
             $apiKey = $apiKey.replace(' ', '')
         For($i=0; $i -lt $username.count; $i++){
@@ -169,12 +198,12 @@ else {
     foreach($result in $results) {
         if(Test-Path $csv_source\$result) {
             pass_log "Initial $result file created successfully!"
-        }
+            }
         else{
             fail_log "Initial $result file not created successfully!"
             break
+            }
         }
-    }
 
     # Get the End Date
     [long]$endtimeusecs = (([datetime]::Now)-(Get-Date -Date '1/1/1970')).TotalMilliseconds * 1000
@@ -188,15 +217,20 @@ else {
     foreach($credential in $credentials){
         # authenticate to Cohesity Cluster
         ForEach-Object{
-            if(!$credential.apiKey){
+            info_log "Connecting to Cohesity Cluster" + $credential.vip + "..."
+
+            if(!$credential.password -and !$credential.apiKey){
+                info_log "Please input Password for User:" + $credential.username
+                }
+            if($credential.password){
                 apiauth -vip $credential.vip -username $credential.username -domain $credential.domain -password $credential.password    
                 }
-            if(!$credential.password){
+            if($credential.apiKey){
                 apiauth -vip $credential.vip -username $credential.username -domain $credential.domain -apiKey $credential.apiKey    
-            }
-        }
-        if(!$credential){
-            Write-host "A complete set of credentials was not input."
+                }
+            if(!$credential){
+                Write-host "A complete set of credentials was not input."
+                }
             }
 
 
