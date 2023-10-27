@@ -11,8 +11,9 @@ This powershell script enumerates the list of files and folders in a FileShare f
 
 Place both files in a folder together, then run the script like so:
 
+(if utilizing ApiKey)
 ```powershell
-./fileshareProperties.ps1 -viewName myview -clusterName mycluster
+./fileshareProperties.ps1 -viewName myview -clusterName mycluster -useApiKey
 ```
 
 ## Authentication Parameters
@@ -40,7 +41,7 @@ Place both files in a folder together, then run the script like so:
 Helios uses an API key for authentication. To acquire an API key:
 
 * log onto Helios
-* click the gear icon (settings) -> access management -> API Keys
+* click settings -> access management -> API Keys
 * click Add API Key
 * enter a name for your key
 * click Save
@@ -51,6 +52,6 @@ If you enter the wrong ApiKey, you can re-enter the password like so:
 
 ```powershell
 > . .\cohesity-api.ps1
-> apiauth -helios -username myusername@mydomain.net -updateApiKey)
+> apiauth -helios -username myusername@mydomain.net -updateApiKey
 Enter your password: *********************
 ```
