@@ -1,0 +1,1 @@
+"C:\Program Files\PowerShell\7\pwsh.exe" -NoProfile -ExecutionPolicy Bypass -Command "start-process "powershell" -Verb "RunAs" -argumentlist '-File C:\Erins_work\AD_UI\ADexport_UI.ps1'" 1>C:\Erins_work\AD_UI\ADexport_UI-logs.log 2>&1
