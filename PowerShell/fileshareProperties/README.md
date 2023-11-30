@@ -52,6 +52,6 @@ If you enter the wrong ApiKey, you can re-enter the password like so:
 
 ```powershell
 > . .\cohesity-api.ps1
-> apiauth -helios -username myusername@mydomain.net -updateApiKey
+> apiauth -helios -username myusername@mydomain.net -update
 Enter your password: *********************
 ```
