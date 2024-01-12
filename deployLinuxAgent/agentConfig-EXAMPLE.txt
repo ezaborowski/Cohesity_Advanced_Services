@@ -1,0 +1,89 @@
+
+## IF NOT USING ANY PARAMETERS FOR FIELD, PLEASE INPUT THE FOLLOWING DIRECTLY AFTER THE '=' : null
+
+[File_Mgmt]
+deployLinuxAgentFile="/script_testing/deployLinuxAgent-TEST/deployLinuxAgent.py"
+    # (required) Path and filename for deployLinuxAgent.py script (must be stored on deployIP box)
+
+[Server_IPs]
+deployIp=10.26.0.128
+    # (required) IP Address of the box that is running the deploy.py
+ipList=10.26.1.31,10.26.0.32
+    # (required) Comma-separated list of Server IPs to install Cohesity Agent on
+rootUser="root"
+    # (required) Root/Admin level username present on all boxes listed in above ipList
+
+[Linux]
+scriptInstaller="/script_testing/deployLinuxAgent-TEST/cohesity_agent_6.8.1_u7_linux_x64_installer"
+    # Cohesity Linux Agent Script Installer path and filename (must be stored on deployIP box)
+rpmInstaller="/script_testing/deployLinuxAgent-TEST/el-cohesity-agent-6.8.1_u7-1.x86_64.rpm"
+    # Cohesity Linux Agent RPM Installer path and filename (must be stored on deployIP box)
+debianInstaller=null
+    # Cohesity Debian Linux Agent Installer path and filename (must be stored on deployIP box)
+suseInstaller="/script_testing/deployLinuxAgent-TEST/cohesity-agent-6.8.1_u7-1.x86_64.rpm"
+    # Cohesity SUSE Linux Agent RPM Installer path and filename (must be stored on deployIP box)
+powerpcInstaller=null
+    # Cohesity PowerPC Linux Agent RPM Installer path and filename (must be stored on deployIP box)
+
+lnxCohesityCert=false
+    # Cohesity AIX Oracle Agent install with Cohesity Certificate (true/false)
+agentCertFile=null
+    # Cohesity Agent Certificate path and filename (in the Cohesity format)
+
+lnxUserCert=
+    # Cohesity AIX Oracle Agent install with User Certificate (true/false)
+rootCAfile=null
+    # Root CA Certificate path and filename
+privateKeyFile=null
+    # Server Private Keyfile path and filename
+certChainFile=null
+    # Server Certificate Chain path and filename
+
+linuxOracleUser=null
+    # (optional) Linux Oracle User (if not installing as root)
+linuxOracleGroup=null  
+    # (optional) Linux Oracle User Group (if not installing as root)
+
+[AIX]
+aixInstaller=null
+    # Cohesity AIX Agent Installer path and filename (must be stored on deployIP box)
+
+## TO INSTALL CUSTOM CERTIFICATES ON AIX ORACLE SERVER
+aixCohesityCert=false
+    # Cohesity AIX Oracle Agent install with Cohesity Certificate (true/false)
+agentCertFile=null
+    # Cohesity Agent Certificate path and filename (in the Cohesity format)
+
+aixUserCert=false
+    # Cohesity AIX Oracle Agent install with User Certificate (true/false)
+rootCAfile=null
+    # Root CA Certificate path and filename
+privateKeyFile=null
+    # Server Private Keyfile path and filename
+certChainFile=null
+    # Server Certificate Chain path and filename
+
+aixOracleUser=null
+    # (optional) AIX Oracle User (if not installing as root)
+    # NOTE: For a non ROOT user, user should have SETENV enabled for the installp command in the /etc/sudoers
+aixOracleGroup=null
+    # (optional) AIX Oracle User Group (if not installing as root)
+
+[Solaris]
+solarisInstaller=null
+    # Cohesity Solaris Agent Installer path and filename (must be stored on deployIP box)
+
+## TO INSTALL CUSTOM CERTIFICATES ON SOLARIS ORACLE SERVER
+solarisCohesityCert=false
+    # Cohesity solaris Oracle Agent install with Cohesity Certificate (true/false)
+agentCertFile=null
+    # Cohesity Agent Certificate path and filename (in the Cohesity format)
+
+solarisUserCert=false
+    # Cohesity solaris Oracle Agent install with User Certificate (true/false)
+rootCAfile=null
+    # Root CA Certificate path and filename
+privateKeyFile=null
+    # Server Private Keyfile path and filename
+certChainFile=null
+    # Server Certificate Chain path and filename
