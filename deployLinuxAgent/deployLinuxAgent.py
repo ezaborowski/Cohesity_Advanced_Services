@@ -57,7 +57,7 @@ if(local != True):
     agentConfig = configparser.ConfigParser()
     agentConfig.read(configFilePath)
     
-    os = args.systemOS
+    systemOS = args.systemOS
     ipAddy = args.ipAddy
     installer = args.installer
     remoteLogDir = args.remoteLogDir
@@ -124,8 +124,8 @@ if(local != True):
         print ("\n" + str(get_now()) + f"   | FAIL for {ipAddy} |   " + bcolors.FAIL + statement + bcolors.ENDC, flush= True)
         
 elif(local != False):
-    os = args.systemOS
-    os = os.lower()
+    systemOS = args.systemOS
+    systemOS = systemOS.lower()
     agentInstaller = args.agentInstaller
     oracleUser = args.oracleUser
     oracleUserGroup = args.oracleUserGroup
@@ -192,15 +192,15 @@ def pyVer():
                 # info_log(f"Cohesity Agent Installer confirmed executable: {i}")
         
     # ask user if they want to exit script to resolve issue
-    # if(failure != False):
-    #     raw_input = input
-    #     response = input('Do you want to exit the script in order to resolve the Agent Installer accessibility issue? (Y or N): ')
-    #     response = response.lower()
-    #     if(response != "n"):
-    #         info_log("Script now exiting...")
-    #         exit()
+    if(failure != False):
+        raw_input = input
+        response = input('Do you want to exit the script in order to resolve the Agent Installer accessibility issue? (Y or N): ')
+        response = response.lower()
+        if(response != "n"):
+            info_log("Script now exiting...")
+            exit()
     
-    # return failure
+    return failure
 
 # shell syntax
 def catch(cmd):
@@ -243,6 +243,7 @@ def scp(ip, direction, origin, dest):
             
             fin = open(scpTemp, 'r')
             result = fin.read()
+            result = result.replace(password, '')
             fin.close()
             
             if(0 != child.exitstatus):
@@ -271,6 +272,7 @@ def scp(ip, direction, origin, dest):
             
             fin = open(scpTemp, 'r')
             result = fin.read()
+            result = result.replace(password, '')
             fin.close()
             
             if(0 != child.exitstatus):
@@ -300,6 +302,7 @@ def scp(ip, direction, origin, dest):
             
             fin = open(scpTemp, 'r')
             result = fin.read()
+            result = result.replace(password, '')
             fin.close()
             
             if(0 != child.exitstatus):
@@ -328,6 +331,7 @@ def scp(ip, direction, origin, dest):
             
             fin = open(scpTemp, 'r')
             result = fin.read()
+            result = result.replace(password, '')
             fin.close()
             
             if(0 != child.exitstatus):
@@ -362,8 +366,7 @@ def lnxCerts():
             info_log("Verified no Linux User Certificates specified.")
             result = False
             return result
-    
-    if(local != True):            
+                    
         if(lnxUserCert == 'true'):
             info_log("Installing Linux Root CA Certificate...")
             rootOutput, result = catch(f"export ENFORCE_USE_CUSTOM_CERTS=true && export USE_THIRD_PARTY_CERTS=true && export ROOT_CA_FILE={lnxRootCAfile}")
@@ -401,6 +404,7 @@ def lnxCerts():
 # scp logs back to deployIP
 def logs():
     info_log(f"Transferring of Local Cohesity Agent Deployment logs file to {deployIP}...")
+    info_log(password)
     agentLog = glob.glob(f'/tmp/CohesityAgentInstall/{ipAddy}_deployAgent-*-LOG.txt')
     for i in agentLog:
         scpOutput, result = scp(deployIP, "fromMe", i, remoteLogDir)
@@ -440,7 +444,6 @@ def aixAgent():
     
     if(local != True):
         logs()
-        
     if(statusOutput != True):            
         pass_log("Cohesity Linux Agent Deployed!")
         info_log("Script now exiting...")
@@ -468,25 +471,25 @@ if(local != False):
     sysos = platform.system()
     sysos = sysos.lower()
     
-    if(f"*{os}*" in sysos):
+    if(f"*{systemOS}*" in sysos):
         pass_log(f"Verified OS: {sysos}")
-        os = sysos
+        systemOS = sysos
     else:
-        warn_log(f"User specified OS ({os}) does not match system specified OS: {sysos}")
+        warn_log(f"User specified OS ({systemOS}) does not match system specified OS: {sysos}")
         warn_log(f"Please specify which OS is correct...")
         
         print("Please select correct OS Cohesity Agent to install: ")
-        print(f"1. {os}")
+        print(f"1. {systemOS}")
         print(f"2. {sysos}")
         print(f"3. Manually Input OS")
         print(f"4. Exit Script")
         response = input("Please input the number that corresponds with the correct response: ")
         if(response == 1):
-            pass_log(f"User Verified OS: {os}")
-            os = os
+            pass_log(f"User Verified OS: {systemOS}")
+            systemOS = systemOS
         if(response == 2):
             pass_log(f"User Verified OS: {sysos}")
-            os = sysos
+            systemOS = sysos
         if(response == 3):
             print("Please select correct OS Cohesity Agent to install: ")
             print("1. ubuntu")
@@ -500,28 +503,28 @@ if(local != False):
             manual = input("Please input the number that corresponds with the correct OS: ")
             if(manual == 1):
                 pass_log(f"User Verified OS: ubuntu")
-                os = "ubuntu"
+                systemOS = "ubuntu"
             if(manual == 2):
                 pass_log(f"User Verified OS: debian")
-                os = "debian"
+                systemOS = "debian"
             if(manual == 3):
                 pass_log(f"User Verified OS: suse")
-                os = "suse"
+                systemOS = "suse"
             if(manual == 4):
                 pass_log(f"User Verified OS: powerpc")
-                os = "powerpc"
+                systemOS = "powerpc"
             if(manual == 5):
                 pass_log(f"User Verified OS: redhat")
-                os = "redhat"
+                systemOS = "redhat"
             if(manual == 6):
                 pass_log(f"User Verified OS: linux")
-                os = "linux"
+                systemOS = "linux"
             if(manual == 7):
                 pass_log(f"User Verified OS: aix")
-                os = "aix"
+                systemOS = "aix"
             if(manual == 8):
                 pass_log(f"User Verified OS: solaris")
-                os = "solaris"
+                systemOS = "solaris"
         if(response == 4):
             exitInput = input('Are you sure that you want to exit the script in order to resolve this OS discrepancy? (Y or N): ')
             exitInput = exitInput.lower()
@@ -545,9 +548,9 @@ if(local != False):
         #    exists(agentPath, agentDir, installer)
                    
 else:
-    pass_log(f"Verified OS: {os}")
-    #os = sysos
-    os = str(os)
+    pass_log(f"Verified OS: {systemOS}")
+    #systemOS = sysos
+    systemOS = str(systemOS)
     rel = platform.release()
     pass_log(f"Verified Release: {rel}")
 
@@ -555,11 +558,12 @@ else:
 
 ## Linux Agent Deployment (login as root to install)
 
-if('ubuntu' in os):
+if('ubuntu' in systemOS):
     chmodOutput = catch(f"chmod +x {agentDir}/{installer}")
     result = lnxCerts()
-    chDir, result = catch(f"cd {agentDir}")
-    if(chDir != True):
+    os.chdir(agentDir)
+    cwd = os.getcwd()
+    if(agentDir in cwd):
         info_log("Installing Ubuntu Cohesity Agent...")
         ubuntuOutput, result = catch(f"sudo ./{installer} -- -i -y")
             
@@ -572,11 +576,12 @@ if('ubuntu' in os):
             pass_log(f"Successful Cohesity Agent Installation: {result}")
             startAgent()
 
-elif('debian' in os):
+elif('debian' in systemOS):
     chmodOutput = catch(f"chmod +x {agentDir}/{installer}")
     result = lnxCerts()
-    chDir, result = catch(f"cd {agentDir}")
-    if(chDir != True):
+    os.chdir(agentDir)
+    cwd = os.getcwd()
+    if(agentDir in cwd):
         info_log("Installing Debian Cohesity Agent...") 
         if(local != True):
             if(linuxOracleUser != 'null'):
@@ -598,11 +603,12 @@ elif('debian' in os):
         pass_log(f"Successful Cohesity Agent Installation: {result}")
         startAgent()
 
-elif('suse' in os):
+elif('suse' in systemOS):
     chmodOutput = catch(f"chmod +x {agentDir}/{installer}")
     result = lnxCerts()
-    chDir, result = catch(f"cd {agentDir}")
-    if(chDir != True):
+    os.chdir(agentDir)
+    cwd = os.getcwd()
+    if(agentDir in cwd):
         info_log("Installing Suse Cohesity Agent...")
         if(local != True):
             if(linuxOracleUser != 'null'):
@@ -624,11 +630,12 @@ elif('suse' in os):
         pass_log(f"Successful Cohesity Agent Installation: {result}")
         startAgent()
 
-elif('power' in os):
+elif('power' in systemOS):
     chmodOutput = catch(f"chmod +x {agentDir}/{installer}")
     result = lnxCerts()
-    chDir, result = catch(f"cd {agentDir}")
-    if(chDir != True):
+    os.chdir(agentDir)
+    cwd = os.getcwd()
+    if(agentDir in cwd):
         info_log("Installing Linux PowerPC Cohesity Agent...")
         if(local != True):
             if(linuxOracleUser != 'null'):
@@ -650,11 +657,12 @@ elif('power' in os):
         pass_log(f"Successful Cohesity Agent Installation: {result}")
         startAgent()
 
-elif('redhat' in os):
+elif('redhat' in systemOS):
     chmodOutput = catch(f"chmod +x {agentDir}/{installer}")
     result = lnxCerts()
-    chDir, result = catch(f"cd {agentDir}")
-    if(chDir != True):
+    os.chdir(agentDir)
+    cwd = os.getcwd()
+    if(agentDir in cwd):
         info_log("Installing RHEL Cohesity Agent...")
         if(local != True):
             if(linuxOracleUser != 'null'):
@@ -676,11 +684,12 @@ elif('redhat' in os):
         pass_log(f"Successful Cohesity Agent Installation: {result}")
         startAgent()
 
-elif('linux' in os):
+elif('linux' in systemOS):
     chmodOutput = catch(f"chmod +x {agentDir}/{installer}")
     result = lnxCerts()
-    chDir, result = catch(f"cd {agentDir}")
-    if(chDir != True):
+    os.chdir(agentDir)
+    cwd = os.getcwd()
+    if(agentDir in cwd):
         info_log("Installing Linux Cohesity Agent...")  
         if(local != True):
             if(linuxOracleUser != 'null'):
@@ -712,7 +721,7 @@ elif('linux' in os):
     # The latest Bash package. For more information, see AIX Toolbox for Linux Applications.
     # Java version, JRE 1.8.0 AIX ppc-64 bit for the agent.
     
-elif('aix' in os):   
+elif('aix' in systemOS):   
     if(local != True):
         if(aixCohesityCert == 'true'):
             info_log("Installing AIX Cohesity Agent Certificate...")
@@ -748,8 +757,9 @@ elif('aix' in os):
             info_log("Verified no AIX User Certificates specified.")
 
     chmodOutput = catch(f"chmod +x {agentDir}/{installer}")
-    chDir, result = catch(f"cd {agentDir}")
-    if(chDir != True):
+    os.chdir(agentDir)
+    cwd = os.getcwd()
+    if(agentDir in cwd):
         info_log("Installing AIX Cohesity Agent...")
         if(local != True):
             if(aixOracleUser != 'null'):
@@ -776,7 +786,7 @@ elif('aix' in os):
     # Oracle's latest bash package running on Oracle Solaris 11 or greater on SPARC v9 (64-bit).
     # Java version, JRE 8 for Oracle Solaris SPARC (64 bit) for the agent.
 
-elif('solaris' in os):
+elif('solaris' in systemOS):
     if(local != True):
         if(solCohesityCert == 'true'):
             info_log("Installing Solaris Agent Certificate...")
@@ -813,8 +823,9 @@ elif('solaris' in os):
             info_log("Verified no Solaris User Certificates specified.")
 
     chmodOutput = catch(f"chmod +x {agentDir}/{installer}")
-    chDir, result = catch(f"cd {agentDir}")
-    if(chDir != True):
+    os.chdir(agentDir)
+    cwd = os.getcwd()
+    if(agentDir in cwd):
         info_log("Installing Solaris Cohesity Agent...")
         solOutput, result = catch(f"sudo /usr/sbin/pkgadd -d {installer}")
         

@@ -189,6 +189,7 @@ def scp(ip, direction, origin, dest):
             
             fin = open(scpTemp, 'r')
             result = fin.read()
+            result = result.replace(password, '')
             fin.close()
             
             if(0 != child.exitstatus):
@@ -218,6 +219,7 @@ def scp(ip, direction, origin, dest):
             
             fin = open(scpTemp, 'r')
             result = fin.read()
+            result = result.replace(password, '')
             fin.close()
             
             if(0 != child.exitstatus):
@@ -248,6 +250,7 @@ def scp(ip, direction, origin, dest):
             
             fin = open(scpTemp, 'r')
             result = fin.read()
+            result = result.replace(password, '')
             fin.close()
             
             if(0 != child.exitstatus):
@@ -277,6 +280,7 @@ def scp(ip, direction, origin, dest):
             
             fin = open(scpTemp, 'r')
             result = fin.read()
+            result = result.replace(password, '')
             fin.close()
             
             if(0 != child.exitstatus):
@@ -314,9 +318,10 @@ def sshdeploy(ip, cmd):
         
         fin = open(sshTemp, 'r')
         result = fin.read()
+        result = result.replace(password, '')
         fin.close()
         
-        if(0 != child.exitstatus):
+        if(0 != child.exitstatus or 'error' in result):
             #raise Exception(stdout) 
             if("File exists" in result):
                 failure = False
@@ -349,6 +354,7 @@ def ssh(ip, cmd):
         
         fin = open(sshTemp, 'r')
         result = fin.read()
+        result = result.replace(password, '')
         fin.close()
         
         if(0 != child.exitstatus):
