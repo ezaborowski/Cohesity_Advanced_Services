@@ -400,7 +400,6 @@ def lnxCerts():
 # scp logs back to deployIP
 def logs():
     info_log(f"Transferring of Local Cohesity Agent Deployment logs file to {deployIP}...")
-    info_log(password)
     agentLog = glob.glob(f'/tmp/CohesityAgentInstall/{ipAddy}_deployAgent-*-LOG.txt')
     for i in agentLog:
         scpOutput, result = scp(deployIP, "fromMe", i, remoteLogDir)
