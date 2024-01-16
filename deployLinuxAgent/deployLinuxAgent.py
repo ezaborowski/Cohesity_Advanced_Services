@@ -397,17 +397,17 @@ def lnxCerts():
 
 # scp logs back to deployIP
 def logs():
-    agentLog = glob.glob(f'/tmp/CohesityAgentInstaller/{ipAddy}_deployAgent-*-LOG.txt')
+    agentLog = glob.glob(f'/tmp/CohesityAgentInstall/{ipAddy}_deployAgent-*-LOG.txt')
     
     scpOutput, result = scp(deployIP, "fromMe", agentLog, remoteLogDir)
 
     if(scpOutput != False):
         fail_log(f"Transfer of Local Cohesity Agent Deployment log file to {deployIP} ERROR output: {result}")
         fail_log(f"Local Cohesity Agent Logs for {ipAddy} failed to scp to {deployIP} !")
-        warn_log(f"The Cohesity Agent Deployment log file for {ipAddy} can be found locally on {ipAddy} in the following directory: /tmp/CohesityAgentInstaller")
+        warn_log(f"The Cohesity Agent Deployment log file for {ipAddy} can be found locally on {ipAddy} in the following directory: /tmp/CohesityAgentInstall")
         
         print(f"Transfer of Agent Deployment log file for {ipAddy} ERROR output: {result}")
-        print(f"Local Cohesity Agent Logs for {ipAddy} failed to scp to {deployIP} ! The log file for {ipAddy} can be found locally on {ipAddy} in the following directory: /tmp/CohesityAgentInstaller") 
+        print(f"Local Cohesity Agent Logs for {ipAddy} failed to scp to {deployIP} ! The log file for {ipAddy} can be found locally on {ipAddy} in the following directory: /tmp/CohesityAgentInstall") 
     else:
         pass_log(f"Successful transfer of Local Cohesity Agent Deployment log file to {deployIP} output: {result}")
 
@@ -457,7 +457,7 @@ ver = pyVer()
 
 
 
-agentDir = '/tmp/CohesityAgentInstaller'
+agentDir = '/tmp/CohesityAgentInstall'
 
 if(local != False):
     sysos = platform.system()
@@ -529,7 +529,7 @@ if(local != False):
     source = agentInstaller.split('/')
     installer = source[-1]
     dirCreate, result = catch("mkdir /tmp")
-    dirCreate, result = catch("mkdir /tmp/CohesityAgentInstaller")
+    dirCreate, result = catch("mkdir /tmp/CohesityAgentInstall")
     if(dirCreate != True):
         info_log(f"Copying Linux Cohesity Agent Installer to {agentDir}...")
         cpPackage, result = catch(f"cp {agentInstaller} {agentDir}")
@@ -834,7 +834,7 @@ elif('solaris' in os):
         exit()
 else:
     fail_log("deployLinuxAgent.py script could not determine the correct Cohesity Agent Installer to use!")
-    warn_log(f"Please SCP the '{installer}' manually and run the '/tmp/CohesityAgentInstaller/deployLinuxAgent.py' script locally.")
+    warn_log(f"Please SCP the '{installer}' manually and run the '/tmp/CohesityAgentInstall/deployLinuxAgent.py' script locally.")
     exit()
     
 if(local != True):
