@@ -362,7 +362,8 @@ def lnxCerts():
             info_log("Verified no Linux User Certificates specified.")
             result = False
             return result
-                    
+    
+    if(local != True):            
         if(lnxUserCert == 'true'):
             info_log("Installing Linux Root CA Certificate...")
             rootOutput, result = catch(f"export ENFORCE_USE_CUSTOM_CERTS=true && export USE_THIRD_PARTY_CERTS=true && export ROOT_CA_FILE={lnxRootCAfile}")
@@ -439,6 +440,7 @@ def aixAgent():
     
     if(local != True):
         logs()
+        
     if(statusOutput != True):            
         pass_log("Cohesity Linux Agent Deployed!")
         info_log("Script now exiting...")
