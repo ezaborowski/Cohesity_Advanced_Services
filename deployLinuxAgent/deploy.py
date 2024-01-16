@@ -293,6 +293,43 @@ def scp(ip, direction, origin, dest):
      
     return failure, result
 
+# sshdeploy function
+def sshdeploy(ip, cmd):
+    failure = False
+    if(rootUser):
+        sshTemp = tempfile.mktemp()
+        sshLog = open(sshTemp, 'w') 
+        
+        options = '-q -oStrictHostKeyChecking=no -oUserKnownHostsFile=/dev/null -oPubkeyAuthentication=no'
+        ssh_cmd = 'ssh %s@%s %s "%s"' % (rootUser, ip, options, cmd)
+        child = pexpect.spawnu(ssh_cmd, timeout=240)
+        child.expect('(?i)password:')
+        child.sendline(password)
+        child.expect('SCP Password:')
+        child.sendline(password)
+        child.logfile = sshLog
+        child.expect(pexpect.EOF)
+        child.close()
+        sshLog.close()
+        
+        fin = open(sshTemp, 'r')
+        result = fin.read()
+        fin.close()
+        
+        if(0 != child.exitstatus):
+            #raise Exception(stdout) 
+            if("File exists" in result):
+                failure = False
+                warn_log(result)
+            else:
+                failure = True
+                fail_log(result)
+        else:
+            failure = False
+            pass_log(result)
+            
+    return failure, result
+    
 # ssh function
 def ssh(ip, cmd):
     failure = False
@@ -511,7 +548,8 @@ for ip in validIpList:
                             warn_log(f"Please ensure the following Python Modules are installed on all remote Linux boxes: argparse, datetime, conifgparser, pexpect.")
                             
                         info_log(f"Running deployLinuxAgent Script on Remote Linux box {ip}...")
-                        sshOutput, result = ssh(ip, f"python3 /tmp/CohesityAgentInstall/deployLinuxAgent.py -rl {remoteLogDir} -in {installer} -o '{sysos}' -p {password} -rc '/tmp/CohesityAgentInstall/agentConfig.txt' -ip {ip} > /tmp/CohesityAgentInstall/{ip}_deployAgent-{dateString}-LOG.txt")
+                        #remotePass = r"{}".format(password)
+                        sshOutput, result = sshdeploy(ip, f"python3 /tmp/CohesityAgentInstall/deployLinuxAgent.py -rl {remoteLogDir} -in {installer} -o '{sysos}' -rc '/tmp/CohesityAgentInstall/agentConfig.txt' -ip {ip} > /tmp/CohesityAgentInstall/{ip}_deployAgent-{dateString}-LOG.txt")
                         if(sshOutput != True):
                             #pass_log(f"Remote Linux box {ip} SUCCESSFUL output: {result}")
                             pass_log(f"Cohesity Linux Agent successfully deployed on Linux box {ip}!")
@@ -544,4 +582,4 @@ for ip in validIpList:
 if(errorIps):     
     warn_log(f"The following are the IP addresses of those remote Linux boxes that encountered errors during the deployment phase and require a manual run of the deployLinuxAgent.py script locally: \n{errorIps}")
     
-pass_log(f"Cohesity Linux Agent Deploy script has completed iterating through all Remote Linux boxes found in {configFilePath} under the File_Mgmt > ipList section.")
+info_log(f"Cohesity Linux Agent Deploy script has completed iterating through all Remote Linux boxes found in {configFilePath} under the File_Mgmt > ipList section.")

@@ -7,6 +7,7 @@ import os
 import subprocess
 import configparser
 from platform import python_version
+from getpass import getpass
 import sys
 import pexpect
 from pexpect import *
@@ -60,9 +61,10 @@ if(local != True):
     ipAddy = args.ipAddy
     installer = args.installer
     remoteLogDir = args.remoteLogDir
-    password = args.password
+    #password = args.password
     deployIP=agentConfig.get(f'Server_IPs', 'deployIP')
     rootUser=agentConfig.get(f'Server_IPs', 'rootUser')
+    password = getpass("SCP Password: ")
 
     # linux
     scriptInstaller=agentConfig.get(f'Linux', 'scriptInstaller')
@@ -190,15 +192,15 @@ def pyVer():
                 # info_log(f"Cohesity Agent Installer confirmed executable: {i}")
         
     # ask user if they want to exit script to resolve issue
-    if(failure != False):
-        raw_input = input
-        response = input('Do you want to exit the script in order to resolve the Agent Installer accessibility issue? (Y or N): ')
-        response = response.lower()
-        if(response != "n"):
-            info_log("Script now exiting...")
-            exit()
+    # if(failure != False):
+    #     raw_input = input
+    #     response = input('Do you want to exit the script in order to resolve the Agent Installer accessibility issue? (Y or N): ')
+    #     response = response.lower()
+    #     if(response != "n"):
+    #         info_log("Script now exiting...")
+    #         exit()
     
-    return failure
+    # return failure
 
 # shell syntax
 def catch(cmd):
@@ -397,19 +399,21 @@ def lnxCerts():
 
 # scp logs back to deployIP
 def logs():
+    info_log(f"Transferring of Local Cohesity Agent Deployment logs file to {deployIP}...")
+    info_log(password)
     agentLog = glob.glob(f'/tmp/CohesityAgentInstall/{ipAddy}_deployAgent-*-LOG.txt')
-    
-    scpOutput, result = scp(deployIP, "fromMe", agentLog, remoteLogDir)
+    for i in agentLog:
+        scpOutput, result = scp(deployIP, "fromMe", i, remoteLogDir)
 
-    if(scpOutput != False):
-        fail_log(f"Transfer of Local Cohesity Agent Deployment log file to {deployIP} ERROR output: {result}")
-        fail_log(f"Local Cohesity Agent Logs for {ipAddy} failed to scp to {deployIP} !")
-        warn_log(f"The Cohesity Agent Deployment log file for {ipAddy} can be found locally on {ipAddy} in the following directory: /tmp/CohesityAgentInstall")
-        
-        print(f"Transfer of Agent Deployment log file for {ipAddy} ERROR output: {result}")
-        print(f"Local Cohesity Agent Logs for {ipAddy} failed to scp to {deployIP} ! The log file for {ipAddy} can be found locally on {ipAddy} in the following directory: /tmp/CohesityAgentInstall") 
-    else:
-        pass_log(f"Successful transfer of Local Cohesity Agent Deployment log file to {deployIP} output: {result}")
+        if(scpOutput != False):
+            fail_log(f"Transfer of Local Cohesity Agent Deployment log file to {deployIP} ERROR output: {result}")
+            fail_log(f"Local Cohesity Agent Logs for {ipAddy} failed to scp to {deployIP} !")
+            warn_log(f"The Cohesity Agent Deployment log file for {ipAddy} can be found locally on {ipAddy} in the following directory: /tmp/CohesityAgentInstall")
+            
+            print(f"Transfer of Agent Deployment log file for {ipAddy} ERROR output: {result}")
+            print(f"Local Cohesity Agent Logs for {ipAddy} failed to scp to {deployIP} ! The log file for {ipAddy} can be found locally on {ipAddy} in the following directory: /tmp/CohesityAgentInstall") 
+        else:
+            pass_log(f"Successful transfer of Local Cohesity Agent Deployment log file to {deployIP} output: {result}")
 
 # start linux agent and scp logs
 def startAgent():
