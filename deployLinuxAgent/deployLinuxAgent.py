@@ -457,7 +457,7 @@ ver = pyVer()
 
 
 
-agentDir = '/tmp/CohesityAgentInstall'
+agentDir = '/tmp/CohesityAgentInstaller'
 
 if(local != False):
     sysos = platform.system()
