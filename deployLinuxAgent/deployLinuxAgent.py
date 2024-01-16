@@ -531,10 +531,10 @@ if(local != False):
     dirCreate, result = catch("mkdir /tmp")
     dirCreate, result = catch("mkdir /tmp/CohesityAgentInstaller")
     if(dirCreate != True):
-        info_log(f"Transferring Linux Cohesity Agent Installer to {agentDir}...")
-        mvPackage, result = catch(f"mv {agentInstaller} {agentDir}")
-        if(mvPackage != False):
-            cpPackage, result = catch(f"cp {agentInstaller} {agentDir}")
+        info_log(f"Copying Linux Cohesity Agent Installer to {agentDir}...")
+        cpPackage, result = catch(f"cp {agentInstaller} {agentDir}")
+        # if(mvPackage != False):
+        #     cpPackage, result = catch(f"cp {agentInstaller} {agentDir}")
         #    exists(agentPath, agentDir, installer)
         #else:
         #    exists(agentPath, agentDir, installer)
